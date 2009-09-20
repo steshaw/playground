@@ -5,7 +5,7 @@
 
 object VassilDichev extends Application {
   def vassil = {
-    val a = (List.make(4, ">>> Happy birthday ")
+    val a = (List.make(4, "Happy birthday ")
       zip (List.tabulate(4, {
         case 2 => "dear friend"
         case _ => "to you"}))
@@ -15,5 +15,5 @@ object VassilDichev extends Application {
 
   import Clock.timeIt
 
-  timeIt("Vassil Dichev") { vassil }
+  timeIt("Vassil Dichev")(vassil)
 }

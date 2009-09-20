@@ -14,7 +14,7 @@ object Clock {
     }
   }
 
-  def timeItOld[T](name: String)(block: => T) {
+  def timeItOnce[T](name: String)(block: => T) {
     val start = System.currentTimeMillis
     try {
       block
