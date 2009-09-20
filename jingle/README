@@ -15,21 +15,27 @@ mkString into an in memory string before it's written out. Even with output redi
 
 On the old laptop I'm currently running, the results from run.sh are:
 
-  -- With stdout redirected to run.out --
-  Dick Java took 4919ms (4.919s)
-  dick1 took 12813ms (12.813s)
-  dick2 took 5065ms (5.065s)
-  dick3 took 5028ms (5.028s)
-  OldSchool took 4936ms (4.936s)
-  Vassil Dichev took 2434ms (2.434s)
+-- With stdout redirected to run.out --
+Dick Java took 4657ms (4.657s)
+dick1 took 13731ms (13.731s)
+dick2 took 5057ms (5.057s)
+dick3 took 5022ms (5.022s)
+OldSchool took 5432ms (5.432s)
+vassil1 took 2436ms (2.436s)
+vassil2 took 5337ms (5.337s)
+martin1 took 5700ms (5.7s)
+martin2 took 2322ms (2.322s)
 
-  -- With stdout redirected to /dev/null --
-  Dick Java took 1673ms (1.673s)
-  dick1 took 8290ms (8.29s)
-  dick2 took 1748ms (1.748s)
-  dick3 took 1709ms (1.709s)
-  OldSchool took 1903ms (1.903s)
-  Vassil Dichev took 1206ms (1.206s)
+-- With stdout redirected to /dev/null --
+Dick Java took 1841ms (1.841s)
+dick1 took 9162ms (9.162s)
+dick2 took 1783ms (1.783s)
+dick3 took 1811ms (1.811s)
+OldSchool took 1927ms (1.927s)
+vassil1 took 1157ms (1.157s)
+vassil2 took 1852ms (1.852s)
+martin1 took 2034ms (2.034s)
+martin2 took 1005ms (1.005s)
 
-The memory profiles are probably different but this is me now thinking differently about
-very functional/Haskell/O'Caml style code! Even in Scala :)
+The memory profiles are probably different but this is me now thinking
+differently about very functional/Haskell/O'Caml style code! Even in Scala :)

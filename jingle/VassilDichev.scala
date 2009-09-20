@@ -13,7 +13,13 @@ object VassilDichev extends Application {
     println(a)
   }
 
+  def vassilOverheardOnTwitter = {
+    val (d,t)=("Dear XXX","To you")
+    List(t,t,d,t) map ("Happy Birthday " + _) foreach println
+  }
+
   import Clock.timeIt
 
-  timeIt("Vassil Dichev")(vassil)
+  timeIt("vassil1")(vassil)
+  timeIt("vassil2")(vassilOverheardOnTwitter)
 }
