@@ -1,0 +1,35 @@
+
+See Article, "Is Scala really more complicated than Java?" by Dick Wall
+http://www.artima.com/weblogs/viewpost.jsp?thread=268561
+
+I kinda favoured the old school (Java-like) approach since it's very direct and doesn't
+create any extraneous data structures. Strangely enough performance is much better with
+the very functional version provided by Vassil. The actual Java code, OldSchool (in Scala)
+and dick2 and dick3 are all about the same. Very slow is dick1 - probably caused by the
+call to format.
+
+The main reason that the functional code is faster is because there's less IO. i.e. less calls
+to println (consequently less syscalls). This is because the entire 4 line jingle is created with
+mkString into an in memory string before it's written out. Even with output redirected to
+/dev/null the functional version still comes in ahead because of this (see below).
+
+On the old laptop I'm currently running, the results from run.sh are:
+
+  -- With stdout redirected to run.out --
+  Dick Java took 4919ms (4.919s)
+  dick1 took 12813ms (12.813s)
+  dick2 took 5065ms (5.065s)
+  dick3 took 5028ms (5.028s)
+  OldSchool took 4936ms (4.936s)
+  Vassil Dichev took 2434ms (2.434s)
+
+  -- With stdout redirected to /dev/null --
+  Dick Java took 1673ms (1.673s)
+  dick1 took 8290ms (8.29s)
+  dick2 took 1748ms (1.748s)
+  dick3 took 1709ms (1.709s)
+  OldSchool took 1903ms (1.903s)
+  Vassil Dichev took 1206ms (1.206s)
+
+The memory profiles are probably different but this is me now thinking differently about
+very functional/Haskell/O'Caml style code! Even in Scala :)
