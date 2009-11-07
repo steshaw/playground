@@ -1,0 +1,18 @@
+#{extends 'main.html'/}
+#{set title:'Home'/}
+
+#{if flash.error}
+  <p style="color: #c00">
+    ${flash.error}
+  </p>
+#{/if}
+
+<form action="@{Application.sayHello()}" method="GET">
+  <label for="name">Enter your name:</label>
+  <input id="name" type="text" name="name"/>
+  <input type="submit" value="Say hello!"/>
+</form>
+
+<hr>
+
+<a href="@{Application.hello}">Just say hello!</a>
