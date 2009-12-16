@@ -1,6 +1,9 @@
 
+// An excercise from Tony Morris.
+// See http://blog.tmorris.net/debut-with-a-catamorphism/
+
 trait MyOption[+A] {
-  // Single abstract method.
+  // single abstract method
   def cata[X](some: A => X, none: => X): X
 
   private def none[A] = new MyOption[A] {
@@ -13,24 +16,24 @@ trait MyOption[+A] {
 
   private def identity[A](a: A) = a
 
-  def map[B](f: A => B): MyOption[B] = cata((a:A) => some(f(a)), none)
+  def map[B](f: A => B): MyOption[B] = cata(f andThen some, none)
 
   def flatMap[B](f: A => MyOption[B]): MyOption[B] = cata(f, none)
 
   def getOrElse[AA >: A](e: => AA): AA = cata(identity[A], e)
 
-  def filter(p: A => Boolean): MyOption[A] = cata((a:A) => if (p(a)) some(a) else none, none)
+  def filter(p: A => Boolean): MyOption[A] = cata(a => if (p(a)) some(a) else none, none)
 
-  def foreach(f: A => Unit): Unit = cata(f(_), none)
+  def foreach(f: A => Unit): Unit = cata(f, ())
 
-  def isDefined: Boolean = cata((a: A) => true, false)
+  def isDefined: Boolean = cata(_ => true, false)
 
   def isEmpty: Boolean = !isDefined
 
   // WARNING: not defined for None
-  def get: A = cata(identity[A], error("undefined"))
+  def get: A = cata(identity[A], error("None.get"))
 
-  def orElse[AA >: A](o: MyOption[AA]): MyOption[AA] = cata((a: A) => this, o)
+  def orElse[AA >: A](o: MyOption[AA]): MyOption[AA] = cata(_ => this, o)
 
   def toLeft[X](right: => X): Either[A, X] = cata(Left(_), Right(right))
 
@@ -39,6 +42,8 @@ trait MyOption[+A] {
   def toList: List[A] = cata(List(_), Nil)
 
   def iterator: Iterator[A] = cata(Iterator(_), Iterator())
+
+  override def toString: String = cata("Some(" + _ + ")", "None")
 }
 
 object MyOption {

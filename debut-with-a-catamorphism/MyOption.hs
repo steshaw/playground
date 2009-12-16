@@ -28,11 +28,11 @@ filter m p = cata m (\a -> if p(a) then m else none) none
  
 -- mapM_
 foreach :: Option a -> (a -> IO ()) -> IO ()
-foreach m f = cata m f (putStr "")
+foreach m f = cata m f (return ())
  
 -- isJust
 isDefined :: Option a -> Bool
-isDefined m = cata m (\a -> True) False
+isDefined m = cata m (const True) False
  
 -- isNothing
 isEmpty :: Option a -> Bool
@@ -43,20 +43,20 @@ isEmpty m = not $ isDefined m
 get :: Option a -> a
 get m = cata m id (error "None.get")
 
-toMaybe m = cata m (\a -> Just a) Nothing
- 
 -- mplus
 orElse :: Option a -> Option a -> Option a
-orElse m n = cata m (\a -> m) n
+orElse m n = cata m (const m) n
  
 toLeft :: Option a -> x -> Either a x
-toLeft m x = cata m (\a -> Left a) (Right x)
+toLeft m x = cata m Left (Right x)
  
 toRight :: Option a -> x -> Either x a
-toRight m x = cata m (\a -> Right a) (Left x)
+toRight m x = cata m Right (Left x)
  
 -- maybeToList
 toList :: Option a -> [a]
 toList m = cata m (\a -> [a]) []
  
 iterator = error "bzzt. This is Haskell silly."
+
+toMaybe m = cata m (\a -> Just a) Nothing
