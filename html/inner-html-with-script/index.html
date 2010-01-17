@@ -2,33 +2,51 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <head>
     <title>Write Script</title>
-    <script>
-      function writeIt() {
-        var from = document.getElementById('from');
-        var html = from.innerHTML;
-        var to = document.getElementById('to');
-        // Technique does not work in 
-        // Does not work in Safari-4/Mac, Chrome-4.0.288.1-dev/Mac.
-        // Works in Firefox-3.5/Mac
-        // Create inner div to hopefully execute embedded <script> tags.
-        var div = document.createElement("div"); 
-        div.innerHTML = html;
-        to.innerHTML = "";
-        to.appendChild(div);
+    <!-- don't use jQuery 1.4 here as the 'Click here to copy' button stops working after 3 or 4 clicks -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript">
+      function copyIt() {
+        var html = $('#from').html();
+        var to = $('#to');
+        to.html(html);
       }
+
+      $(function() {
+        $('#reset').click(function() {
+          $('#to').fadeTo(300, 0.0).html('This will be replaced').fadeTo(300, 1.0);
+        });
+      });
     </script>
+    <style>
+      div {
+        padding: 10px;
+      }
+      span.button {
+        cursor: pointer;
+        border: 1px solid black;
+        padding: 5px;
+        background-color: red;
+        border-radius: 5px;
+        font-family: "Verdana";
+      }
+    </style>
   </head>
   <body style="border: none; margin: 0 0 0 0;">
-    <div style="width: 100%; height: 100%; background-color: gray;">
-      <div style="width: 60%; margin-left: 20%; background-color: #EEE;">
-        <span style="background-color: red;" onclick="writeIt()">Click here to write</span>
+    <div style="width: 100%; height: 100%; background-color: lightblue;">
+      <div style="width: 60%; height: 600px; margin-left: 20%; background-color: #EEE;">
+        <span class="button" onclick="copyIt()">Click here to copy</span>
+        <span id="flashMessage" style="margin-left: 10%; color: red; background-color: pink;">JavaScript is running :)</span>
+        <br/>
         <br/>
         <div>
           From:
           <div style="float: right; width: 50%" id="from">
             This will be copied. Isn't this <i>cool</i>?
-            This has an embedded &lt;script&gt; tag which just does an alert('hi').
-            <script>alert('hi')</script>
+            This has an embedded &lt;script&gt; tag which flashes the message.
+            <script>
+              $("#flashMessage").fadeIn(500).fadeTo(500, 1.0).fadeOut(1000);
+              //alert('JavaScript!');
+            </script>
           </div>
         </div>
         <br clear="both"/>
@@ -36,6 +54,8 @@
           To:
           <div style="float: right; width: 50%;" id="to">This will be replaced</div>
         </div>
+        <br/>
+        <span id="reset" class="button">Reset</span>
       </div>
     </div>
   </body>
