@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>Write Script</title>
+    <script>
+      function writeIt() {
+        var from = document.getElementById('from');
+        var html = from.innerHTML;
+        var to = document.getElementById('to');
+        // Technique does not work in 
+        // Does not work in Safari-4/Mac, Chrome-4.0.288.1-dev/Mac.
+        // Works in Firefox-3.5/Mac
+        // Create inner div to hopefully execute embedded <script> tags.
+        var div = document.createElement("div"); 
+        div.innerHTML = html;
+        to.innerHTML = "";
+        to.appendChild(div);
+      }
+    </script>
+  </head>
+  <body style="border: none; margin: 0 0 0 0;">
+    <div style="width: 100%; height: 100%; background-color: gray;">
+      <div style="width: 60%; margin-left: 20%; background-color: #EEE;">
+        <span style="background-color: red;" onclick="writeIt()">Click here to write</span>
+        <br/>
+        <div>
+          From:
+          <div style="float: right; width: 50%" id="from">
+            This will be copied. Isn't this <i>cool</i>?
+            This has an embedded &lt;script&gt; tag which just does an alert('hi').
+            <script>alert('hi')</script>
+          </div>
+        </div>
+        <br clear="both"/>
+        <div>
+          To:
+          <div style="float: right; width: 50%;" id="to">This will be replaced</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
