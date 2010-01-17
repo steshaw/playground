@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Foo</title>
+
+<!--
+  <link rel="stylesheet" type="text/css" href="reset.css" />
+-->
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <script src="jquery-1.3.2.js"> </script>
+
+  <script>
+    $(document).ready(function() {
+      $("input.rounded").wrap('<div class="inputRounded"></div>')
+        .focus(function() {
+          $(this).parent().css('border-color', 'blue');
+        })
+        .blur(function() {
+          $(this).parent().css('border-color', '#555');
+        });
+    });
+  </script>
+
+</head>
+<body>
+
+<div class="content">
+
+<form>
+  <h1>Enter your details</h1>
+
+  <p>
+    <label for="username">Username</label>
+    <input id="username" class="rounded" type="text" value=""/>
+  </p>
+
+  <p>
+    <label for="password">Password</label>
+    <input id="password" class="rounded" type="password" value=""/>
+  </p>
+
+  <p>
+    <label for="u1">Enter u1</label>
+    <input class="rounded" id="u1" type="text"/>
+  </p>
+
+  <p>
+    <label for="u2">Enter u2</label>
+    <input class="rounded" type="text"/>
+  </p>
+
+</form>
+
+</div>
+</body>
+</html>

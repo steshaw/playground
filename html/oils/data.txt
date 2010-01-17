@@ -1,0 +1,150 @@
+<tr>
+<td>BERGAMOT<td>
+<td>Peel<td>
+<td>Expression<td>
+<td>Photo-sensitising<td>
+<td>Anti-viral<br>Anti-Depressant<td>
+<td>Acne<br>Uplifting<td>
+</tr>
+
+<tr>
+<td>BLACK PEPPER<td>
+<td>Fruit/Seeds<td>
+<td>Steam<td>
+<td>Skin Irritant<td>
+<td>Warming<td>
+<td>Cooling<td>
+<td>Muscular Pain<td>
+<td>High Fever<td>
+</tr>
+
+<tr>
+<td>CAJEPUT<td>
+<td>Leaves<td>
+<td>Steam<td>
+<td>Skin Irritant<td>
+<td>Analgesic<td>
+<td>Antiseptic<td>
+<td>Stomach Pains<td>
+<td>Colds<td>
+</tr>
+
+<tr>
+<td>CEDARWOOD<td>
+<td>Wood<td>
+<td>Steam<td>
+<td>Not to be used during pregnancy<td>
+<td>Diuretic<td>
+<td>Astringent<td>
+<td>Fluid<td>
+<td>Acne<td>
+
+<tr>
+<td>GERMAN CHAMOMILE<td>
+<td>Leaf/Flower<td>
+<td>Steam<td>
+<td>Febrifuge<td>
+<td>Anti Inflammatory<td>
+<td>Body temperature<td>
+<td>Acne<td>
+</tr>
+
+<tr>
+<td>ROMAN CHAMOMILE<td>
+<td> <td>
+<td>Leaf/Flower<td>
+<td>Steam<td>
+<td>Antispasmodic<td>
+<td>Analgesic<td>
+<td>Cramps<td>
+<td>Headache<td>
+</tr>
+
+<tr>
+<td>CLARY SAGE<td>
+<td>Leaf/Flower<td>
+<td>Steam<td>
+<td>Not to be used during pregnancy<td>
+<td>Hypertensive<td>
+<td>Antispasmodic<td>
+<td>High Blood Press.<td>
+<td>Menstrual Cramps<td>
+</tr>
+
+<tr>
+<td>CYPRESS<td>
+<td>Leaves/ Twigs<td>
+<td>Steam<td>
+<td>Antisudorific<td>
+<td>Diuretic<td>
+<td>Perspiration<td>
+<td>Oedema<td>
+</tr>
+
+<tr>
+<td>FENNEL SWEET<td>
+<td>Seeds<td>
+<td>Steam<td>
+<td>Not to be used during pregnancy<td>
+<td>Digestive<td>
+<td>Diuretic<td>
+<td>Nausea<td>
+<td>Fluid<td>
+</tr>
+
+<tr>
+<td>FRANKINCENSE<td>
+<td>Gum or Resin<td>
+<td>Steam<td>
+<td> <td>
+<td>Expectorant<td>
+<td>Anti Inflammatory<td>
+<td> <td>
+<td>Asthma<td>
+<td>Skin<td>
+<td> <td>
+</tr>
+
+<tr>
+<td>GERANIUM<td>
+<td>Entire Aerial<td>
+<td>Steam<td>
+<td> <td>
+<td>Haemostatic<td>
+<td>Astringent<td>
+<td>Bleeding<td>
+<td>Oily Skin<td>
+</tr>
+
+<tr>
+<td>JASMINE ABSOLUTE<td>
+<td>Flower<td>
+<td>Solvent<td>
+<td>Not to be used during pregnancy<td>
+<td>Antispasmodic<td>
+<td>Anti depressant<td>
+<td>Menstrual cramps<td>
+<td>Uplifting<td>
+</tr>
+
+<tr>
+<td>JUNIPER BERRY<td>
+<td>Berry<td>
+<td>Steam<td>
+<td>Not to be used during pregnancy<td>
+<td>Antiseptic<td>
+<td>Diuretic<td>
+<td>Dermatitis<td>
+<td>Cystitis<td>
+</tr>
+
+<tr>
+<td>SPIKE LAVENDER<td>
+<td>Entire Aerial<td>
+<td>Steam<td>
+<td>Epilepsy<td>
+<td>Analgesic<td>
+<td>Decongestant<td>
+<td>Headache<td>
+<td>Sinusitis<td>
+</tr>

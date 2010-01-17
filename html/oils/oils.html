@@ -1,0 +1,236 @@
+<html>
+<head><title>Essential Oils</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js"></script>
+<script>
+
+$(document).ready(function() {
+
+  // Change class for first column.
+  $("table.alternating tbody tr td:first-child").addClass("first");
+
+  // Change class for even rows.
+  $("table.alternating tbody tr:even").addClass("even");
+
+  // Highlight current row when hovering.
+  $("table.alternating tr").hover(function() {
+    $(this).addClass("over");
+  }, function() {
+    $(this).removeClass("over");
+  });
+});
+
+</script>
+
+<style>
+
+table {
+  border-collapse: collapse;
+}
+
+thead {
+  font-weight: bold;
+  font-size: 16pt;
+  text-transform: uppercase;
+  white-space: nowrap;
+  display: table-header-group;
+  background-color: #EEE;
+} 
+
+thead th {
+  padding: 10px;
+  border: solid black 1px;
+  border-bottom: 3px solid black;
+  border-top: 3px solid black;
+  border-spacing: 0px;
+}
+
+/* even color */
+.even, tbody tr.even td {
+  background-color: rgb(223, 216, 232);
+}
+
+tbody tr td {
+  background-color: red;
+  padding: 10px;
+  border: solid black 1px;
+  border-spacing: 0px;
+}
+
+tbody tr.over td {
+  background-color: pink;
+}
+
+/* Default color */
+tbody tr td {
+  background-color: white;
+}
+
+tr {
+  page-break-inside: avoid;
+}
+
+tbody td.first {
+  font-size: 12pt; color: rgb(0, 112, 192);
+  text-transform: uppercase;
+}
+
+h1 {
+  font-family: Verdana;
+  font-size: 48pt;
+  font-style: underline;
+  font-variant: small-caps;
+  text-decoration: underline;
+  text-align: center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+  <h1>Essential Oils</h1>
+
+  <table class="alternating">
+  <thead>
+    <tr>
+      <th>Essential Oils</th>
+      <th>Part of Plant</th>
+      <th>Distillation</th>
+      <th>Contraindications</th>
+      <th>Properties</th>
+      <th>Indication</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+<tr>
+<td>Bergamot</td>
+<td>Peel</td>
+<td>Expression</td>
+<td>Photo-sensitising</td>
+<td>Anti-viral<br>Anti-Depressant</td>
+<td>Acne<br>Uplifting</td>
+</tr>
+
+<tr>
+<td>Black Pepper</td>
+<td>Fruit/Seeds</td>
+<td>Steam</td>
+<td>Skin Irritant</td>
+<td>Warming<br>Cooling</td>
+<td>Muscular Pain<br>High Fever</td>
+</tr>
+
+<tr>
+<td>Cajeput</td>
+<td>Leaves</td>
+<td>Steam</td>
+<td>Skin Irritant</td>
+<td>Analgesic<br>Antiseptic</td>
+<td>Stomach Pains<br>Colds</td>
+</tr>
+
+<tr>
+<td>Cedarwood</td>
+<td>Wood</td>
+<td>Steam</td>
+<td>Not to be used during pregnancy</td>
+<td>Diuretic<br>Astringent</td>
+<td>Fluid<br>Acne</td>
+
+<tr>
+<td>German Chamomile</td>
+<td>Leaf/Flower</td>
+<td>Steam</td>
+<td></td>
+<td>Febrifuge<br>Anti Inflammatory</td>
+<td>Body temperature<br>Acne</td>
+</tr>
+
+<tr>
+<td>Roman Chamomile</td>
+<td>Leaf/Flower</td>
+<td>Steam</td>
+<td></td>
+<td>Antispasmodic<br>Analgesic</td>
+<td>Cramps<br>Headache</td>
+</tr>
+
+<tr>
+<td>Clary Sage</td>
+<td>Leaf/Flower</td>
+<td>Steam</td>
+<td>Not to be used during pregnancy</td>
+<td>Hypertensive<br>Antispasmodic</td>
+<td>High Blood Pressure<br>Menstrual Cramps</td>
+</tr>
+
+<tr>
+<td>Cypress</td>
+<td>Leaves/Twigs</td>
+<td>Steam</td>
+<td></td>
+<td>Antisudorific<br>Diuretic</td>
+<td>Perspiration<br>Oedema</td>
+</tr>
+
+<tr>
+<td>Fennel Sweet</td>
+<td>Seeds</td>
+<td>Steam</td>
+<td>Not to be used during pregnancy</td>
+<td>Digestive<br>Diuretic</td>
+<td>Nausea<br>Fluid</td>
+</tr>
+
+<tr>
+<td>Frankincense</td>
+<td>Gum or Resin</td>
+<td>Steam</td>
+<td></td>
+<td>Expectorant<br>Anti Inflammatory</td>
+<td>Asthma<br>Skin</td>
+</tr>
+
+<tr>
+<td>Geranium</td>
+<td>Entire Aerial</td>
+<td>Steam</td>
+<td></td>
+<td>Haemostatic<br>Astringent</td>
+<td>Bleeding<br>Oily Skin</td>
+</tr>
+
+<tr>
+<td>Jasmine Absolute</td>
+<td>Flower</td>
+<td>Solvent</td>
+<td>Not to be used during pregnancy</td>
+<td>Antispasmodic<br>Anti depressant</td>
+<td>Menstrual cramps<br>Uplifting</td>
+</tr>
+
+<tr>
+<td>Juniper Berry</td>
+<td>Berry</td>
+<td>Steam</td>
+<td>Not to be used during pregnancy</td>
+<td>Antiseptic<br>Diuretic</td>
+<td>Dermatitis<br>Cystitis</td>
+</tr>
+
+<tr>
+<td>Spike Lavender</td>
+<td>Entire Aerial</td>
+<td>Steam</td>
+<td>Epilepsy</td>
+<td>Analgesic<br>Decongestant</td>
+<td>Headache<br>Sinusitis</td>
+</tr>
+
+  </tbody>
+  </table>
+
+</body>

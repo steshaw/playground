@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head><title>foo</title>
+  <style type="text/css">
+
+body {
+  background-color: black;
+  width: 100%;
+}
+
+#content {
+  background-color: #333;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.wraptocenter {
+display: table-cell;
+text-align: center;
+vertical-align: middle;
+width: 500px; /* please note add px */
+height: 500px; /* please note add px */
+}
+.wraptocenter * {
+vertical-align: middle;
+}
+/*\*//*/
+.wraptocenter {
+display: block;
+}
+.wraptocenter i {
+display: inline-block;
+height: 100%;
+width: 1px;
+}
+/**/
+</style>
+<!--[if IE]><style>
+.wraptocenter i {
+display: inline-block;
+height: 100%;
+}
+</style><![endif]-->
+</head>
+<body>
+  <div id="content">
+    <div class="wraptocenter">
+    <i></i>
+    <span id="photo"><a href="javascript:void(showNext());">
+    <div style="background: red; width: 350px; height: 150px;" />
+    <!--
+    <img id="mainImage" src="yourimage.jpg" alt="" border="0">
+    -->
+    </a></span>
+    </div>
+  </div> 
+</body>
+</html>

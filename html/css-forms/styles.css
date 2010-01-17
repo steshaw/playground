@@ -1,0 +1,89 @@
+
+:focus { 
+  -moz-outline-style: none !important;
+  outline-style: none !important;
+  outline-color: transparent;
+}
+
+h1 {
+  font-variant: small-caps;
+}
+
+/*
+input[type=text]:focus, input[type=password]:focus {
+  border: 0px solid #000;
+}
+*/
+
+/*
+*:focus {
+  outline: none;
+  -moz-outline: none  !important;
+  -moz-outline-offset: 5px         !important;
+  -moz-outline-radius: 5px         !important;
+}
+*/
+
+/*
+input:focus {
+  outline: none;
+  outline-style: none;
+  outline-width: 0;
+  outline-width: 0;
+  outline-style: none;
+}
+*/
+
+body {
+  background: black;
+}
+
+div.content {
+  background-color: #CCC;
+  width: 800px;
+  min-height: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3ex;
+  padding: 3ex;
+  -moz-border-radius: 3ex;
+  -webkit-border-radius: 3ex;
+}
+
+div.inputRounded {
+  height: 25px;
+  /*
+  width: 200px;
+  */
+  display: table-cell;
+  vertical-align: middle;
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #555;
+  -moz-border-radius: 1ex;
+  -webkit-border-radius: 1ex;
+}
+
+div.inputRounded input {
+  background-color: transparent;
+  border: none;
+  color: black;
+  font-size: 75%;
+  padding: 0 10px;
+  text-transform: none;
+  display: inline-block;
+}
+
+p {
+  margin-bottom: 3px;
+  line-height: 25px;
+}
+
+label {
+  float: left;
+  width: 100px;
+  margin-right: 10px;
+  text-align: right;
+  font-weight: bold;
+}

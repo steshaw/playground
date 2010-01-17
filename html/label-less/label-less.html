@@ -1,0 +1,94 @@
+<DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+       <title>Helper Text Test</title>
+       <script type="text/javascript" src="curvycorners.js"></script>
+       <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+       <script type="text/javascript">
+
+$(document).ready(function() {
+
+  $(".helperdiv label").before('<input type="text" disabled="true"/>');
+
+  var helpers = $(".helperinput");
+  var decide = function() {
+    if ($(this).val() == "") {
+      $(this).css("background-color", "transparent");
+    } else {
+      $(this).css("background-color", "white");
+    }
+  };
+  
+  helpers.each(decide);
+//  helpers.keyup(decide);
+  helpers.keydown(decide);
+
+  helpers.focus(function() {
+    if ($(this).val() == "") {
+      $(this).css("background-color", "white");
+    }
+  });
+
+  helpers.blur(function() {
+    if ($(this).val() == "") {
+      $(this).css("background-color", "transparent");
+    }
+  });
+});
+
+       </script>
+       <style type="text/css">
+           body {
+               background-color: black;
+           }
+           .helperdiv {
+               height: 35px;
+               position: relative;
+           }
+           .helperdiv label {
+               color: gray;
+               font-size: 80%;
+               left: 0px;
+               padding: 8px;
+               position: absolute;
+               top: 0px;
+               background-color: transparent;
+           }
+           .helperdiv input {
+               background-color: white;
+               left: 0px;
+               padding: 5px;
+               position: absolute;
+               top: 0px;
+               -moz-border-radius: 15px;
+               -webkit-border-radius: 15px;
+           }
+           .helperdiv .helperinput {
+               background-color: white;
+           }
+       </style>
+   </head>
+   <body>
+       <form action="form_action.asp" method="get">
+
+           <div class="helperdiv">
+<!--
+               <input type="text" disabled="true"/>
+-->
+               <label for="fname">First Name</label>
+               <input class="helperinput" id="fname" type="text" name="fname"/>
+           </div>
+
+           <div class="helperdiv">
+<!--
+               <input type="text" disabled="true"/>
+-->
+               <label for="lname">Last Name</label>
+               <input class="helperinput" id="lname" type="text" name="lname"/>
+           </div>
+
+           <input type="submit" value="Submit" />
+       </form>
+   </body>
+</html>
