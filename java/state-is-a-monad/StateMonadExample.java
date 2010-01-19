@@ -15,7 +15,7 @@ class StateMonadExample {
         public A first() { return a; }
         public B second() { return b; }
         public String toString() {
-          return "(" + a + ", " + b + ")";
+          return "(" + a + ":" + a.getClass().getName() + ", " + b + ":" + b.getClass().getName() + ")";
         }
       };
     }
@@ -53,18 +53,30 @@ class StateMonadExample {
   }
 
   public static void main(String[] args) {
-    State<Integer, String> state0 = new State<Integer, String>() {
-      public Pair<Integer, String> run(Integer s) {
-        return Pairs.pair(s, "Initial");
+    State<Double, String> state0 = new State<Double, String>() {
+      public Pair<Double, String> run(Double s) {
+        return Pairs.pair(s, "9");
       }
     };
-    System.out.println("initial state = " + state0.run(100));
-    State<Integer, String> state1 = States.map(state0, new Function<String, String>() {
-      public String apply(String x) {
-        return x + ".";
+    System.out.println("state0 = " + state0.run(1.0));
+
+    State<Double, Integer> state1 = States.map(state0, new Function<String, Integer>() {
+      public Integer apply(String x) {
+        return Integer.valueOf(x) - 5;
       }
     });
-    System.out.println("state = " + state1.run(100));
+    System.out.println("state1 = " + state1.run(1.0));
+
+    State<Double, String> state2 = States.bind(state1, new Function<Integer, State<Double, String>>() {
+      public State<Double, String> apply(final Integer a) {
+        return new State<Double, String>() {
+          public Pair<Double, String> run(Double s) {
+            return Pairs.pair(s + 0.1, "'" + a.toString() + "'");
+          }
+        };
+      }
+    });
+    System.out.println("state2 = " + state2.run(1.0));
   }
 
 }
