@@ -1,6 +1,6 @@
-/*
- * See http://golang.org/doc/install.html
- */
+//
+// See http://golang.org/doc/install.html
+//
 package main
 
 import "fmt"
