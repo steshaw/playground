@@ -1,0 +1,7 @@
+
+See http://blog.tmorris.net/the-state-monad-for-scala-users/
+See also http://blog.tmorris.net/dear-java-guy-state-is-a-monad/
+
+Tony motivates his introduction of the State monad by looking a tree numbering problem. My first instinct would be to implement this imperatively (TreeNumberImperativeStyle.scala) but that doesn't help understand the state monad :). TreeNumber.scala is the solution solved "long hand" but in a functional style. It's equivalent to Tony's solution but easier for me to understand (I make use of a couple of intermediate vals in the number function).
+
+Got the TreeNumberWithStateMonad.scala version going by lifting the State monad from Scalaz5. I've modified the examples so that they start numbering at the number given (not the number+1).

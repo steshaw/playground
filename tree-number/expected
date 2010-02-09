@@ -1,0 +1,9 @@
+Branch(Branch(Leaf(2),Leaf(6)),Leaf(9))
+Branch(Branch(Leaf((2,10)),Leaf((6,11))),Leaf((9,12)))
+Branch(Branch(Leaf(2),Branch(Leaf(4),Leaf(5))),Leaf(9))
+Branch(Branch(Leaf((2,10)),Branch(Leaf((4,11)),Leaf((5,12)))),Leaf((9,13)))
+
+Branch(Branch(Leaf(2),Leaf(6)),Leaf(9))
+Branch(Branch(Leaf((2,10)),Leaf((6,11))),Leaf((9,12)))
+Branch(Branch(Leaf(2),Branch(Leaf(4),Leaf(5))),Leaf(9))
+Branch(Branch(Leaf((2,10)),Branch(Leaf((4,11)),Leaf((5,12)))),Leaf((9,13)))
