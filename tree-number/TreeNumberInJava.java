@@ -117,14 +117,14 @@ public class TreeNumberInJava {
   }
 
   // XXX: This does not work. Type-check fails in use.
-  static <A, B> F<Tree<A>, B> constant(final B b) {
+  static <A, B> F<? extends Tree<A>, B> constant(final B b) {
     return new F<Tree<A>, B>() {
       public B f(Tree<A> ignore) { return b; };
     };
   }
 
   // XXX: This cannot be used either due to type-check failure.
-  private static <A> F<Tree.Empty<A>, Integer> zeroOnEmpty() {
+  private static <A> F<? extends Tree<A>, Integer> zeroOnEmpty() {
     return new F<Tree.Empty<A>, Integer>() {
       public Integer f(Tree.Empty<A> tree) {
         return 0;
@@ -133,7 +133,7 @@ public class TreeNumberInJava {
   }
 
   // XXX: ditto here :(
-  private static <A> F<Tree.Leaf<A>, Integer> oneOnLeaf() {
+  private static <A> F<? extends Tree<A>, Integer> oneOnLeaf() {
       return new F<Tree.Leaf<A>, Integer>() {
         public Integer f(Tree.Leaf tree) {
           return 1;
@@ -148,6 +148,7 @@ public class TreeNumberInJava {
 //        return 1 + max(depth(n.left), depth(n.right));
 //      }
 //    });
+
     return t.match(new F<Tree.Empty<A>, Integer>() {
       public Integer f(Tree.Empty<A> t) {
           return 0;
@@ -163,8 +164,14 @@ public class TreeNumberInJava {
     });
   }
 
-  public static void println(String s) {
+  static void println(String s) {
     System.out.println(s);
+  }
+  static void print(String s) {
+    System.out.print(s);
+  }
+  static void println() {
+    System.out.println();
   }
 
 /*
@@ -224,10 +231,6 @@ public class TreeNumberInJava {
     System.out.println("state2 = " + state2.run(1.0));
   }
 
-  static void print(String s) {
-    System.out.print(s);
-  }
-
   final static class Unit {
     private Unit() {}
     static Unit value = new Unit();
@@ -258,9 +261,9 @@ public class TreeNumberInJava {
 
   public static void go(Tree<Integer> t) {
     printTree(t);
-    println("");
+    println();
     printTree(number(t, 10).first());
-    println("");
+    println();
   }
 
   public static void main(String[] args) {    
@@ -278,7 +281,7 @@ public class TreeNumberInJava {
     // Since we only have one algorithm, just run the same one twice with a line in between to match the "expected" file.
     go(t1);
     go(t2);
-    println("");
+    println();
 
     go(t1);
     go(t2);
