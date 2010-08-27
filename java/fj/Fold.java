@@ -2,6 +2,8 @@ import fj.*;
 import fj.data.Array;
 import static fj.data.Array.*;
 import static fj.Equal.*;
+import static fj.P.*;
+import static fj.Show.*;
 
 public class Fold {
 
@@ -62,6 +64,9 @@ public class Fold {
 
     println("calculate2(cs) => ", calculate2(cs));
     println("calculate3(cs) => ", calculate3(cs));
+
+    // 4: Use an more interesting Accumulator type in the fold to carry forward y values.
+    println("calculate4(as) => ", calculate4(as));
   }
 
   public static class Data {
@@ -85,10 +90,10 @@ public class Fold {
 
     for (Data d : data) {
       System.out.println("d = " + d);
-      System.out.printf("before x = %f y = %f\n", x, y);
+      System.out.printf("before x = %.1f y = %.1f\n", x, y);
       x *= func1(d.getX() , y);
       y = d.getY();
-      System.out.printf("after x = %f y = %f\n", x, y);
+      System.out.printf("after x = %.1f y = %.1f\n", x, y);
       System.out.println();
     }
 
@@ -105,9 +110,9 @@ public class Fold {
     double result = 1;
     for (Data d : data) {
       System.out.println("d = " + d);
-      System.out.printf("before result = %f\n", result);
+      System.out.printf("before result = %.1f\n", result);
       result *= func1(d.getX() , d.getY());
-      System.out.printf("after result = %f\n", result);
+      System.out.printf("after result = %.1f\n", result);
       System.out.println();
     }
 
@@ -117,11 +122,23 @@ public class Fold {
   private static double calculate3(Array<Data> data) {
     F2<Double, Data, Double> f = new F2<Double, Data, Double>() {
       public Double f(Double acc, Data d) {
-        System.out.printf("acc = %f d=%s\n", acc, d);
+        System.out.printf("acc = %.1f d=%s\n", acc, d);
         return acc * func1(d.getX(), d.getY());
       }
     };
     return data.foldLeft(f, 1.0);
+  }
+
+  private static Show<P2<Double, Double>> p2d2Show = p2Show(doubleShow, doubleShow);
+
+  private static double calculate4(Array<Data> data) {
+    F2<P2<Double, Double>, Data, P2<Double, Double>> f = new F2<P2<Double, Double>, Data, P2<Double, Double>>() {
+      public P2<Double, Double> f(P2<Double, Double> acc, Data d) {
+        System.out.printf("acc = %s d=%s\n", p2d2Show.showS(acc), d);
+        return p(d.getY(), acc._2() * func1(d.getX(), acc._1()));
+      }
+    };
+    return data.foldLeft(f, p(data.get(0).getY(), data.get(0).getX()))._2();
   }
 
   public static void println(Object... args) {
