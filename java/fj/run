@@ -1,0 +1,3 @@
+#!/bin/bash
+
+javac -classpath functionaljava.jar Fold.java && java -cp .:functionaljava.jar Fold
