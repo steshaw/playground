@@ -67,6 +67,9 @@ public class Fold {
 
     // 4: Use an more interesting Accumulator type in the fold to carry forward y values.
     println("calculate4(as) => ", calculate4(as));
+
+    // 5: Runar Bjarnason's version from the FJ mailing list.
+    println("runarBjarnasonCalculate1(as) => ", runarBjarnasonCalculate1(as));
   }
 
   public static class Data {
@@ -139,6 +142,16 @@ public class Fold {
       }
     };
     return data.foldLeft(f, p(data.get(0).getY(), data.get(0).getX()))._2();
+  }
+
+  private static double runarBjarnasonCalculate1(Array<Data> data) {
+    double y = data.get(0).getY();
+    double x = data.get(0).getX();
+    return data.foldLeft(new F2<P2<Double,Double>,Data,P2<Double,Double>>() {
+      public P2<Double,Double> f(P2<Double,Double> p, Data d) {
+        return P.p(p._1() * func1(d.getX(), p._2()), d.getY());
+      }
+    }.curry(), P.p(x,y))._1();
   }
 
   public static void println(Object... args) {

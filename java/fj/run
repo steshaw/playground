@@ -1,3 +1,9 @@
 #!/bin/bash
 
-javac -classpath functionaljava.jar Fold.java && java -cp .:functionaljava.jar Fold
+javac -classpath functionaljava.jar Fold.java 
+status=$?
+echo "javac => $status"
+
+if [[ $status -eq 0 ]]; then
+  java -cp .:functionaljava.jar Fold
+fi
