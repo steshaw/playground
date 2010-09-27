@@ -13,63 +13,68 @@
 
 import std.stdio;
 
-void main(string[] args) {
+void main(string[] origArgs) {
   writeln("Hello World, Reloaded");
 
-  // auto type inference and built-in foreach
-  foreach (argc, argv; args) {
-    // Object Oriented Programming
-    auto cl = new CmdLin(argc, argv);
-    // Improved typesafe printf
-    writeln(cl.argnum, cl.suffix, " arg: ", cl.argv);
+  auto progname = origArgs[0];
+  auto args = origArgs[1..origArgs.length]; // Slices are inclusive on the left and exclusive on the right.
+
+  // Type inference + built-in foreach.
+  foreach (argI, arg; args) {
+    auto cl = new CmdLin(argI, arg);
+    writefln("%d%s arg: %s", cl.argnum, cl.suffix, cl.arg);
     // Automatic or explicit memory management
     delete cl;
   }
 
-  // Nested structs and classes
+  // Nested structs and classes.
   struct specs {
-    int count, allocated; // automatically initialized
+    int count, allocated;
   }
 
-  // Nested functions can refer to outer variables like args
-  specs argspecs() {
-    specs* s = new specs;
-    // no need for '->'
-    s.count = args.length;             // get length of array with .length
-    s.allocated = typeof(args).sizeof; // built-in native type properties
-    foreach (argv; args)
-      s.allocated += argv.length * typeof(argv[0]).sizeof;
-    return *s;
+  specs lastSpecs;
+
+  // Nested functions can read/mutate captured/outer-scope variables.
+  /*specs*/void argspecs(string[] args) {
+    lastSpecs = specs(args.length, typeof(args).sizeof);
+    foreach (arg; args) {
+      lastSpecs.allocated += arg.length * typeof(arg[0]).sizeof;
+    }
+    //return s;
   }
 
-  // built-in string and common string operations
-  writefln("argc = %d, " ~ "allocated = %d",
-  argspecs().count, argspecs().allocated);
+  writefln("specs.sizeof = %d", specs.sizeof);
+  {
+    /*auto s1 =*/ argspecs(origArgs);
+    writefln("origArgs: numargs = %d, " ~ "allocated = %d", lastSpecs.count, lastSpecs.allocated);
+  }
+  {
+    /*auto s2 =*/ argspecs(args);
+    writefln("    args: numargs = %d, " ~ "allocated = %d", lastSpecs.count, lastSpecs.allocated);
+  }
 }
 
 class CmdLin {
-  private int _argc;
-  private string _argv;
+  private int _argI;
+  private string _arg;
 
-public:
-  // constructor
-  this(int argc, string argv) {
-    _argc = argc;
-    _argv = argv;
+  public this(int argI, string arg) {
+    _argI = argI;
+    _arg = arg;
   }
 
-  int argnum() {
-    return _argc + 1;
+  public int argnum() {
+    return _argI + 1;
   }
 
-  string argv() {
-    return _argv;
+  public string arg() {
+    return _arg;
   }
 
-  string suffix() {
+  public string suffix() {
     string suffix = "th";
-    if (_argc >= 20) _argc %= 10;
-    switch (_argc % 20) {
+    if (_argI >= 20) _argI %= 10;
+    switch (_argI % 20) {
       case 0:
         suffix = "st";
         break;
