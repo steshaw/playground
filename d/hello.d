@@ -68,7 +68,8 @@ public:
 
   string suffix() {
     string suffix = "th";
-    switch (_argc) {
+    if (_argc >= 20) _argc %= 10;
+    switch (_argc % 20) {
       case 0:
         suffix = "st";
         break;
