@@ -1,0 +1,5 @@
+class MAIN is
+  main is
+    #OUT + "Hello world of Sather!\n"
+  end
+end
