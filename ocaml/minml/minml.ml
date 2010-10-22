@@ -8,16 +8,16 @@ type expr =
 type defn =
   | LetRec of string * string * expr
 
-open Camlp4.PreCast
+open Camlp4.PreCast;;
 
 let expr = Gram.Entry.mk "expr"
 let defn = Gram.Entry.mk "defn"
-let prog = Gram.Entry.mk "prog"
+let prog = Gram.Entry.mk "defn"
 
 EXTEND Gram
   expr:
   [ [ "if"; p = expr; "then"; t = expr; "else"; f = expr ->
-  If(p, t, f) ]
+	If(p, t, f) ]
   | [ e1 = expr; "<="; e2 = expr -> BinOp(`Leq, e1, e2) ]
   | [ e1 = expr; "+"; e2 = expr -> BinOp(`Add, e1, e2)
     | e1 = expr; "-"; e2 = expr -> BinOp(`Sub, e1, e2) ]
@@ -27,7 +27,7 @@ EXTEND Gram
     | "("; e = expr; ")" -> e ] ];
   defn:
   [ [ "let"; "rec"; f = LIDENT; x = LIDENT; "="; body = expr ->
-  LetRec(f, x, body) ] ];
+	LetRec(f, x, body) ] ];
   prog:
   [ [ defns = LIST0 defn; "do"; run = expr -> defns, run ] ];
 END
@@ -35,14 +35,12 @@ END
 open Printf
 
 let program, run =
-  try Gram.parse prog Loc.ghost (Stream.of_channel stdin) with
+  try Gram.parse prog Loc.ghost (Stream.of_channel (open_in "fib.ml")) with
   | Loc.Exc_located(loc, e) ->
       printf "%s at line %d\n" (Printexc.to_string e) (Loc.start_line loc);
       exit 1
 
 open Llvm
-
-let ty = i64_type
 
 let ( |> ) x f = f x
 
@@ -62,15 +60,15 @@ let cont (v, state) dest_blk =
   v, state
 
 let rec expr state = function
-  | Int n -> const_int ty n, state
+  | Int n -> const_int i32_type n, state
   | Var x -> find state x, state
   | BinOp(op, f, g) ->
       let f, state = expr state f in
       let g, state = expr state g in
       let build, name = match op with
-  | `Add -> build_add, "add"
-  | `Sub -> build_sub, "sub"
-  | `Leq -> build_icmp Icmp_sle, "leq" in
+	| `Add -> build_add, "add"
+	| `Sub -> build_sub, "sub"
+	| `Leq -> build_icmp Icmp_sle, "leq" in
       build f g name (bb state), state
   | If(p, t, f) ->
       let t_blk = new_block state "pass" in
@@ -80,7 +78,8 @@ let rec expr state = function
       build_cond_br cond t_blk f_blk (bb state) |> ignore;
       let t, state = cont (expr { state with blk = t_blk } t) k_blk in
       let f, state = cont (expr { state with blk = f_blk } f) k_blk in
-      build_phi [t, t_blk; f, f_blk] "join" (bb state), state
+      let phi = build_phi [t, t_blk; f, f_blk] "join" (bb state) in
+      phi, state
   | Apply(f, arg) ->
       let f, state = expr state f in
       let arg, state = expr state arg in
@@ -88,15 +87,15 @@ let rec expr state = function
 
 let defn m vars = function
   | LetRec(f, arg, body) ->
-      let ty = function_type ty [| ty |] in
+      let ty = function_type i32_type [| i32_type |] in
       let fn = define_function f ty m in
       let vars' = (arg, param fn 0) :: (f, fn) :: vars in
       let body, state =
-  expr { fn = fn; blk = entry_block fn; vars = vars' } body in
+	expr { fn = fn; blk = entry_block fn; vars = vars' } body in
       build_ret body (bb state) |> ignore;
       (f, fn) :: vars
 
-let int n = const_int ty n
+let int n = const_int i32_type n
 
 let main filename =
   let m = create_module filename in
@@ -104,9 +103,9 @@ let main filename =
   let string = pointer_type i8_type in
 
   let print =
-    declare_function "printf" (var_arg_function_type ty [|string|]) m in
+    declare_function "printf" (var_arg_function_type i32_type [|string|]) m in
 
-  let main = define_function "main" (function_type ty [| |]) m in
+  let main = define_function "main" (function_type i32_type [| |]) m in
   let blk = entry_block main in
   let bb = builder_at_end blk in
 

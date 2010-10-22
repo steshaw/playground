@@ -1,0 +1,1 @@
+do (if 1 <= 2 then fib else fib) 40

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+./minml run.bc &&
+  llc -f run.bc -o run.s &&
+  gcc run.s -o run &&
+  ./run
