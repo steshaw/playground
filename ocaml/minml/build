@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Jon's build instructions:
+
+# $ ocamlc -g -dtypes -pp camlp4oof -I +camlp4 dynlink.cma camlp4lib.cma -cc g++ llvm.cma llvm_bitwriter.cma minml.ml -o minml
+# $ ./minml run.bc <fib.ml
+# $ llc -f run.bc -o run.s
+# $ gcc run.s -o run
+# $ ./run
+# 102334155
+
+# Doesn't work with ocaml 3.11.2 ... doesn't have camlp4oof. 
+# Tried camlp4o and camlp4r but no luck.
+ocamlc -g -dtypes -pp camlp4o -I +camp4 dynlink.cma camlp4lib.cma -cc g++ llvm.cma llvm_bitwriter.cma minml.ml -o minml
