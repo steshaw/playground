@@ -20,6 +20,8 @@ elif [[ $1 = 'metahelloworld' ]]; then
     ./helloworld
 elif [[ $1 = 'all' ]]; then
   ./build hello && ./build metahelloworld
+elif [[ $1 = 'clean' ]]; then
+  rm -f hello helloworld metahelloworld *.o *.cmx *.bc *.s *.o *.ll
 else
   echo "usage: $0 hello|metahelloworld|all" >&2
 fi
