@@ -1,4 +1,3 @@
-open Printf
 open Llvm
 
 let main filename =
@@ -6,8 +5,7 @@ let main filename =
    let m = create_module ctx filename in
 
    (* @greeting = global [14 x i8] c"Hello, world!\00" *)
-   let greeting =
-     define_global "greeting" (const_string ctx "Hello, world!\000") m in
+   let greeting = define_global "greeting" (const_stringz ctx "Hello, world!") m in
 
    (* declare i32 @puts(i8* ) *)
    let puts =
@@ -34,4 +32,4 @@ let main filename =
 
 let () = match Sys.argv with
   | [|_; filename|] -> main filename
-  | _ -> main "a.out"
+  | _ -> print_string "usage: hello output-filename.bc\n"

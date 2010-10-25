@@ -1,14 +1,11 @@
 (*
  * From: Gordon Henriksen gordonhenriksen at mac.com
- * http://lists.cs.uiuc.edu/pipermail/llvmdev/2007-October/010996.html
+ *   http://lists.cs.uiuc.edu/pipermail/llvmdev/2007-October/010996.html
  *
- * Not currently compiling against llvm-2.8
+ * Updated to work with LLVM 2.8.
  *)
 
-(* metahelloworld.ml *)
-
 open Llvm
-open Llvm_bitwriter
 
 let _ =
    let filename = Sys.argv.(1) in
@@ -16,12 +13,7 @@ let _ =
    let m = create_module ctx filename in
 
    (* @greeting = global [14 x i8] c"Hello, world!\00" *)
-(*
-   let greeting = define_global "greeting" (make_string_constant
-                                              "Hello, world!" true) m in
-*)
-   let greeting =
-     define_global "greeting" (const_stringz ctx "Hello, world!\000") m in
+   let greeting = define_global "greeting" (const_stringz ctx "Hello, world!") m in
 
    (* declare i32 @puts(i8) *)
    let puts = declare_function "puts" (function_type (i32_type ctx) [|
@@ -44,5 +36,5 @@ let _ =
    ignore (build_ret (const_null (i32_type ctx)) at_entry);
 
    (* write the module to a file *)
-   if not (write_bitcode_file m filename) then exit 1;
+   if not (Llvm_bitwriter.write_bitcode_file m filename) then exit 1;
    dispose_module m

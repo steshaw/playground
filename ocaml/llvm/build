@@ -5,11 +5,11 @@ OPTS="-cc g++ -I +llvm llvm.cmxa llvm_bitwriter.cmxa"
 if [[ $1 = 'hello' ]]; then
   echo building hello...
   ocamlopt $OPTS hello.ml -o hello &&
-    ./hello hello.bc &&
-    llvm-dis hello.bc &&
-    llc hello.bc &&
-    gcc -Wall -o hello hello.s &&
-    ./hello
+    ./hello hello1.bc &&
+    llvm-dis hello1.bc &&
+    llc hello1.bc &&
+    gcc -Wall -o hello1 hello1.s &&
+    ./hello1
 elif [[ $1 = 'metahelloworld' ]]; then
   echo building metahelloworld...
   ocamlopt $OPTS metahelloworld.ml -o metahelloworld &&
