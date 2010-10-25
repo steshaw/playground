@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ocamlopt -I +llvm llvm.cmxa hello.ml -o hello
+exit 0
+
 ocamlopt -cc g++ llvm.cmxa llvm_bitwriter.cmxa -o metahelloworld metahelloworld.ml
 ./metahelloworld helloworld.bc
 llvm-dis < helloworld.bc
