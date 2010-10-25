@@ -7,12 +7,13 @@ let main filename =
    (* @greeting = global [14 x i8] c"Hello, world!\00" *)
    let greeting = define_global "greeting" (const_stringz ctx "Hello, world!") m in
 
-   (* declare i32 @puts(i8* ) *)
+   (* declare i32 @puts( i8* ) *)
    let puts =
      declare_function "puts"
        (function_type (i32_type ctx) [|pointer_type (i8_type ctx)|]) m in
 
-   (* define i32 @main() { entry: *)
+   (* define i32 @main() {
+      entry:               *)
    let main = define_function "main" (function_type (i32_type ctx) [| |]) m in
    let at_entry = builder_at_end ctx (entry_block main) in
 
@@ -27,7 +28,9 @@ let main filename =
    ignore (build_ret (const_null (i32_type ctx)) at_entry);
 
    (* write the module to a file *)
-   if not (Llvm_bitwriter.write_bitcode_file m filename) then exit 1;
+   if not (Llvm_bitwriter.write_bitcode_file m filename) then (
+     print_string "Cannot write "; print_string filename; print_string "\n"; exit 1
+   );
    dispose_module m
 
 let () = match Sys.argv with
