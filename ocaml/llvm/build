@@ -1,11 +1,25 @@
 #!/bin/bash
 
-ocamlopt -I +llvm llvm.cmxa hello.ml -o hello
-exit 0
+OPTS="-cc g++ -I +llvm llvm.cmxa llvm_bitwriter.cmxa"
 
-ocamlopt -cc g++ llvm.cmxa llvm_bitwriter.cmxa -o metahelloworld metahelloworld.ml
-./metahelloworld helloworld.bc
-llvm-dis < helloworld.bc
-llc -o helloworld.s helloworld.bc
-gcc -o helloworld helloworld.s
-./helloworld
+if [[ $1 = 'hello' ]]; then
+  echo building hello...
+  ocamlopt $OPTS hello.ml -o hello &&
+    ./hello hello.bc &&
+    llvm-dis hello.bc &&
+    llc hello.bc &&
+    gcc -Wall -o hello hello.s &&
+    ./hello
+elif [[ $1 = 'metahelloworld' ]]; then
+  echo building metahelloworld...
+  ocamlopt $OPTS metahelloworld.ml -o metahelloworld &&
+    ./metahelloworld helloworld.bc &&
+    llvm-dis helloworld.bc &&
+    llc helloworld.bc &&
+    gcc -o helloworld helloworld.s &&
+    ./helloworld
+elif [[ $1 = 'all' ]]; then
+  ./build hello && ./build metahelloworld
+else
+  echo "usage: $0 hello|metahelloworld|all" >&2
+fi
