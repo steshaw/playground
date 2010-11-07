@@ -1,8 +1,8 @@
-(*These are the examples of Tips for Computer Scientists on Standard ML (Revised), by Mads Tofte, April 5, 2008 *)
+(* These are the examples of Tips for Computer Scientists on Standard ML (Revised), by Mads Tofte, April 5, 2008 *)
 
 (* The next two lines are specific to Moscow ML. Remove them if you use another implementation of Standard ML *)
-load "Int";
-load "Real";
+(* load "Int"; *)
+(* load "Real"; *)
 
 (* example 1.1 *)
 
