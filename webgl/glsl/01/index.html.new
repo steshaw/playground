@@ -1,0 +1,51 @@
+<!DOCTYPE HTML> 
+<html lang="en"> 
+  <head> 
+    <title>WebGL/GLSL Sandbox - Test 01</title> 
+    <meta charset="utf-8"> 
+    <style type="text/css"> 
+      body {
+        background-color: #000000;
+        margin: 0px;
+        overflow: hidden;
+      }
+ 
+      #info {
+        position: absolute;
+        top: 0px;
+ 
+        color: #ffffff;
+        font-family: Monospace;
+        font-size: 14px;
+        font-weight: bold;
+        text-shadow: rgba(0, 0, 0, 0.75) 0px 1px 2px;
+      }
+    </style> 
+  </head> 
+  <body> 
+ 
+    <div id="effect"></div>
+    <div id="info"></div>
+ 
+    <script id="vs" type="x-shader/x-vertex">
+      attribute vec3 position;
+ 
+      void main() {
+        gl_Position = vec4(position, 1.0);
+      }
+    </script>
+ 
+    <script id="fs" type="x-shader/x-fragment">
+      uniform float time;
+      uniform vec2 resolution;
+ 
+      void main(void) {
+        vec3 rgb = vec3(abs(sin(time / 5.0)), 0.0, 0.0);
+        gl_FragColor = vec4(rgb, 1.0);
+      }
+    </script>
+ 
+    <script type="text/javascript" src="glsl.js"> </script> 
+ 
+  </body> 
+</html>
