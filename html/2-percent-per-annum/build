@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ghc --make gendata &&
+  ./gendata >data.txt
