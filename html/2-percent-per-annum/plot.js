@@ -9,8 +9,16 @@ function onLoad() {
       dataSource: new Timeplot.ColumnSource(eventSource, 1),
       valueGeometry: new Timeplot.DefaultValueGeometry({
         gridColor: "#000000",
-        axisLabelsPlacement: "left"
-      })
+        axisLabelsPlacement: "left",
+        min: 99
+      }),
+      timeGeometry: new Timeplot.DefaultTimeGeometry({
+        gridColor: "#000000",
+        axisLabelsPlacement: "top"
+      }),
+      lineColor: "#ff0000",
+      fillColor: "#cc8080",
+      showValues: true
     })
   ];
 
