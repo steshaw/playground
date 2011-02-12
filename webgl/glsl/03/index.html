@@ -1,207 +1,59 @@
 <!DOCTYPE HTML>
 <html lang="en">
-	<head>
-		<title>WebGL/GLSL Sandbox - Test 03</title>
-		<meta charset="utf-8">
-		<style type="text/css">
-			body {
-				background-color: #000000;
-				margin: 0px;
-				overflow: hidden;
-			}
-
-			#info {
-				position: absolute;
-				top: 0px;
-
-				color: #ffffff;
-				font-family: Monospace;
-				font-size: 14px;
-				font-weight: bold;
-				text-shadow: rgba( 0, 0, 0, 0.75 ) 0px 1px 2px;
-			}
-
-		</style>
-	</head>
-	<body>
-
-		<div id="effect"></div>
-		<div id="info"></div>
-
-		<script id="vs" type="x-shader/x-vertex">
-
-			attribute vec3 position;
-
-			void main() {
-
-				gl_Position = vec4( position, 1.0 );
-
-			}
-
-		</script>
-
-		<script id="fs" type="x-shader/x-fragment">
-
-			uniform float time;
-			uniform vec2 resolution;
-
-			void main( void ) {
-
-				vec2 position = gl_FragCoord.xy / resolution.xy;
-
-				float color = 0.0;
-				color += sin( position.x * cos( time / 15.0 ) * 80.0 ) + cos( position.y * cos( time / 15.0 ) * 10.0 );
-				color += sin( position.y * sin( time / 10.0 ) * 40.0 ) + cos( position.x * sin( time / 25.0 ) * 40.0 );
-				color += sin( position.x * sin( time / 5.0 ) * 10.0 ) + sin( position.y * sin( time / 35.0 ) * 80.0 );
-				color *= sin( time / 10.0 ) * 0.5;
-
-				gl_FragColor = vec4( vec3( color, color * 0.5, sin( color + time / 3.0 ) * 0.75 ), 1.0 );
-
-			}
-
-		</script>
-
-		<script type="text/javascript">
-
-			var effectDiv, sourceDiv, canvas, gl, buffer, vertex_shader, fragment_shader, currentProgram,
-			vertex_position, parameters = { start_time: new Date().getTime(), time: 0, screenWidth: 0, screenHeight: 0 };
-
-			init();
-			setInterval( loop, 1000 / 60 );
-
-			function init() {
-
-				vertex_shader = document.getElementById( 'vs' ).textContent;
-				fragment_shader = document.getElementById( 'fs' ).textContent;
-
-				effectDiv = document.getElementById( 'effect' );
-				sourceDiv = document.getElementById( 'info' );
-				sourceDiv.innerHTML = fragment_shader.replace(/\n/gi, "<br />").replace(/\t\t/gi, "&nbsp;&nbsp;&nbsp;&nbsp;");
-
-				canvas = document.createElement( 'canvas' );
-				effectDiv.appendChild( canvas );
-
-				// Initialise WebGL
-
-				try {
-
-					gl = canvas.getContext( 'experimental-webgl' );
-
-				} catch( error ) { }
-
-				if ( !gl ) {
-
-					alert("WebGL not supported");
-					throw "cannot create webgl context";
-
-				}
-
-				// Create Vertex buffer (2 triangles)
-
-				buffer = gl.createBuffer();
-				gl.bindBuffer( gl.ARRAY_BUFFER, buffer );
-				gl.bufferData( gl.ARRAY_BUFFER, new Float32Array( [ - 1.0, - 1.0, 1.0, - 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0 ] ), gl.STATIC_DRAW );
-
-				// Create Program
-
-				currentProgram = createProgram( vertex_shader, fragment_shader );
-
-				onWindowResize();
-				window.addEventListener( 'resize', onWindowResize, false );
-
-			}
-
-			function createProgram( vertex, fragment ) {
-
-				var program = gl.createProgram();
-
-				var vs = createShader( vertex, gl.VERTEX_SHADER );
-				var fs = createShader( '#ifdef GL_ES\nprecision highp float;\n#endif\n\n' + fragment, gl.FRAGMENT_SHADER );
-
-				if ( vs == null || fs == null ) return null;
-
-				gl.attachShader( program, vs );
-				gl.attachShader( program, fs );
-
-				gl.deleteShader( vs );
-				gl.deleteShader( fs );
-
-				gl.linkProgram( program );
-
-				if ( !gl.getProgramParameter( program, gl.LINK_STATUS ) ) {
-
-					alert( "ERROR:\n" +
-					"VALIDATE_STATUS: " + gl.getProgramParameter( program, gl.VALIDATE_STATUS ) + "\n" +
-					"ERROR: " + gl.getError() + "\n\n" +
-					"- Vertex Shader -\n" + vertex + "\n\n" +
-					"- Fragment Shader -\n" + fragment );
-
-					return null;
-
-				}
-
-				return program;
-
-			}
-
-			function createShader( src, type ) {
-
-				var shader = gl.createShader( type );
-
-				gl.shaderSource( shader, src );
-				gl.compileShader( shader );
-
-				if ( !gl.getShaderParameter( shader, gl.COMPILE_STATUS ) ) {
-
-					alert( ( type == gl.VERTEX_SHADER ? "VERTEX" : "FRAGMENT" ) + " SHADER:\n" + gl.getShaderInfoLog( shader ) );
-					return null;
-
-				}
-
-				return shader;
-
-			}
-
-			function onWindowResize( event ) {
-
-				canvas.width = window.innerWidth;
-				canvas.height = window.innerHeight;
-
-				parameters.screenWidth = canvas.width;
-				parameters.screenHeight = canvas.height;
-
-				gl.viewport( 0, 0, canvas.width, canvas.height );
-
-			}
-
-			function loop() {
-
-				if ( !currentProgram ) return;
-
-				parameters.time = new Date().getTime() - parameters.start_time;
-
-				gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
-
-				// Load program into GPU
-
-				gl.useProgram( currentProgram );
-
-				// Set values to program variables
-
-				gl.uniform1f( gl.getUniformLocation( currentProgram, 'time' ), parameters.time / 1000 );
-				gl.uniform2f( gl.getUniformLocation( currentProgram, 'resolution' ), parameters.screenWidth, parameters.screenHeight );
-
-				// Render geometry
-
-				gl.bindBuffer( gl.ARRAY_BUFFER, buffer );
-				gl.vertexAttribPointer( vertex_position, 2, gl.FLOAT, false, 0, 0 );
-				gl.enableVertexAttribArray( vertex_position );
-				gl.drawArrays( gl.TRIANGLES, 0, 6 );
-				gl.disableVertexAttribArray( vertex_position );
-
-			}
-
-		</script>
-
-	</body>
+  <head>
+    <title>WebGL/GLSL Sandbox - Test 03</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+      body {
+        background-color: #000000;
+        margin: 0px;
+        overflow: hidden;
+      }
+
+      #info {
+        position: absolute;
+        top: 0px;
+
+        color: #ffffff;
+        font-family: Monospace;
+        font-size: 14px;
+        font-weight: bold;
+        text-shadow: rgba( 0, 0, 0, 0.75 ) 0px 1px 2px;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <div id="effect"></div>
+    <div id="info"></div>
+
+    <script id="vs" type="x-shader/x-vertex">
+      attribute vec3 position;
+
+      void main() {
+        gl_Position = vec4(position, 1.0);
+      }
+    </script>
+
+    <script id="fs" type="x-shader/x-fragment">
+      uniform float time;
+      uniform vec2 resolution;
+
+      void main(void) {
+        vec2 position = gl_FragCoord.xy / resolution.xy;
+
+        float color = 0.0;
+        color += sin(position.x * cos(time / 15.0) * 80.0) + cos(position.y * cos(time / 15.0) * 10.0);
+        color += sin(position.y * sin(time / 10.0) * 40.0) + cos(position.x * sin(time / 25.0) * 40.0);
+        color += sin(position.x * sin(time / 5.0) * 10.0) + sin(position.y * sin(time / 35.0) * 80.0);
+        color *= sin(time / 10.0) * 0.5;
+
+        gl_FragColor = vec4(vec3(color, color * 0.5, sin(color + time / 3.0) * 0.75), 1.0);
+      }
+    </script>
+
+    <script type="text/javascript" src="glsl.js"> </script>
+
+  </body>
 </html>
