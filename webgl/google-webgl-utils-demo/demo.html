@@ -1,0 +1,19 @@
+<html>
+<body>
+<script type="text/javascript" src="./webgl-utils.js"></script>
+<script>
+  function init() {
+    canvas = document.getElementById("c");
+    gl = WebGLUtils.setupWebGL(canvas);
+    if (!gl) {
+      return;
+    }
+    var numTexturesAvailableInVertexShader = gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+    alert(numTexturesAvailableInVertexShader);
+    console.log(numTexturesAvailableInVertexShader);
+  }
+  window.onload = init;
+</script>
+<canvas id="c"></canvas>
+</body>
+</html>
