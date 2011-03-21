@@ -1,0 +1,26 @@
+
+\comment See http://www.cs.wright.edu/~jslater/mac-tex/mac-tex-intro/mactexintro.html
+
+\begin{lstlisting}  
+\documentclass{article}  
+\author{me}  
+\date{\today}  
+\title{My First Document}  
+ 
+\begin{document}  
+\maketitle  
+\section{My first section}  
+     Now I’m up and running, see equation (\ref{eqn:random}).  
+     \begin{equation}\label{eqn:random}  
+          \alpha^{\beta}=\frac{\sqrt{\int_{0}^{\infty}x^2 dx}}{\beta}  
+     \end{equation}  
+     A paragraph  
+ 
+     Another paragraph.  
+     Still the same paragraph. In the formatted document, this paragraph  
+     will not have a line break after the first sentence.  
+     \subsection{In more detail}\label{sec:subsectionmoredetail}  
+          Subsection text. The indents don’t have to be here,  
+          but they help you see the document structure.  
+\end{document}  
+\end{lstlisting}  
