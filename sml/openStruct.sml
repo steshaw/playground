@@ -1,11 +1,9 @@
-(* 
- * Motivated by http://bitsquid.blogspot.com/2011/02/some-systems-need-to-manipulate-objects.html 
- *
+(*
+  Motivated by http://bitsquid.blogspot.com/2011/02/some-systems-need-to-manipulate-objects.html 
 *)
 
 datatype openStruct 
-  = Null 
-  | Bool of bool
+  = Bool of bool
   | Int of int
   | Float of real
   | String of string
@@ -13,7 +11,3 @@ datatype openStruct
   | Dictionary of (string * openStruct) list
   | Vector3 of {x: real, y: real, z: real}
   | Quaternion of {x: real, y: real, z: real, w: real}
-
-(*
-type namedPair = string * openStruct
-*)
