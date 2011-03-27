@@ -11,3 +11,5 @@ datatype openStruct
   | Dictionary of (string * openStruct) list
   | Vector3 of {x: real, y: real, z: real}
   | Quaternion of {x: real, y: real, z: real, w: real}
+
+fun addFour (Float f) = Float (f + 4.0)
