@@ -23,7 +23,7 @@ class ExpFactory {
     LitFixed(int v) { super(v); }
   }
 
-  public static ExpFixed newLit(int v) {
+  public ExpFixed newLit(int v) {
     return new LitFixed(v);
   }
 
@@ -31,7 +31,7 @@ class ExpFactory {
     AddFixed(ExpFixed e1, ExpFixed e2) { super(e1, e2); }
   }
 
-  public static ExpFixed newAdd(ExpFixed left, ExpFixed right) {
+  public ExpFixed newAdd(ExpFixed left, ExpFixed right) {
     return new AddFixed(left, right);
   }
 }

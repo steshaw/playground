@@ -16,14 +16,14 @@ class EvalAdd<T extends EvalExp<T>> extends Add<T> implements EvalExp<T> {
 interface EvalExpFixed extends EvalExp<EvalExpFixed> {}
 
 class EvalExpFactory {
-  public static EvalExpFixed newLit(int v) {
+  public EvalExpFixed newLit(int v) {
     class LitFixed extends EvalLit<EvalExpFixed> implements EvalExpFixed {
       LitFixed(int v) { super(v); }
     }
     return new LitFixed(v);
   }
 
-  public static EvalExpFixed newAdd(EvalExpFixed left, EvalExpFixed right) {
+  public EvalExpFixed newAdd(EvalExpFixed left, EvalExpFixed right) {
     class AddFixed extends EvalAdd<EvalExpFixed> implements EvalExpFixed {
       AddFixed(EvalExpFixed e1, EvalExpFixed e2) { super(e1, e2); }
     }

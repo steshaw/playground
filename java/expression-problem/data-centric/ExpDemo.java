@@ -1,24 +1,34 @@
 public class ExpDemo {
-  public static void original() {
-    ExpFixed lit1 = ExpFactory.newLit(2);
-    ExpFixed lit2 = ExpFactory.newLit(3);
-    ExpFixed e = ExpFactory.newAdd(lit1, lit2);
+
+  public static ExpFixed buildOriginal(ExpFactory factory) {
+    ExpFixed lit1 = factory.newLit(2);
+    ExpFixed lit2 = factory.newLit(3);
+    return factory.newAdd(lit1, lit2);
+  }
+
+  public static void original(ExpFactory factory) {
+    ExpFixed e = buildOriginal(factory);
     e.print();
     System.out.println();
   }
-  public static void next() {
-    ExpFixed lit1 = ExpFactory.newLit(1);
-    ExpFixed lit2 = ExpFactory.newLit(2);
-    ExpFixed lit3 = ExpFactory.newLit(3);
-    ExpFixed e1 = ExpFactory.newAdd(lit1, lit2);
-    ExpFixed e2 = ExpFactory.newAdd(e1, lit3);
-    e1.print();
-    System.out.println();
+
+  public static void next(ExpFactory factory) {
+    ExpFixed e2 = buildNext(factory);
     e2.print();
     System.out.println();
   }
+
+  private static ExpFixed buildNext(ExpFactory factory) {
+    ExpFixed lit1 = factory.newLit(1);
+    ExpFixed lit2 = factory.newLit(2);
+    ExpFixed lit3 = factory.newLit(3);
+    ExpFixed e1 = factory.newAdd(lit1, lit2);
+    return factory.newAdd(e1, lit3);
+  }
+
   public static void main(String[] args) {
-    original();
-    next();
+    ExpFactory factory = new ExpFactory();
+    original(factory);
+    next(factory);
   }
 }
