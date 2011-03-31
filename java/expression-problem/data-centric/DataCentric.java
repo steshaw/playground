@@ -1,7 +1,10 @@
 public class DataCentric {
-  public static void main(String[] args) {
-    Exp e = new Add(new Lit(2),new Lit(3));
+  static <T extends Exp<T>> void fred() {
+    Exp<T> e = new Add<T>(new Lit(2),new Lit(3));
     e.print();
     System.out.println();
+  }
+  public static void main(String[] args) {
+    fred();
   }
 }
