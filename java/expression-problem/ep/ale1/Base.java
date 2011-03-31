@@ -1,19 +1,19 @@
 package ep.ale1;
 
-interface Exp<C extends Exp<C>> { 
-  void print(); 
-} 
+interface Exp<C extends Exp<C>> {
+  void print();
+}
 
-class Lit<C extends Exp<C>> implements Exp<C> { 
-  public int value; 
+class Lit<C extends Exp<C>> implements Exp<C> {
+  public int value;
   Lit(int v) { value = v; }
-  public void print() { System.out.print(value); } 
-} 
+  public void print() { System.out.print(value); }
+}
 
-class Add<C extends Exp<C>> implements Exp<C> { 
-  public C left, right; 
+class Add<C extends Exp<C>> implements Exp<C> {
+  public C left, right;
   Add(C l, C r) { left = l; right = r; }
-  public void print() { left.print(); System.out.print('+'); right.print(); } 
+  public void print() { left.print(); System.out.print('+'); right.print(); }
 }
 
 interface AleFactory<C extends Exp<C>> {
@@ -29,13 +29,13 @@ class PrintFactory implements AleFactory<ExpF> {
       LitF(int v) { super(v); }
     }
     return new LitF(value);
-  }  
+  }
   public ExpF makeAdd(ExpF left, ExpF right) {
     class AddF extends Add<ExpF> implements ExpF {
       AddF(ExpF l, ExpF r) { super(l,r); }
     }
     return new AddF(left,right);
-  }  
+  }
 }
 
 public class Base {

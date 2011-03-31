@@ -3,7 +3,7 @@ package ep.ale1;
 class Neg<C extends EvalExp<C>> implements EvalExp<C> {
   C exp;
   Neg(C e) { exp = e; }
-  public void print() { 
+  public void print() {
     System.out.print("-("); exp.print(); System.out.print(")");
   }
   public int eval() { return -exp.eval(); }
@@ -22,10 +22,10 @@ class NaleEvalFactory extends EvalFactory implements NaleFactory<EvalExpF> {
   }
 }
 
-public class Ext2 extends Ext {
+public class Ext2 {
   public static void main(String[] args) {
     NaleEvalFactory factory = new NaleEvalFactory();
-    EvalExpF exp = factory.makeNeg(build(factory));
-    show(exp); System.out.println(" = " + exp.eval());
+    EvalExpF exp = factory.makeNeg(Base.build(factory));
+    Base.show(exp); System.out.println(" = " + exp.eval());
   }
 }
