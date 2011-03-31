@@ -18,17 +18,20 @@ class Add<T extends Exp<T>> implements Exp<T> {
 interface ExpFixed extends Exp<ExpFixed> {}
 
 class ExpFactory {
+
+  static class LitFixed extends Lit<ExpFixed> implements ExpFixed {
+    LitFixed(int v) { super(v); }
+  }
+
   public static ExpFixed newLit(int v) {
-    class LitFixed extends Lit<ExpFixed> implements ExpFixed {
-      LitFixed(int v) { super(v); }
-    }
     return new LitFixed(v);
   }
 
+  static class AddFixed extends Add<ExpFixed> implements ExpFixed {
+    AddFixed(ExpFixed e1, ExpFixed e2) { super(e1, e2); }
+  }
+
   public static ExpFixed newAdd(ExpFixed left, ExpFixed right) {
-    class AddFixed extends Add<ExpFixed> implements ExpFixed {
-      AddFixed(ExpFixed e1, ExpFixed e2) { super(e1, e2); }
-    }
     return new AddFixed(left, right);
   }
 }
