@@ -1,8 +1,8 @@
-public class DataCentric {
+public class ExpDemo {
   public static void original() {
     ExpFixed lit1 = Factory.newLit(2);
     ExpFixed lit2 = Factory.newLit(3);
-    Exp e = new Add<ExpFixed>(lit1, lit2);
+    ExpFixed e = Factory.newAdd(lit1, lit2);
     e.print();
     System.out.println();
   }
