@@ -17,7 +17,12 @@ class Add<T extends Exp<T>> implements Exp<T> {
 
 interface ExpFixed extends Exp<ExpFixed> {}
 
-class ExpFactory {
+interface IExpFactory<T extends Exp<T>> {
+  T newLit(int v);
+  T newAdd(T left, T right);
+}
+
+class ExpFactory implements IExpFactory<ExpFixed> {
 
   static class LitFixed extends Lit<ExpFixed> implements ExpFixed {
     LitFixed(int v) { super(v); }

@@ -1,8 +1,8 @@
 public class ExpDemo {
 
-  public static ExpFixed buildOriginal(ExpFactory factory) {
-    ExpFixed lit1 = factory.newLit(2);
-    ExpFixed lit2 = factory.newLit(3);
+  public static <T extends Exp<T>> T buildOriginal(IExpFactory<T> factory) {
+    T lit1 = factory.newLit(2);
+    T lit2 = factory.newLit(3);
     return factory.newAdd(lit1, lit2);
   }
 
@@ -18,11 +18,11 @@ public class ExpDemo {
     System.out.println();
   }
 
-  private static ExpFixed buildNext(ExpFactory factory) {
-    ExpFixed lit1 = factory.newLit(1);
-    ExpFixed lit2 = factory.newLit(2);
-    ExpFixed lit3 = factory.newLit(3);
-    ExpFixed e1 = factory.newAdd(lit1, lit2);
+  public static <T extends Exp<T>> T buildNext(IExpFactory<T> factory) {
+    T lit1 = factory.newLit(1);
+    T lit2 = factory.newLit(2);
+    T lit3 = factory.newLit(3);
+    T e1 = factory.newAdd(lit1, lit2);
     return factory.newAdd(e1, lit3);
   }
 

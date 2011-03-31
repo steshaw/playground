@@ -15,7 +15,7 @@ class EvalAdd<T extends EvalExp<T>> extends Add<T> implements EvalExp<T> {
 
 interface EvalExpFixed extends EvalExp<EvalExpFixed> {}
 
-class EvalExpFactory {
+class EvalExpFactory implements IExpFactory<EvalExpFixed> {
   public EvalExpFixed newLit(int v) {
     class LitFixed extends EvalLit<EvalExpFixed> implements EvalExpFixed {
       LitFixed(int v) { super(v); }
