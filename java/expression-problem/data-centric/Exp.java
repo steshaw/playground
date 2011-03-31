@@ -13,11 +13,3 @@ class Add implements Exp {
   Add(Exp l, Exp r) { left = l; right = r; }
   public void print() { left.print(); System.out.print('+'); right.print(); }
 }
-
-public class DataCentric {
-  public static void main(String[] args) {
-    Exp e = new Add(new Lit(2),new Lit(3));
-    e.print();
-    System.out.println();
-  }
-}
