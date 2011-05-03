@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'nehe' target in the 'nehe' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

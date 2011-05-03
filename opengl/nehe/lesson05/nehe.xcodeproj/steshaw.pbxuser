@@ -136,14 +136,14 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 326075621;
-			PBXWorkspaceStateSaveDate = 326075621;
+			PBXPerProjectTemplateStateSaveDate = 326084902;
+			PBXWorkspaceStateSaveDate = 326084902;
 		};
 		perUserProjectItems = {
 			9C72A86513683F73004D1C1B /* PBXTextBookmark */ = 9C72A86513683F73004D1C1B /* PBXTextBookmark */;
+			9C9F48E9136FAF6600A73CF8 /* PBXTextBookmark */ = 9C9F48E9136FAF6600A73CF8 /* PBXTextBookmark */;
 			9CB1CDEE136F8B9900862CDC /* PBXTextBookmark */ = 9CB1CDEE136F8B9900862CDC /* PBXTextBookmark */;
 			9CEE9349136F748600342FBE /* PBXTextBookmark */ = 9CEE9349136F748600342FBE /* PBXTextBookmark */;
-			9CEE93D5136F840400342FBE /* PBXTextBookmark */ = 9CEE93D5136F840400342FBE /* PBXTextBookmark */;
 		};
 		sourceControlManager = 9C72A786136831CB004D1C1B /* Source Control */;
 		userBuildSettings = {
@@ -210,8 +210,8 @@
 	9C72A797136832EF004D1C1B /* main.cpp */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1110, 2327}}";
-			sepNavSelRange = "{4456, 0}";
-			sepNavVisRange = "{3843, 1046}";
+			sepNavSelRange = "{206, 0}";
+			sepNavVisRange = "{0, 958}";
 			sepNavWindowFrame = "{{352, 4}, {1002, 874}}";
 		};
 	};
@@ -223,6 +223,16 @@
 		rLoc = 0;
 		rType = 0;
 		vrLen = 0;
+		vrLoc = 0;
+	};
+	9C9F48E9136FAF6600A73CF8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C72A797136832EF004D1C1B /* main.cpp */;
+		name = "main.cpp: 11";
+		rLen = 0;
+		rLoc = 206;
+		rType = 0;
+		vrLen = 958;
 		vrLoc = 0;
 	};
 	9CB1CDEE136F8B9900862CDC /* PBXTextBookmark */ = {
@@ -251,15 +261,5 @@
 		name = gl.h;
 		path = /Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/gl.h;
 		sourceTree = "<absolute>";
-	};
-	9CEE93D5136F840400342FBE /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 9C72A797136832EF004D1C1B /* main.cpp */;
-		name = "main.cpp: 5";
-		rLen = 0;
-		rLoc = 90;
-		rType = 0;
-		vrLen = 1288;
-		vrLoc = 0;
 	};
 }
