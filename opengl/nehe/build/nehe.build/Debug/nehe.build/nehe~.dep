@@ -1,0 +1,9 @@
+e1dfb9f26e9726cb38a39dc8995cf2ae 8bdac597253813fb7d983a8f97478c28 ffffffffffffffffffffffffffffffff 102 /Users/steshaw/Projects/nehe/build/Debug/nehe.app
+078ed68ec7e0caa9d1026271b5d4aa39 a9d16118ef501cdd3e9d8d12a0bed56b ffffffffffffffffffffffffffffffff 14400 /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/MacOS/nehe
+000000004db7fa33000000000002bb4a 355b33965700a5d5b5f6ba66bfdec2ac ffffffffffffffffffffffffffffffff 34337 /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Resources/English.lproj/MainMenu.nib
+000000004db7fa33000000000000002d 7adb3df21127556a62cac8cd33eaf437 ffffffffffffffffffffffffffffffff 92 /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Resources/English.lproj/InfoPlist.strings
+00000000000000000000000000000000 1e93d0f31299f1f7bdc31041151e439c ffffffffffffffffffffffffffffffff 8 /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/PkgInfo
+00000000000000000000000000000000 1e93d0f31299f1f7bdc31041151e439c ffffffffffffffffffffffffffffffff 877 /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Info.plist
+3e22fa310c1c162e466733a60fb2dde9 51eb0990560623757651fd52b4ffd514 ffffffffffffffffffffffffffffffff 21008 /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/neheAppDelegate.o
+3e22fa3141abec1d466733a60fb2dd6b 5665df1edc661e25a7539f23012bdaa1 ffffffffffffffffffffffffffffffff 4968 /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/main.o
+000000000d73505b000000000000016e 3e22fa3141abec1d466733a60fb2dd10 ffffffffffffffffffffffffffffffff 54306576 /var/folders/du/duVUOlewGamnG+ZDhnY5L++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/nehe_Prefix-helnxjtuljhmjpgclubodrfisdam/nehe_Prefix.pch.gch
