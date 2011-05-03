@@ -1,196 +1,0 @@
-Tnehe
-v7
-r0
-t325595595.185275
-cCheck dependencies
-cProcessInfoPlistFile /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Info.plist nehe-Info.plist
-cCopyStringsFile /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Resources/English.lproj/InfoPlist.strings English.lproj/InfoPlist.strings
-cCompileXIB /Users/steshaw/Projects/nehe/English.lproj/MainMenu.xib
-cProcessPCH /var/folders/du/duVUOlewGamnG+ZDhnY5L++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/nehe_Prefix-helnxjtuljhmjpgclubodrfisdam/nehe_Prefix.pch.gch nehe_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
-cCompileC build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/main.o /Users/steshaw/Projects/nehe/main.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
-cCompileC build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/neheAppDelegate.o /Users/steshaw/Projects/nehe/neheAppDelegate.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
-cLd /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/MacOS/nehe normal x86_64
-cTouch /Users/steshaw/Projects/nehe/build/Debug/nehe.app
-
-N/Developer/SDKs/MacOSX10.6.sdk
-c000000004CAA740B00000000000000EE
-t1286239243
-s238
-
-N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h
-c0000000040C4AA6800000000000001E5
-t1086630504
-s485
-
-N/System/Library/Frameworks/Cocoa.framework/Cocoa
-c000000004C9D79C1000000000000A5E0
-t1285388737
-s42464
-
-N/Users/steshaw/Projects/nehe/English.lproj/InfoPlist.strings
-c000000004DB7FA33000000000000002D
-t1303902771
-s45
-
-N/Users/steshaw/Projects/nehe/English.lproj/MainMenu.xib
-c000000004DB7FA33000000000002BB4A
-t1303902771
-s179018
-
-N/Users/steshaw/Projects/nehe/build/Debug/nehe.app
-t1303902795
-s102
-
-N/Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Info.plist
-t1303902791
-s877
-
-N/Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/MacOS/nehe
-t1303902795
-s14400
-
-N/Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/PkgInfo
-t1303902791
-s8
-
-N/Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Resources/English.lproj/InfoPlist.strings
-t1303902791
-s92
-
-N/Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Resources/English.lproj/MainMenu.nib
-t1303902791
-s34337
-
-N/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/main.o
-t1303902795
-s4968
-
-N/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/nehe.LinkFileList
-c000000004DB7FA4700000000000000C3
-t1303902791
-s195
-
-N/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/neheAppDelegate.o
-t1303902795
-s21008
-
-N/Users/steshaw/Projects/nehe/main.m
-c000000004DB7FA3300000000000000F0
-t1303902771
-s240
-i<Cocoa/Cocoa.h>
-
-N/Users/steshaw/Projects/nehe/neheAppDelegate.h
-c000000004DB7FA330000000000000128
-t1303902771
-s296
-i<Cocoa/Cocoa.h>
-
-N/Users/steshaw/Projects/nehe/neheAppDelegate.m
-c000000004DB7FA33000000000000015A
-t1303902771
-s346
-i"neheAppDelegate.h"
-
-N/Users/steshaw/Projects/nehe/nehe_Prefix.pch
-c000000004DB7FA33000000000000008B
-t1303902771
-s139
-i<Cocoa/Cocoa.h>
-
-N/var/folders/du/duVUOlewGamnG+ZDhnY5L++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/nehe_Prefix-helnxjtuljhmjpgclubodrfisdam/nehe_Prefix.pch.gch
-t1303902794
-s54306576
-
-Nnehe-Info.plist
-c000000004DB7FA3300000000000003EA
-t1303902771
-s1002
-
-CCheck dependencies
-r0
-lSLF07#2@18"Check dependencies325595591#325595591#0(0"0(0#1#0"3343187568374212096#0"0#
-
-CCompileC build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/main.o /Users/steshaw/Projects/nehe/main.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
-s325595594.832148
-e325595595.043409
-r1
-xCompileC
-xbuild/nehe.build/Debug/nehe.build/Objects-normal/x86_64/main.o
-x/Users/steshaw/Projects/nehe/main.m
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@43"Compile /Users/steshaw/Projects/nehe/main.m325595594#325595595#0(0"0(0#0#35"/Users/steshaw/Projects/nehe/main.m8603066016#1280"    cd /Users/steshaw/Projects/nehe    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-generated-files.hmap -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-own-target-headers.hmap -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-all-target-headers.hmap -iquote /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-project-headers.hmap -F/Users/steshaw/Projects/nehe/build/Debug -I/Users/steshaw/Projects/nehe/build/Debug/include -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/DerivedSources/x86_64 -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/DerivedSources -include /var/folders/du/duVUOlewGamnG+ZDhnY5L++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/nehe_Prefix-helnxjtuljhmjpgclubodrfisdam/nehe_Prefix.pch -c /Users/steshaw/Projects/nehe/main.m -o /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/main.o0#
-
-CCompileC build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/neheAppDelegate.o /Users/steshaw/Projects/nehe/neheAppDelegate.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
-s325595594.833526
-e325595595.073380
-r1
-xCompileC
-xbuild/nehe.build/Debug/nehe.build/Objects-normal/x86_64/neheAppDelegate.o
-x/Users/steshaw/Projects/nehe/neheAppDelegate.m
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@54"Compile /Users/steshaw/Projects/nehe/neheAppDelegate.m325595594#325595595#0(0"0(0#0#46"/Users/steshaw/Projects/nehe/neheAppDelegate.m8600409472#1302"    cd /Users/steshaw/Projects/nehe    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-generated-files.hmap -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-own-target-headers.hmap -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-all-target-headers.hmap -iquote /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-project-headers.hmap -F/Users/steshaw/Projects/nehe/build/Debug -I/Users/steshaw/Projects/nehe/build/Debug/include -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/DerivedSources/x86_64 -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/DerivedSources -include /var/folders/du/duVUOlewGamnG+ZDhnY5L++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/nehe_Prefix-helnxjtuljhmjpgclubodrfisdam/nehe_Prefix.pch -c /Users/steshaw/Projects/nehe/neheAppDelegate.m -o /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/neheAppDelegate.o0#
-
-CCompileXIB /Users/steshaw/Projects/nehe/English.lproj/MainMenu.xib
-s325595591.255629
-e325595591.725300
-r1
-xCompileXIB
-x/Users/steshaw/Projects/nehe/English.lproj/MainMenu.xib
-lSLF07#2@37"CompileXIB English.lproj/MainMenu.xib325595591#325595591#0(0"0(0#0#55"/Users/steshaw/Projects/nehe/English.lproj/MainMenu.xib8605203872#331"    cd /Users/steshaw/Projects/nehe    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Resources/English.lproj/MainMenu.nib /Users/steshaw/Projects/nehe/English.lproj/MainMenu.xib --sdk /Developer/SDKs/MacOSX10.6.sdk0#
-
-CCopyStringsFile /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Resources/English.lproj/InfoPlist.strings English.lproj/InfoPlist.strings
-s325595591.252833
-e325595591.319013
-r1
-xCopyStringsFile
-x/Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Resources/English.lproj/InfoPlist.strings
-xEnglish.lproj/InfoPlist.strings
-lSLF07#2@36"Copy English.lproj/InfoPlist.strings325595591#325595591#0(0"0(0#0#60"/Users/steshaw/Projects/nehe/English.lproj/InfoPlist.strings8605641312#342"    cd /Users/steshaw/Projects/nehe    setenv ICONV /usr/bin/iconv    /Developer/Library/Xcode/Plug-ins/CoreBuildTasks.xcplugin/Contents/Resources/copystrings --validate --inputencoding utf-8 --outputencoding UTF-16 English.lproj/InfoPlist.strings --outdir /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Resources/English.lproj0#
-
-CLd /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/MacOS/nehe normal x86_64
-s325595595.073486
-e325595595.180590
-r1
-xLd
-x/Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/MacOS/nehe
-xnormal
-xx86_64
-lSLF07#2@74"Link /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/MacOS/nehe325595595#325595595#0(0"0(0#0#0"8603201216#477"    cd /Users/steshaw/Projects/nehe    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/gcc-4.2 -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/steshaw/Projects/nehe/build/Debug -F/Users/steshaw/Projects/nehe/build/Debug -filelist /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/Objects-normal/x86_64/nehe.LinkFileList -mmacosx-version-min=10.6 -framework Cocoa -o /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/MacOS/nehe0#
-
-CProcessInfoPlistFile /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Info.plist nehe-Info.plist
-s325595591.245824
-e325595591.252732
-r1
-xProcessInfoPlistFile
-x/Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Info.plist
-xnehe-Info.plist
-lSLF07#2@23"Process nehe-Info.plist325595591#325595591#0(0"0(0#0#44"/Users/steshaw/Projects/nehe/nehe-Info.plist28429470871191664#271"    cd /Users/steshaw/Projects/nehe    builtin-infoPlistUtility nehe-Info.plist -genpkginfo /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/steshaw/Projects/nehe/build/Debug/nehe.app/Contents/Info.plist0#
-
-CProcessPCH /var/folders/du/duVUOlewGamnG+ZDhnY5L++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/nehe_Prefix-helnxjtuljhmjpgclubodrfisdam/nehe_Prefix.pch.gch nehe_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
-s325595591.725474
-e325595594.831935
-r1
-xProcessPCH
-x/var/folders/du/duVUOlewGamnG+ZDhnY5L++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/nehe_Prefix-helnxjtuljhmjpgclubodrfisdam/nehe_Prefix.pch.gch
-xnehe_Prefix.pch
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@26"Precompile nehe_Prefix.pch325595591#325595594#0(0"0(0#0#44"/Users/steshaw/Projects/nehe/nehe_Prefix.pch8605016320#1199"    cd /Users/steshaw/Projects/nehe    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c-header -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-generated-files.hmap -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-own-target-headers.hmap -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-all-target-headers.hmap -iquote /Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/nehe-project-headers.hmap -F/Users/steshaw/Projects/nehe/build/Debug -I/Users/steshaw/Projects/nehe/build/Debug/include -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/DerivedSources/x86_64 -I/Users/steshaw/Projects/nehe/build/nehe.build/Debug/nehe.build/DerivedSources -c /Users/steshaw/Projects/nehe/nehe_Prefix.pch -o /var/folders/du/duVUOlewGamnG+ZDhnY5L++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/nehe_Prefix-helnxjtuljhmjpgclubodrfisdam/nehe_Prefix.pch.gch0#
-
-CTouch /Users/steshaw/Projects/nehe/build/Debug/nehe.app
-s325595595.180696
-e325595595.185237
-r1
-xTouch
-x/Users/steshaw/Projects/nehe/build/Debug/nehe.app
-lSLF07#2@55"Touch /Users/steshaw/Projects/nehe/build/Debug/nehe.app325595595#325595595#0(0"0(0#0#0"8602976160#108"    cd /Users/steshaw/Projects/nehe    /usr/bin/touch -c /Users/steshaw/Projects/nehe/build/Debug/nehe.app0#
-
