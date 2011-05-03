@@ -299,7 +299,7 @@
 							<real>247</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>90 59 1440 819 0 0 1440 878 </string>
+						<string>0 59 1440 819 0 0 1440 878 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -329,18 +329,12 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>9CEE93D5136F840400342FBE</string>
+										<string>9CB1CDDB136F888100862CDC</string>
 										<key>history</key>
 										<array>
-											<string>9C72A83113683C05004D1C1B</string>
-											<string>9C72A83313683C05004D1C1B</string>
-											<string>9C72A83513683C05004D1C1B</string>
-											<string>9C72A84213683C99004D1C1B</string>
 											<string>9C72A86513683F73004D1C1B</string>
 											<string>9CEE9349136F748600342FBE</string>
-											<string>9CEE9359136F774100342FBE</string>
-											<string>9CEE93CF136F83CA00342FBE</string>
-											<string>9CEE93D0136F83CA00342FBE</string>
+											<string>9CEE93D5136F840400342FBE</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -352,14 +346,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1171, 655}}</string>
+								<string>{{0, 0}, {1171, 652}}</string>
 								<key>RubberWindowFrame</key>
-								<string>90 59 1440 819 0 0 1440 878 </string>
+								<string>0 59 1440 819 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>655pt</string>
+							<string>652pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -372,14 +366,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 660}, {1171, 118}}</string>
+								<string>{{0, 657}, {1171, 121}}</string>
 								<key>RubberWindowFrame</key>
-								<string>90 59 1440 819 0 0 1440 878 </string>
+								<string>0 59 1440 819 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>118pt</string>
+							<string>121pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -398,9 +392,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>9CEE932B136F71BB00342FBE</string>
+				<string>9CB1CDAC136F84F100862CDC</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>9CEE932C136F71BB00342FBE</string>
+				<string>9CB1CDAD136F84F100862CDC</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -540,15 +534,16 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>9CEE9339136F724400342FBE</string>
-		<string>9CEE933A136F724400342FBE</string>
+		<string>9CB1CDDC136F888100862CDC</string>
+		<string>9CB1CDB7136F84F100862CDC</string>
+		<string>9CB1CDB8136F84F100862CDC</string>
 		<string>1C78EAAD065D492600B07095</string>
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>9C72A77A136831CB004D1C1B</string>
-		<string>/Users/steshaw/Projects/nehe/nehe.xcodeproj</string>
+		<string>/Users/steshaw/Projects/playground/opengl/nehe/nehe.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>90 59 1440 819 0 0 1440 878 </string>
+	<string>0 59 1440 819 0 0 1440 878 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
@@ -586,8 +581,6 @@
 							<string>427pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -627,7 +620,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>9C72A77A136831CB004D1C1B</string>
-				<string>9CEE932D136F71BB00342FBE</string>
+				<string>9CB1CDAE136F84F100862CDC</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -671,8 +664,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {316, 194}}</string>
-											<string>{{316, 0}, {378, 194}}</string>
+											<string>{{0, 0}, {316, 198}}</string>
+											<string>{{316, 0}, {378, 198}}</string>
 										</array>
 									</dict>
 									<key>VerticalSplitView</key>
@@ -687,8 +680,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {694, 194}}</string>
-											<string>{{0, 194}, {694, 187}}</string>
+											<string>{{0, 0}, {694, 198}}</string>
+											<string>{{0, 198}, {694, 183}}</string>
 										</array>
 									</dict>
 								</dict>
@@ -721,7 +714,7 @@
 										<real>148</real>
 									</array>
 									<key>Frame</key>
-									<string>{{316, 0}, {378, 194}}</string>
+									<string>{{316, 0}, {378, 198}}</string>
 									<key>RubberWindowFrame</key>
 									<string>266 385 694 422 0 0 1440 878 </string>
 								</dict>
@@ -749,13 +742,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>9CEE9331136F724400342FBE</string>
+				<string>9CB1CDAF136F84F100862CDC</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>9CEE9332136F724400342FBE</string>
-				<string>9CEE9333136F724400342FBE</string>
-				<string>9CEE9334136F724400342FBE</string>
-				<string>9CEE9335136F724400342FBE</string>
-				<string>9CEE9336136F724400342FBE</string>
+				<string>9CB1CDB0136F84F100862CDC</string>
+				<string>9CB1CDB1136F84F100862CDC</string>
+				<string>9CB1CDB2136F84F100862CDC</string>
+				<string>9CB1CDB3136F84F100862CDC</string>
+				<string>9CB1CDB4136F84F100862CDC</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -874,8 +867,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -911,7 +902,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>9CEE9337136F724400342FBE</string>
+				<string>9CB1CDB5136F84F100862CDC</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>

@@ -3,8 +3,8 @@
 #include <OpenGL/glu.h>
 #include <GLUT/glut.h>
 
-#define kWindowWidth	600
-#define kWindowHeight	450
+#define WINDOW_WIDTH  600
+#define WINDOW_HEIGHT 450
 
 static float rotTriangle = 0.0f;
 static float rotQuad = 0.0f;
@@ -23,89 +23,98 @@ void displayGL() {
   glLoadIdentity();
 
   glTranslatef(-1.5f, 0.0f, -6.0f);
-  
-  glRotatef(rotTriangle, 0.0f, 1.0f, 0.0f);
-
-  // Pyramid.
-  glBegin(GL_TRIANGLES); 
+//  glTranslatef(0.0f, 0.0f, -9.0f);
+ 
+  glPushMatrix();
   {
-    // Front.
-    glColor3f(1.0f,0.0f,0.0f);
-    glVertex3f( 0.0f, 1.0f, 0.0f);			// Top Of Triangle (Front)
-    glColor3f(0.0f,1.0f,0.0f);
-    glVertex3f(-1.0f,-1.0f, 1.0f);			// Left Of Triangle (Front)
-    glColor3f(0.0f,0.0f,1.0f);
-    glVertex3f( 1.0f,-1.0f, 1.0f);			// Right Of Triangle (Front)
-    
-    // Right.
-    glColor3f(1.0f,0.0f,0.0f);
-    glVertex3f( 0.0f, 1.0f, 0.0f);			// Top Of Triangle (Right)
-    glColor3f(0.0f,0.0f,1.0f);
-    glVertex3f( 1.0f,-1.0f, 1.0f);			// Left Of Triangle (Right)
-    glColor3f(0.0f,1.0f,0.0f);
-    glVertex3f( 1.0f,-1.0f, -1.0f);			// Right Of Triangle (Right)
-    glColor3f(1.0f,0.0f,0.0f);
-    
-    // Back.
-    glVertex3f( 0.0f, 1.0f, 0.0f);			// Top Of Triangle (Back)
-    glColor3f(0.0f,1.0f,0.0f);
-    glVertex3f( 1.0f,-1.0f, -1.0f);			// Left Of Triangle (Back)
-    glColor3f(0.0f,0.0f,1.0f);
-    glVertex3f(-1.0f,-1.0f, -1.0f);			// Right Of Triangle (Back)
-    
-    // Left.
-    glColor3f(1.0f,0.0f,0.0f);
-    glVertex3f( 0.0f, 1.0f, 0.0f);			// Top Of Triangle (Left)
-    glColor3f(0.0f,0.0f,1.0f);
-    glVertex3f(-1.0f,-1.0f,-1.0f);			// Left Of Triangle (Left)
-    glColor3f(0.0f,1.0f,0.0f);
-    glVertex3f(-1.0f,-1.0f, 1.0f);			// Right Of Triangle (Left)
+    glRotatef(rotTriangle, 0.0f, 1.0f, 0.0f);
+
+    // Pyramid.
+    glBegin(GL_TRIANGLES); 
+    {
+      // Front.
+      glColor3f(1.0f,0.0f,0.0f);
+      glVertex3f(0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f,1.0f,0.0f);
+      glVertex3f(-1.0f, -1.0f, 1.0f);
+      glColor3f(0.0f,0.0f,1.0f);
+      glVertex3f(1.0f, -1.0f, 1.0f);
+      
+      // Right.
+      glColor3f(1.0f,0.0f,0.0f);
+      glVertex3f( 0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f,0.0f,1.0f);
+      glVertex3f( 1.0f,-1.0f, 1.0f);
+      glColor3f(0.0f,1.0f,0.0f);
+      glVertex3f( 1.0f,-1.0f, -1.0f);
+      glColor3f(1.0f,0.0f,0.0f);
+      
+      // Back.
+      glVertex3f( 0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f,1.0f,0.0f);
+      glVertex3f( 1.0f,-1.0f, -1.0f);
+      glColor3f(0.0f,0.0f,1.0f);
+      glVertex3f(-1.0f,-1.0f, -1.0f);
+      
+      // Left.
+      glColor3f(1.0f,0.0f,0.0f);
+      glVertex3f( 0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f,0.0f,1.0f);
+      glVertex3f(-1.0f,-1.0f,-1.0f);
+      glColor3f(0.0f,1.0f,0.0f);
+      glVertex3f(-1.0f,-1.0f, 1.0f);
+    }
+    glEnd();
   }
-  glEnd();
+  glPopMatrix();
   
+/*
   glLoadIdentity();
   glTranslatef(1.5f, 0.0f, -6.0f);
+*/
+  glTranslatef(3.0f, 0.0f, 0.0f);
+  
   glRotatef(rotQuad, 1.0f, 0.0f, 0.0f);
   glColor3f(0.5, 0.5f, 1.0f);
   glBegin(GL_QUADS);
   {
     // Top.
-    glColor3f(0.0f,1.0f,0.0f);			// Set The Color To Blue
-    glVertex3f( 1.0f, 1.0f,-1.0f);			// Top Right Of The Quad (Top)
-    glVertex3f(-1.0f, 1.0f,-1.0f);			// Top Left Of The Quad (Top)
-    glVertex3f(-1.0f, 1.0f, 1.0f);			// Bottom Left Of The Quad (Top)
-    glVertex3f( 1.0f, 1.0f, 1.0f);			// Bottom Right Of The Quad (Top)
+    glColor3f(0.0f,1.0f,0.0f);
+    glVertex3f( 1.0f, 1.0f,-1.0f);
+    glVertex3f(-1.0f, 1.0f,-1.0f);
+    glVertex3f(-1.0f, 1.0f, 1.0f);
+    glVertex3f( 1.0f, 1.0f, 1.0f);
     
     // Bottom.
-    glColor3f(1.0f,0.5f,0.0f);			// Set The Color To Orange
+    glColor3f(1.0f,0.5f,0.0f);
     glVertex3f( 1.0f,-1.0f, 1.0f);			// Top Right Of The Quad (Bottom)
     glVertex3f(-1.0f,-1.0f, 1.0f);			// Top Left Of The Quad (Bottom)
     glVertex3f(-1.0f,-1.0f,-1.0f);			// Bottom Left Of The Quad (Bottom)
     glVertex3f( 1.0f,-1.0f,-1.0f);			// Bottom Right Of The Quad (Bottom)
 
     // Front.
-    glColor3f(1.0f,0.0f,0.0f);			// Set The Color To Red
+    glColor3f(1.0f,0.0f,0.0f);
     glVertex3f( 1.0f, 1.0f, 1.0f);			// Top Right Of The Quad (Front)
     glVertex3f(-1.0f, 1.0f, 1.0f);			// Top Left Of The Quad (Front)
     glVertex3f(-1.0f,-1.0f, 1.0f);			// Bottom Left Of The Quad (Front)
     glVertex3f( 1.0f,-1.0f, 1.0f);			// Bottom Right Of The Quad (Front)
     
     // Back.
-    glColor3f(1.0f,1.0f,0.0f);			// Set The Color To Yellow
+    glColor3f(1.0f,1.0f,0.0f);
     glVertex3f( 1.0f,-1.0f,-1.0f);			// Bottom Left Of The Quad (Back)
     glVertex3f(-1.0f,-1.0f,-1.0f);			// Bottom Right Of The Quad (Back)
     glVertex3f(-1.0f, 1.0f,-1.0f);			// Top Right Of The Quad (Back)
     glVertex3f( 1.0f, 1.0f,-1.0f);			// Top Left Of The Quad (Back)
     
     // Left.
-    glColor3f(0.0f,0.0f,1.0f);			// Set The Color To Blue
+    glColor3f(0.0f,0.0f,1.0f);
     glVertex3f(-1.0f, 1.0f, 1.0f);			// Top Right Of The Quad (Left)
     glVertex3f(-1.0f, 1.0f,-1.0f);			// Top Left Of The Quad (Left)
     glVertex3f(-1.0f,-1.0f,-1.0f);			// Bottom Left Of The Quad (Left)
     glVertex3f(-1.0f,-1.0f, 1.0f);			// Bottom Right Of The Quad (Left)
     
     // Right.
-    glColor3f(1.0f,0.0f,1.0f);			// Set The Color To Violet
+    glColor3f(1.0f,0.0f,1.0f);
     glVertex3f( 1.0f, 1.0f,-1.0f);			// Top Right Of The Quad (Right)
     glVertex3f( 1.0f, 1.0f, 1.0f);			// Top Left Of The Quad (Right)
     glVertex3f( 1.0f,-1.0f, 1.0f);			// Bottom Left Of The Quad (Right)
@@ -144,7 +153,7 @@ void arrowKeys(int aKeys, int x, int y) {
       break;      
     case GLUT_KEY_DOWN:
       glutInitWindowPosition(300, 300);
-      glutReshapeWindow(kWindowWidth, kWindowHeight);
+      glutReshapeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
       break;
   }
 }
@@ -152,7 +161,7 @@ void arrowKeys(int aKeys, int x, int y) {
 int main(int argc, char *argv[]) {
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(kWindowWidth, kWindowHeight);
+  glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
   glutInitWindowPosition(300, 300);
   glutCreateWindow(argv[0]);
 
