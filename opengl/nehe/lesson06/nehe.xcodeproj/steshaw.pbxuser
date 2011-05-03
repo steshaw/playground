@@ -213,6 +213,16 @@
 			9C8C7CA1136FE09600A6B0A9 /* PBXTextBookmark */ = 9C8C7CA1136FE09600A6B0A9 /* PBXTextBookmark */;
 			9C8C7CA7136FE0EB00A6B0A9 /* PBXTextBookmark */ = 9C8C7CA7136FE0EB00A6B0A9 /* PBXTextBookmark */;
 			9C8C7CAB136FE18900A6B0A9 /* PBXTextBookmark */ = 9C8C7CAB136FE18900A6B0A9 /* PBXTextBookmark */;
+			9C8C7CB3136FE41A00A6B0A9 /* PBXTextBookmark */ = 9C8C7CB3136FE41A00A6B0A9 /* PBXTextBookmark */;
+			9C8C7CBF136FE4AA00A6B0A9 /* PBXTextBookmark */ = 9C8C7CBF136FE4AA00A6B0A9 /* PBXTextBookmark */;
+			9C8C7CCF136FE54500A6B0A9 /* XCBuildMessageTextBookmark */ = 9C8C7CCF136FE54500A6B0A9 /* XCBuildMessageTextBookmark */;
+			9C8C7CD2136FE55B00A6B0A9 /* PBXTextBookmark */ = 9C8C7CD2136FE55B00A6B0A9 /* PBXTextBookmark */;
+			9C8C7CD4136FE55B00A6B0A9 /* PBXTextBookmark */ = 9C8C7CD4136FE55B00A6B0A9 /* PBXTextBookmark */;
+			9C8C7CD6136FE56000A6B0A9 /* XCBuildMessageTextBookmark */ = 9C8C7CD6136FE56000A6B0A9 /* XCBuildMessageTextBookmark */;
+			9C8C7CD7136FE56000A6B0A9 /* PBXTextBookmark */ = 9C8C7CD7136FE56000A6B0A9 /* PBXTextBookmark */;
+			9C8C7CD8136FE56400A6B0A9 /* PBXTextBookmark */ = 9C8C7CD8136FE56400A6B0A9 /* PBXTextBookmark */;
+			9C8C7CDD136FE6CD00A6B0A9 /* PBXTextBookmark */ = 9C8C7CDD136FE6CD00A6B0A9 /* PBXTextBookmark */;
+			9C8C7CDF136FE72000A6B0A9 /* PBXTextBookmark */ = 9C8C7CDF136FE72000A6B0A9 /* PBXTextBookmark */;
 			9CEE9349136F748600342FBE = 9CEE9349136F748600342FBE /* PBXTextBookmark */;
 		};
 		sourceControlManager = 9C72A786136831CB004D1C1B /* Source Control */;
@@ -227,9 +237,9 @@
 	};
 	9C34CD70136FB24600F28209 /* lesson06.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1110, 4771}}";
-			sepNavSelRange = "{6535, 0}";
-			sepNavVisRange = "{4449, 2085}";
+			sepNavIntBoundsRect = "{{0, 0}, {1110, 4602}}";
+			sepNavSelRange = "{765, 0}";
+			sepNavVisRange = "{520, 1180}";
 			sepNavWindowFrame = "{{15, 4}, {1002, 874}}";
 		};
 	};
@@ -297,7 +307,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 286";
 		rLen = 0;
-		rLoc = 7974;
+		rLoc = 7191;
 		rType = 0;
 		vrLen = 1369;
 		vrLoc = 8390;
@@ -307,7 +317,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 286";
 		rLen = 0;
-		rLoc = 7974;
+		rLoc = 7191;
 		rType = 0;
 		vrLen = 1354;
 		vrLoc = 8390;
@@ -361,7 +371,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 286";
 		rLen = 0;
-		rLoc = 7974;
+		rLoc = 7191;
 		rType = 0;
 		vrLen = 1278;
 		vrLoc = 8390;
@@ -391,7 +401,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 305";
 		rLen = 0;
-		rLoc = 8143;
+		rLoc = 7365;
 		rType = 0;
 		vrLen = 1278;
 		vrLoc = 8390;
@@ -401,7 +411,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 57";
 		rLen = 0;
-		rLoc = 1306;
+		rLoc = 877;
 		rType = 0;
 		vrLen = 1192;
 		vrLoc = 973;
@@ -411,7 +421,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 55";
 		rLen = 0;
-		rLoc = 1178;
+		rLoc = 874;
 		rType = 0;
 		vrLen = 937;
 		vrLoc = 299;
@@ -571,7 +581,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 55";
 		rLen = 0;
-		rLoc = 1178;
+		rLoc = 874;
 		rType = 0;
 		vrLen = 1043;
 		vrLoc = 263;
@@ -581,7 +591,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 57";
 		rLen = 0;
-		rLoc = 1305;
+		rLoc = 877;
 		rType = 0;
 		vrLen = 1337;
 		vrLoc = 1103;
@@ -591,7 +601,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 57";
 		rLen = 0;
-		rLoc = 1305;
+		rLoc = 877;
 		rType = 0;
 		vrLen = 1353;
 		vrLoc = 1103;
@@ -601,7 +611,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 124";
 		rLen = 0;
-		rLoc = 2812;
+		rLoc = 2213;
 		rType = 0;
 		vrLen = 889;
 		vrLoc = 2554;
@@ -643,7 +653,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 128";
 		rLen = 23;
-		rLoc = 3177;
+		rLoc = 2578;
 		rType = 0;
 		vrLen = 940;
 		vrLoc = 2554;
@@ -653,7 +663,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 323";
 		rLen = 0;
-		rLoc = 8851;
+		rLoc = 8078;
 		rType = 0;
 		vrLen = 1281;
 		vrLoc = 8355;
@@ -673,7 +683,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 403";
 		rLen = 0;
-		rLoc = 10691;
+		rLoc = 9860;
 		rType = 0;
 		vrLen = 1073;
 		vrLoc = 10125;
@@ -692,7 +702,7 @@
 		isa = PBXTextBookmark;
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		rLen = 1;
-		rLoc = 39;
+		rLoc = 32;
 		rType = 1;
 	};
 	9C8C7C22136FCC0F00A6B0A9 /* PBXTextBookmark */ = {
@@ -700,7 +710,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 221";
 		rLen = 0;
-		rLoc = 6011;
+		rLoc = 3855;
 		rType = 0;
 		vrLen = 1094;
 		vrLoc = 10018;
@@ -710,7 +720,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 331";
 		rLen = 0;
-		rLoc = 9267;
+		rLoc = 8494;
 		rType = 0;
 		vrLen = 1295;
 		vrLoc = 8480;
@@ -720,7 +730,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 333";
 		rLen = 0;
-		rLoc = 9327;
+		rLoc = 8554;
 		rType = 0;
 		vrLen = 1374;
 		vrLoc = 8340;
@@ -740,7 +750,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 333";
 		rLen = 0;
-		rLoc = 9327;
+		rLoc = 8554;
 		rType = 0;
 		vrLen = 1403;
 		vrLoc = 8340;
@@ -749,7 +759,7 @@
 		isa = PBXTextBookmark;
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		rLen = 1;
-		rLoc = 21;
+		rLoc = 20;
 		rType = 1;
 	};
 	9C8C7C40136FD23600A6B0A9 /* PBXTextBookmark */ = {
@@ -757,7 +767,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 309";
 		rLen = 0;
-		rLoc = 8621;
+		rLoc = 7848;
 		rType = 0;
 		vrLen = 1268;
 		vrLoc = 9121;
@@ -789,7 +799,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 344";
 		rLen = 0;
-		rLoc = 9796;
+		rLoc = 9028;
 		rType = 0;
 		vrLen = 1419;
 		vrLoc = 9393;
@@ -799,7 +809,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 373";
 		rLen = 0;
-		rLoc = 10535;
+		rLoc = 9772;
 		rType = 0;
 		vrLen = 1279;
 		vrLoc = 9689;
@@ -809,7 +819,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 344";
 		rLen = 0;
-		rLoc = 9796;
+		rLoc = 9028;
 		rType = 0;
 		vrLen = 1285;
 		vrLoc = 9689;
@@ -819,7 +829,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 378";
 		rLen = 0;
-		rLoc = 10580;
+		rLoc = 9790;
 		rType = 0;
 		vrLen = 1216;
 		vrLoc = 9859;
@@ -829,7 +839,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 301";
 		rLen = 0;
-		rLoc = 8899;
+		rLoc = 8126;
 		rType = 0;
 		vrLen = 1339;
 		vrLoc = 8893;
@@ -849,7 +859,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 336";
 		rLen = 0;
-		rLoc = 9920;
+		rLoc = 9152;
 		rType = 0;
 		vrLen = 1161;
 		vrLoc = 9431;
@@ -859,7 +869,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 337";
 		rLen = 0;
-		rLoc = 9920;
+		rLoc = 9152;
 		rType = 0;
 		vrLen = 1242;
 		vrLoc = 9431;
@@ -880,7 +890,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		fallbackIsa = XCBuildMessageTextBookmark;
 		rLen = 1;
-		rLoc = 116;
+		rLoc = 97;
 		rType = 1;
 	};
 	9C8C7C6E136FDE9500A6B0A9 /* PBXTextBookmark */ = {
@@ -888,7 +898,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 117";
 		rLen = 0;
-		rLoc = 2911;
+		rLoc = 2312;
 		rType = 0;
 		vrLen = 795;
 		vrLoc = 2345;
@@ -941,7 +951,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		fallbackIsa = XCBuildMessageTextBookmark;
 		rLen = 1;
-		rLoc = 116;
+		rLoc = 97;
 		rType = 1;
 	};
 	9C8C7C77136FDE9700A6B0A9 /* PBXTextBookmark */ = {
@@ -949,7 +959,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 117";
 		rLen = 0;
-		rLoc = 2911;
+		rLoc = 2312;
 		rType = 0;
 		vrLen = 1042;
 		vrLoc = 2242;
@@ -958,7 +968,7 @@
 		isa = PBXTextBookmark;
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		rLen = 1;
-		rLoc = 81;
+		rLoc = 62;
 		rType = 1;
 	};
 	9C8C7C7C136FDF0300A6B0A9 /* PBXTextBookmark */ = {
@@ -966,7 +976,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 120";
 		rLen = 0;
-		rLoc = 3112;
+		rLoc = 2513;
 		rType = 0;
 		vrLen = 1047;
 		vrLoc = 2400;
@@ -976,7 +986,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 66";
 		rLen = 0;
-		rLoc = 1644;
+		rLoc = 879;
 		rType = 0;
 		vrLen = 1124;
 		vrLoc = 1620;
@@ -986,7 +996,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 120";
 		rLen = 0;
-		rLoc = 3063;
+		rLoc = 2464;
 		rType = 0;
 		vrLen = 1014;
 		vrLoc = 2547;
@@ -996,7 +1006,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 118";
 		rLen = 0;
-		rLoc = 3005;
+		rLoc = 2406;
 		rType = 0;
 		vrLen = 1068;
 		vrLoc = 2547;
@@ -1006,7 +1016,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 33";
 		rLen = 0;
-		rLoc = 737;
+		rLoc = 601;
 		rType = 0;
 		vrLen = 1170;
 		vrLoc = 411;
@@ -1017,7 +1027,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		fallbackIsa = XCBuildMessageTextBookmark;
 		rLen = 1;
-		rLoc = 136;
+		rLoc = 115;
 		rType = 1;
 	};
 	9C8C7C96136FE06000A6B0A9 /* PBXTextBookmark */ = {
@@ -1025,7 +1035,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 137";
 		rLen = 0;
-		rLoc = 3413;
+		rLoc = 2780;
 		rType = 0;
 		vrLen = 629;
 		vrLoc = 3126;
@@ -1036,7 +1046,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		fallbackIsa = XCBuildMessageTextBookmark;
 		rLen = 1;
-		rLoc = 352;
+		rLoc = 321;
 		rType = 1;
 	};
 	9C8C7CA1136FE09600A6B0A9 /* PBXTextBookmark */ = {
@@ -1044,7 +1054,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 359";
 		rLen = 0;
-		rLoc = 10458;
+		rLoc = 9695;
 		rType = 0;
 		vrLen = 1292;
 		vrLoc = 9549;
@@ -1054,7 +1064,7 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 335";
 		rLen = 0;
-		rLoc = 9707;
+		rLoc = 8939;
 		rType = 0;
 		vrLen = 1219;
 		vrLoc = 9679;
@@ -1064,10 +1074,108 @@
 		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
 		name = "lesson06.cpp: 229";
 		rLen = 0;
-		rLoc = 6535;
+		rLoc = 3855;
 		rType = 0;
 		vrLen = 2085;
 		vrLoc = 4449;
+	};
+	9C8C7CB3136FE41A00A6B0A9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		name = "lesson06.cpp: 49";
+		rLen = 0;
+		rLoc = 879;
+		rType = 0;
+		vrLen = 1319;
+		vrLoc = 707;
+	};
+	9C8C7CBF136FE4AA00A6B0A9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		name = "lesson06.cpp: 63";
+		rLen = 0;
+		rLoc = 1432;
+		rType = 0;
+		vrLen = 1281;
+		vrLoc = 707;
+	};
+	9C8C7CCF136FE54500A6B0A9 /* XCBuildMessageTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "'Quit' was not declared in this scope";
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		fallbackIsa = XCBuildMessageTextBookmark;
+		rLen = 1;
+		rLoc = 331;
+		rType = 1;
+	};
+	9C8C7CD2136FE55B00A6B0A9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		name = "lesson06.cpp: 200";
+		rLen = 0;
+		rLoc = 3855;
+		rType = 0;
+		vrLen = 1925;
+		vrLoc = 3580;
+	};
+	9C8C7CD4136FE55B00A6B0A9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		name = "lesson06.cpp: 342";
+		rLen = 0;
+		rLoc = 9860;
+		rType = 0;
+		vrLen = 1562;
+		vrLoc = 8339;
+	};
+	9C8C7CD6136FE56000A6B0A9 /* XCBuildMessageTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "'Quit' was not declared in this scope";
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		fallbackIsa = XCBuildMessageTextBookmark;
+		rLen = 1;
+		rLoc = 246;
+		rType = 1;
+	};
+	9C8C7CD7136FE56000A6B0A9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		name = "lesson06.cpp: 252";
+		rLen = 0;
+		rLoc = 7344;
+		rType = 0;
+		vrLen = 632;
+		vrLoc = 7037;
+	};
+	9C8C7CD8136FE56400A6B0A9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		name = "lesson06.cpp: 200";
+		rLen = 0;
+		rLoc = 3855;
+		rType = 0;
+		vrLen = 1925;
+		vrLoc = 3580;
+	};
+	9C8C7CDD136FE6CD00A6B0A9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		name = "lesson06.cpp: 230";
+		rLen = 0;
+		rLoc = 6863;
+		rType = 0;
+		vrLen = 1424;
+		vrLoc = 6075;
+	};
+	9C8C7CDF136FE72000A6B0A9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C34CD70136FB24600F28209 /* lesson06.cpp */;
+		name = "lesson06.cpp: 39";
+		rLen = 0;
+		rLoc = 765;
+		rType = 0;
+		vrLen = 1180;
+		vrLoc = 520;
 	};
 	9CEE9349136F748600342FBE /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
