@@ -57,9 +57,54 @@ static const char* textureFormatToString(GLenum textureFormat) {
       return "unknown texture format";
   }
 }
-    
-int loadTextures() {
+
+SDL_Surface *flipSurface(SDL_Surface *bitmap) {
+  if (!bitmap) return NULL;
+  SDL_Surface *result = SDL_CreateRGBSurface(0, bitmap->w, bitmap->h,
+                                           bitmap->format->BitsPerPixel,
+                                           bitmap->format->Rmask,
+                                           bitmap->format->Gmask,
+                                           bitmap->format->Bmask,
+                                           bitmap->format->Amask);
+  if (!result) return NULL;
+  SDL_Rect src,dest;
+  src.w = bitmap->w;
+  src.h = 1;
+  src.x = 0;
+  dest.x = 0;
+  int origh = bitmap->h;
+  for (int i = 0; i < origh; ++i) {
+    src.y = i;
+    dest.y = (origh - 1) - i;
+    SDL_BlitSurface(bitmap, &src, result, &dest);
+  }
+  return result;
+}
+
+SDL_Surface *loadBitmap(const char filename[]) {
   SDL_Surface *bitmap = SDL_LoadBMP("data/nehe.bmp");
+  if (!bitmap) return NULL;
+  SDL_Surface *flipped = flipSurface(bitmap);
+  SDL_FreeSurface(bitmap);
+  return flipped;
+}
+
+typedef struct {
+  GLubyte r, g, b;
+} RGB;
+
+void flipPixels(RGB bmp[], SDL_Surface *bitmap) {
+  RGB *pixels = (RGB*)bitmap->pixels;
+
+  for (int x = 0; x < bitmap->h; ++x) {
+    for (int y = 0; y < bitmap->w; ++y) {
+      bmp[(bitmap->h - 1 - x) * bitmap->w + bitmap->w - 1 - y] = pixels[x * bitmap->w + y];
+    }
+  }
+}
+
+bool loadTextures() {
+  SDL_Surface *bitmap = loadBitmap("data/nehe.bmp");
   if (!bitmap) return false;
 
   if (!isPowerOf2(bitmap->w)) {
@@ -70,7 +115,7 @@ int loadTextures() {
     fprintf(stderr, "image height is not power of 2");
     return false;
   }
-  
+
   int numColours = bitmap->format->BytesPerPixel;
   GLenum texture_format;
   if (numColours == 4) {
@@ -92,10 +137,10 @@ int loadTextures() {
     return false;
   }
   printf("texture format is '%s'\n", textureFormatToString(texture_format));
-          
+
   // Create the texture.
   glGenTextures(1, &texture[1]);
-  
+
   // Typical texture generation using data from the bitmap.
   glBindTexture(GL_TEXTURE_2D, texture[0]);
 
@@ -103,151 +148,126 @@ int loadTextures() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   
-  // Generate the texture.
-  glTexImage2D(GL_TEXTURE_2D, 0, 
-               numColours, bitmap->w, bitmap->h, 
-               0, texture_format,
-               GL_UNSIGNED_BYTE, bitmap->pixels);
-  
+  bool withMipMap = false;
+  if (withMipMap) {
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 
+                      3, bitmap->w, bitmap->h, 
+                      GL_BGR, GL_UNSIGNED_BYTE, 
+                      bitmap->pixels);
+  } else {
+    RGB bmp[bitmap->w * bitmap->h];
+    flipPixels(bmp, bitmap);
+    bool flip = false;
+    glTexImage2D(GL_TEXTURE_2D, 0,
+                 numColours, bitmap->w, bitmap->h,
+                 0, texture_format,
+                 GL_UNSIGNED_BYTE, flip? bmp : bitmap->pixels);
+  }
+
   SDL_FreeSurface(bitmap);
+
+  printf("texture \"name\" is %d\n", texture[0]);
   return true;
 }
 
-int resizeWindow(int width, int height) {
+bool resizeWindow(int width, int height) {
   // Protect against a divide by zero.
   if (height == 0) height = 1;
-  
+
   GLfloat ratio = (GLfloat)width / (GLfloat)height;
-  
+
   // Setup our viewport.
   glViewport(0, 0, width, height);
-  
+
   // Change to the projection matrix and set our viewing volume.
   glMatrixMode(GL_PROJECTION);
-  glLoadIdentity( );
-  
-  /* Set our perspective */
-  gluPerspective(45.0f, ratio, 0.1f, 100.0f);
-  
-  /* Make sure we're chaning the model view and not the projection */
-  glMatrixMode(GL_MODELVIEW);
-  
-  // Reset The View
   glLoadIdentity();
-  
+
+  gluPerspective(45.0f, ratio, 0.1f, 100.0f);
+
+  // Make sure we're chaning the model view and not the projection.
+  glMatrixMode(GL_MODELVIEW);
+
+  // Reset the view.
+  glLoadIdentity();
+
   return true;
 }
 
-int initGL() {
+bool initGL() {
   if (!loadTextures()) return false;
-  
+
   glEnable(GL_TEXTURE_2D);
   glShadeModel(GL_SMOOTH);
-  
-  /* Set the background black */
-  glClearColor( 0.0f, 0.0f, 0.0f, 0.5f );
-  
+
+  // Set the background black.
+  glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
+
   glClearDepth(1.0f);
-  
+
   glEnable(GL_DEPTH_TEST);  
   glDepthFunc(GL_LEQUAL);
-  
+
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-  
+
   return true;
 }
 
 void drawScene() {
-  /* These are to calculate our fps */
+  // These are to calculate our fps.
   static GLint t0         = 0;
   static GLint frameCount = 0;
   
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
-  /* Move Into The Screen 5 Units */
+  // Move into the screen 5 units.
   glLoadIdentity();
   glTranslatef(0.0f, 0.0f, -5.0f);
   
   glRotatef(xrot, 1.0f, 0.0f, 0.0f);
   glRotatef(yrot, 0.0f, 1.0f, 0.0f);
   glRotatef(zrot, 0.0f, 0.0f, 1.0f);
-  
+
   glBindTexture(GL_TEXTURE_2D, texture[0]);
-  
-  /* NOTE:
-   *   The x coordinates of the glTexCoord2f function need to inverted
-   * for SDL because of the way SDL_LoadBmp loads the data. So where
-   * in the tutorial it has glTexCoord2f( 1.0f, 0.0f ); it should
-   * now read glTexCoord2f( 0.0f, 0.0f );
-   */
+
   glBegin(GL_QUADS);
-  {    
-    /* Front Face */
-    /* Bottom Left Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 1.0f ); glVertex3f( -1.0f, -1.0f, 1.0f );
-    /* Bottom Right Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 1.0f ); glVertex3f(  1.0f, -1.0f, 1.0f );
-    /* Top Right Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 0.0f ); glVertex3f(  1.0f,  1.0f, 1.0f );
-    /* Top Left Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 0.0f ); glVertex3f( -1.0f,  1.0f, 1.0f );
-    
-    /* Back Face */
-    /* Bottom Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 0.0f ); glVertex3f( -1.0f, -1.0f, -1.0f );
-    /* Top Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 1.0f ); glVertex3f( -1.0f,  1.0f, -1.0f );
-    /* Top Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 1.0f ); glVertex3f(  1.0f,  1.0f, -1.0f );
-    /* Bottom Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 0.0f ); glVertex3f(  1.0f, -1.0f, -1.0f );
-    
-    /* Top Face */
-    /* Top Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 1.0f ); glVertex3f( -1.0f,  1.0f, -1.0f );
-    /* Bottom Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 0.0f ); glVertex3f( -1.0f,  1.0f,  1.0f );
-    /* Bottom Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 0.0f ); glVertex3f(  1.0f,  1.0f,  1.0f );
-    /* Top Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 1.0f ); glVertex3f(  1.0f,  1.0f, -1.0f );
-    
-    /* Bottom Face */
-    /* Top Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 1.0f ); glVertex3f( -1.0f, -1.0f, -1.0f );
-    /* Top Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 1.0f ); glVertex3f(  1.0f, -1.0f, -1.0f );
-    /* Bottom Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 0.0f ); glVertex3f(  1.0f, -1.0f,  1.0f );
-    /* Bottom Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 0.0f ); glVertex3f( -1.0f, -1.0f,  1.0f );
-    
-    /* Right face */
-    /* Bottom Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 0.0f ); glVertex3f( 1.0f, -1.0f, -1.0f );
-    /* Top Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 1.0f ); glVertex3f( 1.0f,  1.0f, -1.0f );
-    /* Top Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 1.0f ); glVertex3f( 1.0f,  1.0f,  1.0f );
-    /* Bottom Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 0.0f ); glVertex3f( 1.0f, -1.0f,  1.0f );
-    
-    /* Left Face */
-    /* Bottom Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 0.0f ); glVertex3f( -1.0f, -1.0f, -1.0f );
-    /* Bottom Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 0.0f ); glVertex3f( -1.0f, -1.0f,  1.0f );
-    /* Top Right Of The Texture and Quad */
-    glTexCoord2f( 0.0f, 1.0f ); glVertex3f( -1.0f,  1.0f,  1.0f );
-    /* Top Left Of The Texture and Quad */
-    glTexCoord2f( 1.0f, 1.0f ); glVertex3f( -1.0f,  1.0f, -1.0f );
+  {
+    // Front Face
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Top Left Of The Texture and Quad
+    // Back Face
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// Bottom Right Of The Texture and Quad
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// Top Right Of The Texture and Quad
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// Bottom Left Of The Texture and Quad
+    // Top Face
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Right Of The Texture and Quad
+    // Bottom Face
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// Top Right Of The Texture and Quad
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// Top Left Of The Texture and Quad
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
+    // Right face
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// Bottom Right Of The Texture and Quad
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Right Of The Texture and Quad
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Top Left Of The Texture and Quad
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
+    // Left Face
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// Bottom Left Of The Texture and Quad
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
   }
   glEnd();
   
-  SDL_Flip(surface);
-//  SDL_GL_SwapBuffers();
+  SDL_GL_SwapBuffers();
   
-  /* Gather our frames per second */
+  // Gather our frames per second.
   ++frameCount;
   {
 	GLint t = SDL_GetTicks();
@@ -259,10 +279,12 @@ void drawScene() {
       frameCount = 0;
 	}
   }
-  
-  xrot += 0.3f; /* X Axis Rotation */
-  yrot += 0.2f; /* Y Axis Rotation */
-  zrot += 0.4f; /* Z Axis Rotation */
+
+  if (true) {    
+    xrot += 0.3f / 2 / 2 / 2;
+    yrot += 0.2f / 2 / 2 / 2;
+    zrot += 0.4f / 2 / 2 / 2;
+  }
 }
 
 void handleKeyPress(SDL_keysym *keysym) {
