@@ -229,6 +229,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -269,16 +271,12 @@
 								<string>29B97317FDCFA39411CA2CEA</string>
 								<string>19C28FACFE9D520D11CA2CBB</string>
 								<string>1C37FBAC04509CD000000102</string>
-								<string>9C8C7BC8136FC18A00A6B0A9</string>
-								<string>9C8C7BC9136FC18A00A6B0A9</string>
 								<string>1C37FAAC04509CD000000102</string>
 								<string>1C37FABC05509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>9</integer>
-									<integer>5</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -313,8 +311,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -332,11 +328,9 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>9C8C7CDF136FE72000A6B0A9</string>
+										<string>9C9CCDF013713969007D87CF</string>
 										<key>history</key>
 										<array>
-											<string>9CEE9349136F748600342FBE</string>
-											<string>9C34CD84136FB33A00F28209</string>
 											<string>9C8C7BCA136FC18A00A6B0A9</string>
 											<string>9C8C7BE9136FC40D00A6B0A9</string>
 											<string>9C8C7BF6136FC4BC00A6B0A9</string>
@@ -345,7 +339,8 @@
 											<string>9C8C7C71136FDE9700A6B0A9</string>
 											<string>9C8C7C73136FDE9700A6B0A9</string>
 											<string>9C8C7C75136FDE9700A6B0A9</string>
-											<string>9C8C7CA0136FE09600A6B0A9</string>
+											<string>9C8C7D2A136FF96D00A6B0A9</string>
+											<string>9C8C7D5E13700FFE00A6B0A9</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -357,14 +352,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1171, 639}}</string>
+								<string>{{0, 0}, {1171, 635}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 59 1440 819 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>639pt</string>
+							<string>635pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -377,14 +372,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 644}, {1171, 134}}</string>
+								<string>{{0, 640}, {1171, 138}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 59 1440 819 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>134pt</string>
+							<string>138pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -403,9 +398,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>9C8C7ABB136FBD2A00A6B0A9</string>
+				<string>9C9CCDF113713969007D87CF</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>9C8C7ABC136FBD2A00A6B0A9</string>
+				<string>9C9CCDF213713969007D87CF</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -520,7 +515,7 @@
 	<key>PerspectivesBarVisible</key>
 	<false/>
 	<key>PinnedNavigatorIdentifier</key>
-	<string>9C8C7CC4136FE4E600A6B0A9</string>
+	<string>9C8C7D0B136FEEA700A6B0A9</string>
 	<key>ShelfIsVisible</key>
 	<false/>
 	<key>SourceDescription</key>
@@ -545,11 +540,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>9C8C7AC6136FBD2A00A6B0A9</string>
-		<string>9C8C7AC7136FBD2A00A6B0A9</string>
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>9C72A77A136831CB004D1C1B</string>
-		<string>1C78EAAD065D492600B07095</string>
 		<string>/Users/steshaw/Projects/playground/opengl/nehe/lesson06/nehe.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -574,7 +566,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>lesson06.cpp</string>
+								<string></string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -591,8 +583,6 @@
 							<string>427pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -632,7 +622,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>9C72A77A136831CB004D1C1B</string>
-				<string>9C8C7ABD136FBD2A00A6B0A9</string>
+				<string>9C9CCDF313713969007D87CF</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -754,13 +744,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>9C8C7ABE136FBD2A00A6B0A9</string>
+				<string>9C9CCDF413713969007D87CF</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>9C8C7ABF136FBD2A00A6B0A9</string>
-				<string>9C8C7AC0136FBD2A00A6B0A9</string>
-				<string>9C8C7AC1136FBD2A00A6B0A9</string>
-				<string>9C8C7AC2136FBD2A00A6B0A9</string>
-				<string>9C8C7AC3136FBD2A00A6B0A9</string>
+				<string>9C9CCDF513713969007D87CF</string>
+				<string>9C9CCDF613713969007D87CF</string>
+				<string>9C9CCDF713713969007D87CF</string>
+				<string>9C9CCDF813713969007D87CF</string>
+				<string>9C9CCDF913713969007D87CF</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -893,7 +883,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {886, 428}}</string>
 								<key>RubberWindowFrame</key>
-								<string>530 248 886 469 0 0 1440 878 </string>
+								<string>147 349 886 469 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXDebugCLIModule</string>
@@ -922,11 +912,11 @@
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.consoleV3</string>
 			<key>WindowString</key>
-			<string>530 248 886 469 0 0 1440 878 </string>
+			<string>147 349 886 469 0 0 1440 878 </string>
 			<key>WindowToolGUID</key>
 			<string>1C78EAAD065D492600B07095</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Identifier</key>
