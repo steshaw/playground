@@ -23,7 +23,6 @@ void displayGL() {
   glLoadIdentity();
 
   glTranslatef(-1.5f, 0.0f, -6.0f);
-//  glTranslatef(0.0f, 0.0f, -9.0f);
  
   glPushMatrix();
   {
