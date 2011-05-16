@@ -12,7 +12,7 @@
  *
  * Visit Jeff at http://nehe.gamedev.net/
  * 
- * or for port-specific comments, questions, bugreports etc. 
+ * or for port-specific comments, questions, bugreports etc.
  * email to leggett@eecs.tulane.edu
  */
 
@@ -189,7 +189,7 @@ static bool loadTextures() {
                       GL_BGR, GL_UNSIGNED_BYTE, 
                       bitmap->pixels);
   }
-  
+
   SDL_FreeSurface(bitmap);
 
   for (int i = 0; i < 3; ++i) {
