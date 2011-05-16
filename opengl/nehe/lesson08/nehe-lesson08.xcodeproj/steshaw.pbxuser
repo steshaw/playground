@@ -136,22 +136,22 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 327194152;
-			PBXWorkspaceStateSaveDate = 327194152;
+			PBXPerProjectTemplateStateSaveDate = 327207201;
+			PBXWorkspaceStateSaveDate = 327207201;
 		};
 		perUserProjectItems = {
-			9C09006F1380B64C00414B31 /* PBXTextBookmark */ = 9C09006F1380B64C00414B31 /* PBXTextBookmark */;
-			9C0900B31380C49700414B31 /* XCBuildMessageTextBookmark */ = 9C0900B31380C49700414B31 /* XCBuildMessageTextBookmark */;
-			9C0900F21380C86500414B31 /* PBXTextBookmark */ = 9C0900F21380C86500414B31 /* PBXTextBookmark */;
-			9C8C7BCA136FC18A00A6B0A9 /* PBXTextBookmark */ = 9C8C7BCA136FC18A00A6B0A9 /* PBXTextBookmark */;
-			9C8C7BE9136FC40D00A6B0A9 /* PBXTextBookmark */ = 9C8C7BE9136FC40D00A6B0A9 /* PBXTextBookmark */;
-			9C8C7BF6136FC4BC00A6B0A9 /* PBXTextBookmark */ = 9C8C7BF6136FC4BC00A6B0A9 /* PBXTextBookmark */;
-			9C8C7C06136FC54B00A6B0A9 /* PBXTextBookmark */ = 9C8C7C06136FC54B00A6B0A9 /* PBXTextBookmark */;
-			9C8C7C60136FDBB100A6B0A9 /* PBXTextBookmark */ = 9C8C7C60136FDBB100A6B0A9 /* PBXTextBookmark */;
-			9C8C7C71136FDE9700A6B0A9 /* PBXTextBookmark */ = 9C8C7C71136FDE9700A6B0A9 /* PBXTextBookmark */;
-			9C9CCF15137167CC007D87CF /* PBXTextBookmark */ = 9C9CCF15137167CC007D87CF /* PBXTextBookmark */;
-			9C9CCF17137167CC007D87CF /* PBXTextBookmark */ = 9C9CCF17137167CC007D87CF /* PBXTextBookmark */;
-			9C9CCF4A13716E2A007D87CF /* PBXTextBookmark */ = 9C9CCF4A13716E2A007D87CF /* PBXTextBookmark */;
+			9C09006F1380B64C00414B31 = 9C09006F1380B64C00414B31 /* PBXTextBookmark */;
+			9C0900B31380C49700414B31 = 9C0900B31380C49700414B31 /* PBXTextBookmark */;
+			9C0900F21380C86500414B31 = 9C0900F21380C86500414B31 /* PBXTextBookmark */;
+			9C8C7BCA136FC18A00A6B0A9 = 9C8C7BCA136FC18A00A6B0A9 /* PBXTextBookmark */;
+			9C8C7BE9136FC40D00A6B0A9 = 9C8C7BE9136FC40D00A6B0A9 /* PBXTextBookmark */;
+			9C8C7BF6136FC4BC00A6B0A9 = 9C8C7BF6136FC4BC00A6B0A9 /* PBXTextBookmark */;
+			9C8C7C06136FC54B00A6B0A9 = 9C8C7C06136FC54B00A6B0A9 /* PBXTextBookmark */;
+			9C8C7C60136FDBB100A6B0A9 = 9C8C7C60136FDBB100A6B0A9 /* PBXTextBookmark */;
+			9C8C7C71136FDE9700A6B0A9 = 9C8C7C71136FDE9700A6B0A9 /* PBXTextBookmark */;
+			9C9CCF15137167CC007D87CF = 9C9CCF15137167CC007D87CF /* PBXTextBookmark */;
+			9C9CCF17137167CC007D87CF = 9C9CCF17137167CC007D87CF /* PBXTextBookmark */;
+			9C9CCF4A13716E2A007D87CF = 9C9CCF4A13716E2A007D87CF /* PBXTextBookmark */;
 		};
 		sourceControlManager = 9C72A786136831CB004D1C1B /* Source Control */;
 		userBuildSettings = {
@@ -181,11 +181,10 @@
 		vrLen = 1186;
 		vrLoc = 0;
 	};
-	9C0900B31380C49700414B31 /* XCBuildMessageTextBookmark */ = {
+	9C0900B31380C49700414B31 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		comments = "Expected unqualified-id before '[' token";
 		fRef = 9C0900081380B41100414B31 /* main.cpp */;
-		fallbackIsa = XCBuildMessageTextBookmark;
 		rLen = 1;
 		rLoc = 334;
 		rType = 1;
@@ -362,11 +361,6 @@
 		name = SDL_keyboard.h;
 		path = /Library/Frameworks/SDL.framework/Headers/SDL_keyboard.h;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1110, 2112}}";
-			sepNavSelRange = "{345, 0}";
-			sepNavVisRange = "{0, 1186}";
-		};
 	};
 	9C9CCF15137167CC007D87CF /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;

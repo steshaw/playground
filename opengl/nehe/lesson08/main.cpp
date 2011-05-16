@@ -310,9 +310,9 @@ static void drawScene() {
     glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
   }
   glEnd();
-  
+
   SDL_GL_SwapBuffers();
-  
+
   // FPS.
   static GLint t0         = 0;
   static GLint frameCount = 0;
@@ -344,6 +344,7 @@ static const char* textureTypeToString(int textureType) {
     default:
       break;
   }
+  return "oops";
 }
 
 static void handleKeyPress(SDL_keysym *keysym) {
@@ -400,7 +401,7 @@ static void handleKeyPress(SDL_keysym *keysym) {
       printf("q/Esc pressed\n");
       cleanExit(0);
       break;
-      
+
     case SDLK_F1:
     case SDLK_f:
       printf("F1/f pressed - toggle fullscreen\n");
@@ -411,11 +412,11 @@ static void handleKeyPress(SDL_keysym *keysym) {
       initGL();  
       resizeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
       break;
-      
+
 	default:
       break;
   }
-  
+
   return;
 }
 
@@ -424,9 +425,9 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Video initialization failed: %s\n", SDL_GetError());
     cleanExit(1);
   }
-  
+
   const SDL_VideoInfo *videoInfo = SDL_GetVideoInfo();
-  
+
   if (!videoInfo) {
     fprintf(stderr, "Video query failed: %s\n", SDL_GetError());
     cleanExit(1);
@@ -435,9 +436,9 @@ int main(int argc, char *argv[]) {
   videoFlags     |= SDL_DOUBLEBUF | SDL_HWSURFACE;
   videoFlags     |= SDL_HWPALETTE;
   videoFlags     |= SDL_RESIZABLE;
-  
+
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  
+
   surface = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, videoFlags);
   if (!surface) {
     fprintf(stderr, "Video mode set failed: %s\n", SDL_GetError());
@@ -445,11 +446,11 @@ int main(int argc, char *argv[]) {
   }
 
   printf("screen is hardware surface = %d\n", (surface->flags & SDL_HWSURFACE == 0));
-  
+
   initGL();  
   resizeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
   SDL_EnableKeyRepeat(100, 50);
-  
+
   // Event loop.
   for (;;) {
     SDL_Event event;
