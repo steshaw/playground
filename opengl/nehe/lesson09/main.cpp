@@ -22,39 +22,31 @@
 #include <OpenGL/glu.h>
 #include <SDL/SDL.h>
 
+#define loop(v, m) for(int v = 0; v<(m); v++)
+#define loopi(m) loop(i,m)
+#define loopj(m) loop(j,m)
+#define loopk(m) loop(k,m)
+#define loopl(m) loop(l,m)
+
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 480
 #define SCREEN_BPP     16
 
 static SDL_Surface *surface;
 
-static GLfloat xRot = 0.0f;
-static GLfloat yRot = 0.0f;
-
-static GLfloat xSpeed = 0.0f;
-static GLfloat ySpeed = 0.0f;
-
-static GLfloat z = -5.0f;
-
-static GLfloat lightAmbient[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
-static GLfloat lightDiffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
-static GLfloat lightPosition[] = { 0.0f, 0.0f, 2.0f, 1.0f };
-
-static GLuint textureType = 0;
+static GLuint textureType = 1; // Linear-filtered texture.
 static GLuint texture[3];
 
-static bool lighting = true;
-static bool blending = true;
-
 static bool twinkling = false;
+static bool randomTwinkle = false;
+
+static bool animate = true;
 
 const int numStars = 50;
 
-GLfloat zoom = -15.0f;
-GLfloat tilt = 90.0f;
-GLfloat spin = 0.0f;
-
-GLuint loop = 0;
+static GLfloat zoom = -15.0f;
+static GLfloat tilt = 90.0f;
+static GLfloat spin = 0.0f;
 
 struct Star {
   int r, g, b;
@@ -62,7 +54,7 @@ struct Star {
   GLfloat angle;
 };
 
-static Star stars[numStars];
+static Star star[numStars];
 
 static int videoFlags  = SDL_OPENGL;
 
@@ -127,16 +119,6 @@ typedef struct {
   GLubyte r, g, b;
 } RGB;
 
-static void flipPixels(RGB bmp[], SDL_Surface *bitmap) {
-  RGB *pixels = (RGB*)bitmap->pixels;
-
-  for (int x = 0; x < bitmap->h; ++x) {
-    for (int y = 0; y < bitmap->w; ++y) {
-      bmp[(bitmap->h - 1 - x) * bitmap->w + bitmap->w - 1 - y] = pixels[x * bitmap->w + y];
-    }
-  }
-}
-
 static bool loadTextures() {
   SDL_Surface *bitmap = loadBitmap("data/star.bmp");
   if (!bitmap) return false;
@@ -172,9 +154,9 @@ static bool loadTextures() {
   }
   printf("texture format is '%s'\n", textureFormatToString(texture_format));
 
-  // Create the texture.
+  // Create the textures.
   glGenTextures(3, texture);
-  
+
   // Create nearest filtered texture as texture[0].
   {
     glBindTexture(GL_TEXTURE_2D, texture[0]);
@@ -241,113 +223,132 @@ static bool resizeWindow(int width, int height) {
   return true;
 }
 
+static inline GLuint randColor() {
+  return rand() % 256;
+}
+
+static void initStars() {
+  loopi (numStars) {
+    star[i].angle = 0.0f;
+    star[i].distance = float(i)/numStars * 5.0f;
+    star[i].r = randColor();
+    star[i].g = randColor();
+    star[i].b = randColor();
+  }
+}
+
 static bool initGL() {
   if (!loadTextures()) return false;
 
   glEnable(GL_TEXTURE_2D);
   glShadeModel(GL_SMOOTH);
 
-  // Set the background black.
   glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
-
   glClearDepth(1.0f);
-
-#if 0
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
-#endif
-
-  glEnable(GL_BLEND);
-  glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
-  glLightfv(GL_LIGHT1, GL_AMBIENT, lightAmbient);
-  glLightfv(GL_LIGHT1, GL_DIFFUSE, lightDiffuse);
-  glLightfv(GL_LIGHT1, GL_POSITION, lightPosition);
-  glEnable(GL_LIGHT1);
-  glEnable(GL_LIGHTING);
-
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+  glEnable(GL_BLEND);
+
+  initStars();
+
   return true;
+}
+
+static void drawStarQuads() {
+  glBegin(GL_QUADS);
+  {
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, 0.0f);
+  }
+  glEnd();
+}
+
+static void animationStep(int i, Star &star) {
+  spin += 0.01f;
+  star.angle += float(i) / numStars;
+  star.distance -= 0.01f;
+}
+
+static void animationStepAll() {
+  loopi (numStars) {
+    animationStep(i, star[i]);
+  }
 }
 
 static void drawScene() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glLoadIdentity();
-  glTranslatef(0.0f, 0.0f, z);
-
-  glRotatef(xRot, 1.0f, 0.0f, 0.0f);
-  glRotatef(yRot, 0.0f, 1.0f, 0.0f);
-
   glBindTexture(GL_TEXTURE_2D, texture[textureType]);
+  
+#if 0
+  printf("tilt = %g\n", tilt);
+  printf("zoom = %g\n", zoom);
+#endif
 
-  glBegin(GL_QUADS);
-  {
-    // Front Face
-    glNormal3f(0.f, 0.f, 1.f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+  loopi(numStars) {
+    glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, zoom);
+    glRotatef(tilt, 1.0f, 0.0f, 0.0f);
+
+    glRotatef(star[i].angle, 0.0f, 1.0f, 0.0f);
+    glTranslatef(star[i].distance, 0.0f, 0.0f);
+
+    // Cancel rotations.
+    glRotatef(-star[i].angle, 0.0f, 1.0f, 0.0f);
+    glRotatef(-tilt, 1.0f, 0.0f, 0.0f);
+
+    // Handle twinkling.
+    if (twinkling) {
+      if (randomTwinkle) {
+        glColor4ub(randColor(), randColor(), randColor(), 255);
+      } else {
+        // Select another star the same distance from the end of the array as this one is from the beginning.
+        Star other = star[numStars - i - 1];
+        glColor4ub(other.r, other.g, other.b, 255);
+      }
+      drawStarQuads();
+    }
+
+    // Draw star.
+    glRotatef(spin, 0.0f, 0.0f, 1.0f);
+    glColor4ub(star[i].r, star[i].g, star[i].b, 255);
+    drawStarQuads();
+
+    // Adjust stars.
+    if (animate) {
+      animationStep(i, star[i]);
+    }
     
-    // Back Face
-    glNormal3f(0.f, 0.f, -1.f);
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-    
-    // Top Face
-    glNormal3f(0.f, 1.f, 0.f);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-    
-    // Bottom Face
-    glNormal3f(0.f, -1.f, 0.f);
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-    
-    // Right face
-    glNormal3f(1.f, 0.f, 0.f);
-    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-    
-    // Left Face
-    glNormal3f(-1.f, 0.f, 0.f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+    // Reset star if reached middle.
+    if (star[i].distance < 0.0f) {
+      star[i].distance += 5.0f;
+      star[i].r = randColor();
+      star[i].g = randColor();
+      star[i].b = randColor();
+    }
   }
-  glEnd();
 
   SDL_GL_SwapBuffers();
 
-  // FPS.
-  static GLint t0         = 0;
-  static GLint frameCount = 0;
-  ++frameCount;
+  // Frames per second.
+  static GLint t0     = 0;
+  static GLint frames = 0;
+  ++frames;
   {
-	GLint t = SDL_GetTicks();
-	if (t - t0 >= 5000) {
-      GLfloat seconds = (t - t0) / 1000.0;
-      GLfloat fps = frameCount / seconds;
-      printf("%d frames in %g seconds = %g FPS\n", frameCount, seconds, fps);
+    GLint t = SDL_GetTicks();
+    if (t - t0 >= 5000) {
+      double seconds = (t - t0) / 1000.0;
+      double fps = frames / seconds;
+      printf("%d frames in %g seconds = %g fps\n", frames, seconds, fps);
+    
+      // Reset.
       t0 = t;
-      frameCount = 0;
-	}
+      frames = 0;
+    }
   }
-
-  xRot += xSpeed;
-  yRot += ySpeed;
 }
 
 static const char* textureTypeToString(int textureType) {
@@ -368,53 +369,51 @@ static const char* textureTypeToString(int textureType) {
 static void handleKeyPress(SDL_keysym *keysym) {
   switch (keysym->sym) {
 
+    case SDLK_a:
+      animate = !animate;
+      printf("animate = %s\n", animate? "on" : "off");
+      break;
+
+    case SDLK_i:
+      initStars();
+      printf("stars reinitialised\n");
+      break;
+
+    case SDLK_s:
+      animationStepAll();
+      printf("animationStepAll()\n");
+      break;
+
+    case SDLK_k:
+      twinkling = !twinkling;
+      printf("twinkling = %s\n", twinkling? "on" : "off");
+      break;
+
+    case SDLK_r:
+      randomTwinkle = !randomTwinkle;
+      printf("random twinkling = %s\n", randomTwinkle? "on" : "off");
+      break;
+
     case SDLK_t:
       textureType = ++textureType % 3;
       printf("texture type = %s\n", textureTypeToString(textureType));
       break;
 
-    case SDLK_b:
-      blending = !blending;
-      if (blending) {
-        glEnable(GL_BLEND);
-        glDisable(GL_DEPTH_TEST);
-      } else {
-        glDisable(GL_BLEND);
-        glEnable(GL_DEPTH_TEST);
-      }      
-      break;
-      
-    case SDLK_l:
-      lighting = !lighting;
-      if (lighting) {
-        glEnable(GL_LIGHTING);
-      } else {
-        glDisable(GL_LIGHTING);
-      }      
-      break;
-
-    case SDLK_RIGHT:
-      ySpeed += 0.01f;
-      break;
-    case SDLK_LEFT:
-      ySpeed -= 0.01f;
-      break;
-
-    case SDLK_DOWN:
-      xSpeed += 0.01f;
-      break;
     case SDLK_UP:
-      xSpeed -= 0.01f;
+      tilt -= 0.5f;
+      break;
+    case SDLK_DOWN:
+      tilt += 0.5f;
       break;
 
     case SDLK_PAGEDOWN:
-      z -= 0.08f;
+      zoom -= 0.2f;
       break;
     case SDLK_PAGEUP:
-      z += 0.08f;
+      zoom += 0.2f;
       break;
-      
-	case SDLK_ESCAPE:
+
+    case SDLK_ESCAPE:
     case SDLK_q:
       printf("q/Esc pressed\n");
       cleanExit(0);
@@ -431,7 +430,7 @@ static void handleKeyPress(SDL_keysym *keysym) {
       resizeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
       break;
 
-	default:
+    default:
       break;
   }
 
@@ -483,7 +482,7 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "Could not get a surface after resize: %s\n", SDL_GetError());
             cleanExit(1);
           }
-          initGL();  
+          initGL();
           resizeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
           break;
         case SDL_KEYDOWN:
