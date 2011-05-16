@@ -1,5 +1,9 @@
+//
+// Steven Shaw adapted from original NeHe tutorials. See original notice below.
+//
+
 /*
- * Adapted from original code. See below.
+ * ORIGINAL NOTICE:
  *
  * This code was created by Jeff Molofee '99
  * (ported to Linux/SDL by Ti Leggett '01)
@@ -24,15 +28,27 @@
 
 static SDL_Surface *surface;
 
-static GLfloat xrot = 0.0f;
-static GLfloat yrot = 0.0f;
-static GLfloat zrot = 0.0f;
+static GLfloat xRot = 0.0f;
+static GLfloat yRot = 0.0f;
+
+static GLfloat xSpeed = 0.0f;
+static GLfloat ySpeed = 0.0f;
+
+static GLfloat z = -5.0f;
+
+static GLfloat lightAmbient[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
+static GLfloat lightDiffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+static GLfloat lightPosition[] = { 0.0f, 0.0f, 2.0f, 1.0f };
+
+static GLuint filter = 0;
+static GLuint texture[3];
+
+static bool lighting = true;
+static bool blending = true;
 
 int videoFlags  = SDL_OPENGL;
 
-static GLuint texture[1];
-
-void cleanExit(int returnCode) {
+static void cleanExit(int returnCode) {
   SDL_Quit();
   exit(returnCode);
 }
@@ -58,7 +74,7 @@ static const char* textureFormatToString(GLenum textureFormat) {
   }
 }
 
-SDL_Surface *flipSurface(SDL_Surface *bitmap) {
+static SDL_Surface *flipSurface(SDL_Surface *bitmap) {
   if (!bitmap) return NULL;
   SDL_Surface *result = SDL_CreateRGBSurface(0, bitmap->w, bitmap->h,
                                            bitmap->format->BitsPerPixel,
@@ -81,8 +97,8 @@ SDL_Surface *flipSurface(SDL_Surface *bitmap) {
   return result;
 }
 
-SDL_Surface *loadBitmap(const char filename[]) {
-  SDL_Surface *bitmap = SDL_LoadBMP("data/nehe.bmp");
+static SDL_Surface *loadBitmap(const char filename[]) {
+  SDL_Surface *bitmap = SDL_LoadBMP(filename);
   if (!bitmap) return NULL;
   SDL_Surface *flipped = flipSurface(bitmap);
   SDL_FreeSurface(bitmap);
@@ -93,7 +109,7 @@ typedef struct {
   GLubyte r, g, b;
 } RGB;
 
-void flipPixels(RGB bmp[], SDL_Surface *bitmap) {
+static void flipPixels(RGB bmp[], SDL_Surface *bitmap) {
   RGB *pixels = (RGB*)bitmap->pixels;
 
   for (int x = 0; x < bitmap->h; ++x) {
@@ -103,8 +119,8 @@ void flipPixels(RGB bmp[], SDL_Surface *bitmap) {
   }
 }
 
-bool loadTextures() {
-  SDL_Surface *bitmap = loadBitmap("data/nehe.bmp");
+static bool loadTextures() {
+  SDL_Surface *bitmap = loadBitmap("data/glass.bmp");
   if (!bitmap) return false;
 
   if (!isPowerOf2(bitmap->w)) {
@@ -155,13 +171,10 @@ bool loadTextures() {
                       GL_BGR, GL_UNSIGNED_BYTE, 
                       bitmap->pixels);
   } else {
-    RGB bmp[bitmap->w * bitmap->h];
-    flipPixels(bmp, bitmap);
-    bool flip = false;
     glTexImage2D(GL_TEXTURE_2D, 0,
                  numColours, bitmap->w, bitmap->h,
                  0, texture_format,
-                 GL_UNSIGNED_BYTE, flip? bmp : bitmap->pixels);
+                 GL_UNSIGNED_BYTE, bitmap->pixels);
   }
 
   SDL_FreeSurface(bitmap);
@@ -170,7 +183,7 @@ bool loadTextures() {
   return true;
 }
 
-bool resizeWindow(int width, int height) {
+static bool resizeWindow(int width, int height) {
   // Protect against a divide by zero.
   if (height == 0) height = 1;
 
@@ -194,7 +207,7 @@ bool resizeWindow(int width, int height) {
   return true;
 }
 
-bool initGL() {
+static bool initGL() {
   if (!loadTextures()) return false;
 
   glEnable(GL_TEXTURE_2D);
@@ -205,69 +218,88 @@ bool initGL() {
 
   glClearDepth(1.0f);
 
-  glEnable(GL_DEPTH_TEST);  
+#if 0
+  glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
+#endif
+
+  glEnable(GL_BLEND);
+  glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+  glLightfv(GL_LIGHT1, GL_AMBIENT, lightAmbient);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE, lightDiffuse);
+  glLightfv(GL_LIGHT1, GL_POSITION, lightPosition);
+  glEnable(GL_LIGHT1);
+  glEnable(GL_LIGHTING);
 
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
   return true;
 }
 
-void drawScene() {
-  // These are to calculate our fps.
-  static GLint t0         = 0;
-  static GLint frameCount = 0;
-  
+static void drawScene() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
-  // Move into the screen 5 units.
-  glLoadIdentity();
-  glTranslatef(0.0f, 0.0f, -5.0f);
-  
-  glRotatef(xrot, 1.0f, 0.0f, 0.0f);
-  glRotatef(yrot, 0.0f, 1.0f, 0.0f);
-  glRotatef(zrot, 0.0f, 0.0f, 1.0f);
 
-  glBindTexture(GL_TEXTURE_2D, texture[0]);
+  glLoadIdentity();
+  glTranslatef(0.0f, 0.0f, z);
+
+  glRotatef(xRot, 1.0f, 0.0f, 0.0f);
+  glRotatef(yRot, 0.0f, 1.0f, 0.0f);
+
+  glBindTexture(GL_TEXTURE_2D, texture[filter]);
 
   glBegin(GL_QUADS);
   {
     // Front Face
-    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
-    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
-    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
-    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Top Left Of The Texture and Quad
+    glNormal3f(0.f, 0.f, 1.f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+    
     // Back Face
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// Bottom Right Of The Texture and Quad
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// Top Right Of The Texture and Quad
-    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
-    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// Bottom Left Of The Texture and Quad
+    glNormal3f(0.f, 0.f, -1.f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+    
     // Top Face
-    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
-    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
-    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
-    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Right Of The Texture and Quad
+    glNormal3f(0.f, 1.f, 0.f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+    
     // Bottom Face
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// Top Right Of The Texture and Quad
-    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// Top Left Of The Texture and Quad
-    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
+    glNormal3f(0.f, -1.f, 0.f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+    
     // Right face
-    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// Bottom Right Of The Texture and Quad
-    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// Top Right Of The Texture and Quad
-    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// Top Left Of The Texture and Quad
-    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// Bottom Left Of The Texture and Quad
+    glNormal3f(1.f, 0.f, 0.f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+    
     // Left Face
-    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// Bottom Left Of The Texture and Quad
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// Bottom Right Of The Texture and Quad
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// Top Right Of The Texture and Quad
-    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
+    glNormal3f(-1.f, 0.f, 0.f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
   }
   glEnd();
   
   SDL_GL_SwapBuffers();
   
-  // Gather our frames per second.
+  // FPS.
+  static GLint t0         = 0;
+  static GLint frameCount = 0;
   ++frameCount;
   {
 	GLint t = SDL_GetTicks();
@@ -280,20 +312,64 @@ void drawScene() {
 	}
   }
 
-  if (true) {    
-    xrot += 0.3f / 2 / 2 / 2;
-    yrot += 0.2f / 2 / 2 / 2;
-    zrot += 0.4f / 2 / 2 / 2;
-  }
+  xRot += xSpeed;
+  yRot += ySpeed;
 }
 
-void handleKeyPress(SDL_keysym *keysym) {
+static void handleKeyPress(SDL_keysym *keysym) {
   switch (keysym->sym) {
+
+    case SDLK_t:
+      filter = ++filter % 3;
+      break;
+
+    case SDLK_b:
+      blending = !blending;
+      if (blending) {
+        glEnable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
+      } else {
+        glDisable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+      }      
+      break;
+      
+    case SDLK_l:
+      lighting = !lighting;
+      if (lighting) {
+        glEnable(GL_LIGHTING);
+      } else {
+        glDisable(GL_LIGHTING);
+      }      
+      break;
+
+    case SDLK_RIGHT:
+      ySpeed += 0.01f;
+      break;
+    case SDLK_LEFT:
+      ySpeed -= 0.01f;
+      break;
+
+    case SDLK_DOWN:
+      xSpeed += 0.01f;
+      break;
+    case SDLK_UP:
+      xSpeed -= 0.01f;
+      break;
+
+    case SDLK_PAGEDOWN:
+      z -= 0.08f;
+      break;
+    case SDLK_PAGEUP:
+      z += 0.08f;
+      break;
+      
 	case SDLK_ESCAPE:
     case SDLK_q:
       printf("q/Esc pressed\n");
       cleanExit(0);
       break;
+      
     case SDLK_F1:
     case SDLK_f:
       printf("F1/f pressed - toggle fullscreen\n");
@@ -304,6 +380,7 @@ void handleKeyPress(SDL_keysym *keysym) {
       initGL();  
       resizeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
       break;
+      
 	default:
       break;
   }
@@ -340,6 +417,7 @@ int main(int argc, char *argv[]) {
   
   initGL();  
   resizeWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
+  SDL_EnableKeyRepeat(100, 50);
   
   // Event loop.
   for (;;) {
@@ -372,9 +450,9 @@ int main(int argc, char *argv[]) {
     drawScene();
   }
 finished:
-  
+
   cleanExit(0);
-  
+
   // Never reached.
   return 0;
 }
