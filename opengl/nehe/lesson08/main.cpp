@@ -40,7 +40,7 @@ static GLfloat lightAmbient[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
 static GLfloat lightDiffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
 static GLfloat lightPosition[] = { 0.0f, 0.0f, 2.0f, 1.0f };
 
-static GLuint filter = 0;
+static GLuint textureType = 0;
 static GLuint texture[3];
 
 static bool lighting = true;
@@ -155,31 +155,47 @@ static bool loadTextures() {
   printf("texture format is '%s'\n", textureFormatToString(texture_format));
 
   // Create the texture.
-  glGenTextures(1, &texture[1]);
-
-  // Typical texture generation using data from the bitmap.
-  glBindTexture(GL_TEXTURE_2D, texture[0]);
-
-  // Linear Filtering.
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glGenTextures(3, texture);
   
-  bool withMipMap = false;
-  if (withMipMap) {
-    gluBuild2DMipmaps(GL_TEXTURE_2D, 
-                      3, bitmap->w, bitmap->h, 
-                      GL_BGR, GL_UNSIGNED_BYTE, 
-                      bitmap->pixels);
-  } else {
+  // Create nearest filtered texture as texture[0].
+  {
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0,
                  numColours, bitmap->w, bitmap->h,
                  0, texture_format,
                  GL_UNSIGNED_BYTE, bitmap->pixels);
   }
 
+  // Create linear filtered texture as texture[1].
+  {
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0,
+                 numColours, bitmap->w, bitmap->h,
+                 0, texture_format,
+                 GL_UNSIGNED_BYTE, bitmap->pixels);
+  }
+
+  // Create linear mipmapped texture as texture[2].
+  {
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 
+                      3, bitmap->w, bitmap->h, 
+                      GL_BGR, GL_UNSIGNED_BYTE, 
+                      bitmap->pixels);
+  }
+  
   SDL_FreeSurface(bitmap);
 
-  printf("texture \"name\" is %d\n", texture[0]);
+  for (int i = 0; i < 3; ++i) {
+    printf("texture[%i] \"name\" is %i\n", i, texture[i]);    
+  }
+
   return true;
 }
 
@@ -247,7 +263,7 @@ static void drawScene() {
   glRotatef(xRot, 1.0f, 0.0f, 0.0f);
   glRotatef(yRot, 0.0f, 1.0f, 0.0f);
 
-  glBindTexture(GL_TEXTURE_2D, texture[filter]);
+  glBindTexture(GL_TEXTURE_2D, texture[textureType]);
 
   glBegin(GL_QUADS);
   {
@@ -316,11 +332,26 @@ static void drawScene() {
   yRot += ySpeed;
 }
 
+static const char* textureTypeToString(int textureType) {
+  switch (textureType) {
+    case 0:
+      return "NEAREST";
+    case 1:
+      return "LINEAR";
+    case 2:
+      return "LINEAR_MIPMAP_NEAREST";
+      break;
+    default:
+      break;
+  }
+}
+
 static void handleKeyPress(SDL_keysym *keysym) {
   switch (keysym->sym) {
 
     case SDLK_t:
-      filter = ++filter % 3;
+      textureType = ++textureType % 3;
+      printf("texture type = %s\n", textureTypeToString(textureType));
       break;
 
     case SDLK_b:
