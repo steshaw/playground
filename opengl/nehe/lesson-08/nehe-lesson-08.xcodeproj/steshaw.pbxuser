@@ -136,13 +136,13 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 327229869;
-			PBXWorkspaceStateSaveDate = 327229869;
+			PBXPerProjectTemplateStateSaveDate = 328077749;
+			PBXWorkspaceStateSaveDate = 328077749;
 		};
 		perUserProjectItems = {
 			9C09006F1380B64C00414B31 /* PBXTextBookmark */ = 9C09006F1380B64C00414B31 /* PBXTextBookmark */;
-			9C0900FD1380CA3000414B31 /* PBXTextBookmark */ = 9C0900FD1380CA3000414B31 /* PBXTextBookmark */;
 			9C090422138121F000414B31 /* PBXTextBookmark */ = 9C090422138121F000414B31 /* PBXTextBookmark */;
+			9C5CFD01138E11DD009CA8AD /* PBXTextBookmark */ = 9C5CFD01138E11DD009CA8AD /* PBXTextBookmark */;
 			9C8C7BCA136FC18A00A6B0A9 /* PBXTextBookmark */ = 9C8C7BCA136FC18A00A6B0A9 /* PBXTextBookmark */;
 			9C8C7BE9136FC40D00A6B0A9 /* PBXTextBookmark */ = 9C8C7BE9136FC40D00A6B0A9 /* PBXTextBookmark */;
 			9C8C7BF6136FC4BC00A6B0A9 /* PBXTextBookmark */ = 9C8C7BF6136FC4BC00A6B0A9 /* PBXTextBookmark */;
@@ -165,8 +165,8 @@
 	};
 	9C0900081380B41100414B31 /* main.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1110, 8352}}";
-			sepNavSelRange = "{10429, 0}";
+			sepNavIntBoundsRect = "{{0, 0}, {1110, 7856}}";
+			sepNavSelRange = "{2197, 0}";
 			sepNavVisRange = "{0, 748}";
 			sepNavWindowFrame = "{{15, 4}, {1189, 874}}";
 		};
@@ -179,16 +179,6 @@
 		rLoc = 345;
 		rType = 0;
 		vrLen = 1186;
-		vrLoc = 0;
-	};
-	9C0900FD1380CA3000414B31 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 9C0900081380B41100414B31 /* main.cpp */;
-		name = "main.cpp: 403";
-		rLen = 0;
-		rLoc = 10429;
-		rType = 0;
-		vrLen = 748;
 		vrLoc = 0;
 	};
 	9C090422138121F000414B31 /* PBXTextBookmark */ = {
@@ -215,6 +205,16 @@
 			sepNavSelRange = "{0, 0}";
 			sepNavVisRange = "{0, 374}";
 		};
+	};
+	9C5CFD01138E11DD009CA8AD /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 9C0900081380B41100414B31 /* main.cpp */;
+		name = "main.cpp: 91";
+		rLen = 0;
+		rLoc = 2197;
+		rType = 0;
+		vrLen = 748;
+		vrLoc = 0;
 	};
 	9C72A769136831B3004D1C1B /* nehe-lesson-08 */ = {
 		isa = PBXExecutable;
