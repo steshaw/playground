@@ -44,7 +44,7 @@ Hello.main = function() {
 	haxe.Log.trace("Hello world!",{ fileName : "Hello.hx", lineNumber : 3, className : "Hello", methodName : "main"});
 	js.Lib.alert(js.Lib.window.location.href);
 	var w = js.Lib.window;
-	js.Lib.window.status = "Steven Shaw was here";
+	w.status = "Steven Shaw was here";
 	js.Lib.document.onclick = function(e) {
 		w.status = "Clicked";
 	}
