@@ -7,11 +7,15 @@ class Equals1Alternative {
   static class A {
     int n1;
     public boolean equals(Object o) {
-      if (!(o instanceof A)) {
-        return false;
+      if (super.equals(o)) {
+        return true;
       } else {
-        A rhs = (A)o;
-        return this.n1 == rhs.n1;
+        if (!(o instanceof A)) {
+          return false;
+        } else {
+          A rhs = (A)o;
+          return this.n1 == rhs.n1;
+        }
       }
     }
   }
