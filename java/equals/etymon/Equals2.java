@@ -1,7 +1,7 @@
 //
 // Equals solution 2 from http://etymon.blogspot.com/2004/08/objectequals.html
 //
-// Appears broken.
+// With fix applied to EllipseBase.equals.
 // 
 
 class Equals2 {
@@ -10,7 +10,7 @@ class Equals2 {
     public abstract int getMajor();
     public abstract int getMinor();
     public final boolean equals(Object o) {
-      if (!super.equals(o)) {
+      if (o == null || !(o instanceof EllipseBase)) {
         return false;
       } else {
         EllipseBase rhs = (EllipseBase)o;
