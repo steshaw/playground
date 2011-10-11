@@ -13,9 +13,9 @@ class Equals2 {
       if (!(o instanceof EllipseBase)) {
         return false;
       } else {
-        EllipseBase rhs = (EllipseBase)o;
-        return this.getMajor() == rhs.getMajor()
-            && this.getMinor() == rhs.getMinor();
+        EllipseBase that = (EllipseBase)o;
+        return this.getMajor() == that.getMajor()
+            && this.getMinor() == that.getMinor();
       }
     }
   }

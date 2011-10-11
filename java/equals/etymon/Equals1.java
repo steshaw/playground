@@ -15,8 +15,8 @@ class Equals1 {
       } else if (o == null || !getClass().equals(o.getClass())) {
         return false;
       } else {
-        A rhs = (A)o;
-        return this.n1 == rhs.n1;
+        A that = (A)o;
+        return this.n1 == that.n1;
       }
     }
   }
@@ -27,8 +27,8 @@ class Equals1 {
       if (!super.equals(o)) {
         return false;
       } else {
-        B rhs = (B)o;
-        return this.n2 == rhs.n2;
+        B that = (B)o;
+        return this.n2 == that.n2;
       }
     }
   }

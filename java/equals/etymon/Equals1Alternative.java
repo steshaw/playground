@@ -13,8 +13,8 @@ class Equals1Alternative {
         if (!(o instanceof A)) {
           return false;
         } else {
-          A rhs = (A)o;
-          return this.n1 == rhs.n1;
+          A that = (A)o;
+          return this.n1 == that.n1;
         }
       }
     }
@@ -29,8 +29,8 @@ class Equals1Alternative {
         if (!(o instanceof B)) {
           return false;
         } else {
-          B rhs = (B)o;
-          return this.n2 == rhs.n2;
+          B that = (B)o;
+          return this.n2 == that.n2;
         }
       }
     }
