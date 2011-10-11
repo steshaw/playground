@@ -7,7 +7,7 @@ class Equals1Alternative {
   static class A {
     int n1;
     public boolean equals(Object o) {
-      if (o == null || !A.class.isAssignableFrom(o.getClass())) {
+      if (!(o instanceof A)) {
         return false;
       } else {
         A rhs = (A)o;
