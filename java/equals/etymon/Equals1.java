@@ -35,9 +35,9 @@ class Equals1 {
 
   static void printEqual(A a1, A a2) {
     if (a1.equals(a2)) {
-      System.out.println("EQUAL");
+      System.out.println("eq");
     } else {
-      System.out.println("NOT-EQUAL");
+      System.out.println("ne");
     }
   }
 
@@ -45,9 +45,7 @@ class Equals1 {
   public static void main(String[] args) {
     A test1 = new A();
     A test2 = new B();
-    printEqual(test1, test2);
-    //    => Prints "NOT-EQUAL"
-    printEqual(test2, test1);
-    //    => Prints "NOT-EQUAL"
+    printEqual(test1, test2); // => Prints "ne"
+    printEqual(test2, test1); // => Prints "ne"
   }
 }

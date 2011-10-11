@@ -70,6 +70,9 @@ class Equals2 {
     printEqual(c2a, e22a);
     printEqual(e22a, c2a);
 
+    printEqual(e22a, null);
+    printEqual(c2a, null);
+
     printEqual(c2a, e23a);
     printEqual(e23a, c2a);
   }
