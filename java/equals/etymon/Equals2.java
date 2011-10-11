@@ -10,7 +10,7 @@ class Equals2 {
     public abstract int getMajor();
     public abstract int getMinor();
     public final boolean equals(Object o) {
-      if (o == null || !(o instanceof EllipseBase)) {
+      if (!(o instanceof EllipseBase)) {
         return false;
       } else {
         EllipseBase rhs = (EllipseBase)o;
