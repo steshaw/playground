@@ -22,7 +22,7 @@ class Equals1Alternative {
       if (super.equals(o)) {
         return true;
       } else {
-        if (o == null || !B.class.isAssignableFrom(o.getClass())) {
+        if (!(o instanceof B)) {
           return false;
         } else {
           B rhs = (B)o;
