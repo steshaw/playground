@@ -36,8 +36,8 @@ class Equals2Alternative {
     // !!! NOTE THE USE OF *final* to prevent asymmetry!
     // Also note the exclusive use of accessors.
     public final boolean equals(Object o) {
-      if (super.equals(o)) {
-        return true;
+      if (!super.equals(o)) {
+        return false;
       } else {
         if (!(o instanceof Ellipse)) {
           return false;
