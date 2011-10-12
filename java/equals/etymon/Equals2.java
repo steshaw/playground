@@ -1,6 +1,8 @@
 //
 // Equals solution 2 from http://etymon.blogspot.com/2004/08/objectequals.html
 //
+// Bug fix applied
+//
 
 class Equals2 {
 
