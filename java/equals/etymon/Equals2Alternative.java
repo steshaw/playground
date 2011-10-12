@@ -3,16 +3,14 @@
 //
 // but following along the pattern from Equals1Alternative
 //
-// FIXME: This shows that the pattern from Equals1Alternative is buggy!
 //
 
 class Equals2Alternative {
 
   static abstract class Shape {
     public boolean equals(Object o) {
-      if (super.equals(o)) {
-        return true;
-      } else {
+      if (this == o) return true;
+      else {
         if (!(o instanceof Shape)) {
           return false;
         } else {
