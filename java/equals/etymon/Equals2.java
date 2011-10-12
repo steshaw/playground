@@ -1,8 +1,10 @@
 //
 // Equals solution 2 from http://etymon.blogspot.com/2004/08/objectequals.html
 //
+// Buggy.
+//
 
-class Equals3 {
+class Equals2 {
 
   static abstract class Shape {
     public boolean equals(Object o) {
