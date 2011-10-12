@@ -1,8 +1,6 @@
 //
 // Equals solution 2 from http://etymon.blogspot.com/2004/08/objectequals.html
 //
-// Buggy.
-//
 
 class Equals2 {
 
@@ -35,7 +33,7 @@ class Equals2 {
     public final boolean equals(Object o) {
       if (!super.equals(o)) {
         return false;
-      } else if (getClass().equals(o.getClass())) {
+      } else if (o instanceof Ellipse) {
         Ellipse rhs = (Ellipse)o;
         return this.getMajor() == rhs.getMajor()
             && this.getMinor() == rhs.getMinor();
