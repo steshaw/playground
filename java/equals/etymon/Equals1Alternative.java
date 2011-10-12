@@ -5,8 +5,8 @@
 class Equals1Alternative {
 
   static class A {
-    A(int a) { this.a = a; }
     int a;
+    A(int a) { this.a = a; }
     public boolean equals(Object o) {
       if (super.equals(o)) {
         // At the bottom of the heirarchy, return true if Object.equals is true. i.e. ==
@@ -27,8 +27,8 @@ class Equals1Alternative {
   }
 
   static class B extends A {
-    B(int a, int b) { super(a); this.b = b; }
     int b;
+    B(int a, int b) { super(a); this.b = b; }
     public boolean equals(Object o) {
       // If o.class is a strict superclass of B, then "switch arguments" to equals.
       if (o != null && isStrictSuperclass(B.class, o.getClass())) return o.equals(this);
@@ -41,6 +41,26 @@ class Equals1Alternative {
         } else {
           B that = (B)o;
           return this.b == that.b;
+        }
+      }
+    }
+  }
+
+  static class C extends B {
+    int c;
+    C(int a, int b, int c) { super(a, b); this.c = c; }
+    public boolean equals(Object o) {
+      // If o.class is a strict superclass of C, then "switch arguments" to equals.
+      if (o != null && isStrictSuperclass(C.class, o.getClass())) return o.equals(this);
+
+      if (!super.equals(o)) {
+        return false;
+      } else {
+        if (!(o instanceof C)) {
+          return false;
+        } else {
+          C that = (C)o;
+          return this.c == that.c;
         }
       }
     }
@@ -66,16 +86,14 @@ class Equals1Alternative {
     A b23a = new B(2, 3);
     A b23b = new B(2, 3);
 
-    // eq
-    printEqual(a1a, a1a);
-    printEqual(b12a, b12a);
-    printEqual(a1a, b12a);
-    printEqual(b12a, a1a);
+    A c123a = new C(1, 2, 3);
+    A c123b = new C(1, 2, 3);
 
+    // eq
+    System.out.println("== eq");
     printEqual(a1a, a1a);
     printEqual(b12a, b12a);
-    printEqual(a1a, b12a);
-    printEqual(b12a, a1a);
+    printEqual(c123a, c123a);
 
     printEqual(a1a, a1b);
     printEqual(a1b, a1a);
@@ -87,9 +105,23 @@ class Equals1Alternative {
     printEqual(b23a, b23b);
     printEqual(b23b, b23a);
 
+    printEqual(c123a, c123b);
+    printEqual(c123b, c123a);
+
+    printEqual(a1a, b12a);
+    printEqual(b12a, a1a);
+
+    printEqual(a1a, c123a);
+    printEqual(c123a, a1a);
+
+    printEqual(b12a, c123a);
+    printEqual(c123a, b12a);
+
     // ne
+    System.out.println("== ne");
     printEqual(a1a, null);
     printEqual(b12a, null);
+    printEqual(c123a, null);
 
     printEqual(a1a, a2a);
     printEqual(a2a, a1a);
@@ -99,7 +131,14 @@ class Equals1Alternative {
 
     printEqual(a1a, b23a);
     printEqual(b23a, a1a);
+
     printEqual(a2a, b12a);
     printEqual(b12a, a2a);
+
+    printEqual(a2a, c123a);
+    printEqual(c123a, a2a);
+
+    printEqual(b23a, c123a);
+    printEqual(c123a, b23a);
   }
 }
