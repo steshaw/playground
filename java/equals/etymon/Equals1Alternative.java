@@ -8,7 +8,7 @@ class Equals1Alternative {
     int a;
     A(int a) { this.a = a; }
     public boolean equals(Object o) {
-      if (super.equals(o)) {
+      if (this == o) {
         // At the bottom of the heirarchy, return true if Object.equals is true. i.e. ==
         return true;
       } else {
