@@ -1,10 +1,10 @@
 //
-// Equals solution 2 from http://etymon.blogspot.com/2004/08/objectequals.html
+// Equals solution 3 from http://etymon.blogspot.com/2004/08/objectequals.html
 //
 // With fix applied to EllipseBase.equals.
 // 
 
-class Equals2 {
+class Equals3 {
 
   public static abstract class EllipseBase {
     public abstract int getMajor();
