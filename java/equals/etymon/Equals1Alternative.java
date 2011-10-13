@@ -1,6 +1,8 @@
 //
 // Here I follow the design of Solution1 closely but use isAssignableFrom so that subclasses can be compared.
 //
+// XXX transitivity is broken :(
+//
 
 class Equals1Alternative {
 
@@ -74,6 +76,15 @@ class Equals1Alternative {
     }
   }
 
+  /**
+   * a = b and b = c => a = c
+   */
+  public static void transitivity(A a, A b, A c) {
+    printEqual(a, b);
+    printEqual(b, c);
+    printEqual(a, c);
+  }
+
   // And test it:
   public static void main(String[] args) {
     A a1a = new A(1);
@@ -88,6 +99,9 @@ class Equals1Alternative {
 
     A c123a = new C(1, 2, 3);
     A c123b = new C(1, 2, 3);
+
+    // Transitivity
+    transitivity(b12a, a1a, b13);
 
     // eq
     System.out.println("== eq");
