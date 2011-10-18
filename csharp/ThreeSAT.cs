@@ -9,13 +9,15 @@ class MainClass
     class F{}
     delegate void DT(T t);
     delegate void DF(F f);
-    static void M(DT dt)
+    static void M(string msg, DT dt)
     {
+        System.Console.Write(msg);
         System.Console.WriteLine("true");
         dt(new T());
     }
-    static void M(DF df)
+    static void M(string msg, DF df)
     {
+        System.Console.Write(msg);
         System.Console.WriteLine("false");
         df(new F());
     }
@@ -38,7 +40,7 @@ class MainClass
     {
         // Introduce enough variables and then encode any Boolean predicate:
         // eg, here we encode (!x3) & ((!x1) & ((x1 | x2 | x1) & (x2 | x3 | x2)))
-        M(x1=>M(x2=>M(x3=>MustBeT(
+        M("x1 = ", x1=>M("x2 = ", x2=>M("x3 = ", x3=>MustBeT(
           And(
             Not(x3), 
             And(
