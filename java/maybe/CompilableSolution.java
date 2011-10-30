@@ -1,31 +1,28 @@
 //
 // Adapted from the "compilable solution" from the end of the post http://blog.tmorris.net/strong-type-systems/
 //
-// I deleted the unnecessary first argument to bind as it was the same as the implicit receiver.
+// 1. Deleted the unnecessary first argument to bind as it was the same as the implicit receiver.
+// 2. No longer implement Monad as it's not possible to have the correct type for bind (I guess
+//    that's the point of the post).
 //
 
 interface F<X, Y> {
   Y f(X x);
 }
 
+/*
 interface Monad<A> {
   <B> Monad<B> bind(F<A, Monad<B>> f);
 }
+*/
 
-final class Maybe<A> implements Monad<A> {
-  public <B> Maybe<B> bind(final F<A, Monad<B>> f) {
+final class Maybe<A> /*implements Monad<A>*/ {
+  public <B> Maybe<B> bind(final F<A, Maybe<B>> f) {
     final A a = just();
     if (a == null) {
       return Maybe.<B>nothing();
     } else {
-      final Monad<B> b = f.f(a);
-
-      if (b instanceof Maybe) {
-        return (Maybe<B>)b;
-      } else {
-        throw new Error("Just because we don't have higher-order types," +
-          "doesn't mean we start doing silly stuff");
-      }
+      return f.f(a);
     }
   }
 
@@ -83,11 +80,11 @@ class Person {
 
 class Demo {
   static Maybe<Person> couldBePerson(final Maybe<String> maybeName, final Maybe<Integer> maybeAge) {
-    return maybeName.bind(new F<String, Monad<Person>>() {
-      @Override public Monad<Person> f(final String name) {
-        return maybeAge.bind(new F<Integer, Monad<Person>>() {
-          @Override public Monad<Person> f(final Integer age) {
-            return (Monad<Person>) Maybe.just(Person.mk(name, age));
+    return maybeName.bind(new F<String, Maybe<Person>>() {
+      @Override public Maybe<Person> f(final String name) {
+        return maybeAge.bind(new F<Integer, Maybe<Person>>() {
+          @Override public Maybe<Person> f(final Integer age) {
+            return Maybe.just(Person.mk(name, age));
           }
         });
       }
