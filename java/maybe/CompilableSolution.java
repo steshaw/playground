@@ -10,11 +10,10 @@ interface F<X, Y> {
   Y f(X x);
 }
 
-/*
+// No longer implemented. Just here for "documentation".
 interface Monad<A> {
   <B> Monad<B> bind(F<A, Monad<B>> f);
 }
-*/
 
 final class Maybe<A> /*implements Monad<A>*/ {
   public <B> Maybe<B> bind(final F<A, Maybe<B>> f) {
