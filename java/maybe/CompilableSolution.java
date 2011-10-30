@@ -19,7 +19,7 @@ interface Monad<A> {
 final class Maybe<A> /*implements Monad<A>*/ {
   public <B> Maybe<B> bind(final F<A, Maybe<B>> f) {
     final A a = just();
-    if (a == null) {
+    if (isNothing()) {
       return Maybe.<B>nothing();
     } else {
       return f.f(a);
@@ -48,8 +48,12 @@ final class Maybe<A> /*implements Monad<A>*/ {
     return a;
   }
 
+  public boolean isNothing() {
+    return a == null;
+  }
+
   @Override public String toString() {
-    if (a == null) return "Nothing"; else return "Just " + a.toString();
+    return isNothing()? "Nothing" : "Just " + a.toString();
   }
 
   static <A> Maybe<A> just(final A a) {
