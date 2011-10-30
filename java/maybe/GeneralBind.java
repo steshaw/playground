@@ -4,25 +4,22 @@
 //
 // 1. Changed the signature of bind (which looked a lot like map).
 //
+//      <B> Monad<B> bind(Function<A, B> function)
+//
+// 2. No longer implement Monad in order to have correct signature for bind.
+//
 
 interface Function<A, B> {
   B run(A a);
 }
 
+// No longer used.
 interface Monad<A> {
-  // This original bind method has the wrong signature. It looks more like map.
-//  <B> Monad<B> bind(Function<A, B> function);
-
-  //
-  // Here we try to fix it.
-  //
-  // Should be like this Haskell signature:
-  //   (>>=) :: (Monad m) => m a -> (a -> m b) -> m b
-  //
   <B> Monad<B> bind(Function<A, Monad<B>> function);
 }
 
-interface Maybe<A> extends Monad<A> {
+interface Maybe<A> /*extends Monad<A>*/ {
+  <B> Maybe<B> bind(Function<A, Maybe<B>> function);
 }
 
 final class Just<A> implements Maybe<A> {
@@ -32,7 +29,7 @@ final class Just<A> implements Maybe<A> {
     this.a = a;
   }
 
-  public <B> Monad<B> bind(Function<A, Monad<B>> function) {
+  public <B> Maybe<B> bind(Function<A, Maybe<B>> function) {
     return function.run(a);
   }
 
@@ -46,7 +43,7 @@ final class Just<A> implements Maybe<A> {
 }
 
 final class Nothing<A> implements Maybe<A> {
-  public <B> Monad<B> bind(Function<A, Monad<B>> function) {
+  public <B> Maybe<B> bind(Function<A, Maybe<B>> function) {
     return nothing();
   }
   @Override public String toString() {
@@ -77,10 +74,10 @@ class Person {
 
 class GeneralBindDemo {
   static Maybe<Person> couldBePerson(final Maybe<String> maybeName, final Maybe<Integer> maybeAge) {
-    return (Maybe<Person>) maybeName.bind(new Function<String, Monad<Person>>() {
-      @Override public Monad<Person> run(final String name) {
-        return maybeAge.bind(new Function<Integer, Monad<Person>>() {
-          @Override public Monad<Person> run(final Integer age) {
+    return maybeName.bind(new Function<String, Maybe<Person>>() {
+      @Override public Maybe<Person> run(final String name) {
+        return maybeAge.bind(new Function<Integer, Maybe<Person>>() {
+          @Override public Maybe<Person> run(final Integer age) {
             return Just.just(Person.mk(name, age));
           }
         });
