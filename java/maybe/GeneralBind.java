@@ -2,6 +2,8 @@
 // Adapted from https://docs.google.com/View?docid=dx5mfkq_17fnd4ss&pli=1
 //   which is linked from http://blog.tmorris.net/strong-type-systems/ by Ricky Clarkson.
 //
+// 1. Changed the signature of bind (which looked a lot like map).
+//
 
 interface Function<A, B> {
   B run(A a);
@@ -45,7 +47,7 @@ final class Just<A> implements Maybe<A> {
 
 final class Nothing<A> implements Maybe<A> {
   public <B> Monad<B> bind(Function<A, Monad<B>> function) {
-    return new Nothing<B>();
+    return nothing();
   }
   @Override public String toString() {
     return "Nothing";
@@ -76,9 +78,9 @@ class Person {
 class GeneralBindDemo {
   static Maybe<Person> couldBePerson(final Maybe<String> maybeName, final Maybe<Integer> maybeAge) {
     return (Maybe<Person>) maybeName.bind(new Function<String, Monad<Person>>() {
-      @Override public Maybe<Person> run(final String name) {
-        return (Maybe<Person>) maybeAge.bind(new Function<Integer, Monad<Person>>() {
-          @Override public Maybe<Person> run(final Integer age) {
+      @Override public Monad<Person> run(final String name) {
+        return maybeAge.bind(new Function<Integer, Monad<Person>>() {
+          @Override public Monad<Person> run(final Integer age) {
             return Just.just(Person.mk(name, age));
           }
         });
