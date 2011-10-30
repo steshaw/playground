@@ -69,12 +69,11 @@ class Person {
 class GeneralBindDemo {
   // TODO: bind on maybeAge
   static Maybe<Person> couldBePerson(Maybe<String> maybeName, Maybe<Integer> maybeAge) {
-    Monad<Person> result = maybeName.bind(new Function<String, Monad<Person>>() {
+    return (Maybe<Person>) maybeName.bind(new Function<String, Monad<Person>>() {
       @Override public Maybe<Person> run(String name) {
         return new Just<Person>(Person.mk(name, 3));
       }
     });
-    return (Maybe<Person>)result;
   }
 
   public static void main(String[] args) {
