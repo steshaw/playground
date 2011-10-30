@@ -76,25 +76,17 @@ class Person {
   }
 }
 
-class Main {
-  static Maybe<String> couldBeName() {
-    return new Maybe<String>("Steve");
-  }
-
-  static Maybe<Integer> couldBeAge() {
-    return new Maybe<Integer>(40);
-  }
-
+class Demo {
+  // TODO: bind on maybeAge
   static Maybe<Person> couldBePerson(Maybe<String> maybeName, Maybe<Integer> maybeAge) {
     return maybeName.bind(/* XXX - why is this param required? */ (Monad<String>)maybeName, new F<String, Monad<Person>>() {
       @Override public Monad<Person> f(String name) {
-        System.out.println("a1 - name = " + name);
-        return (Monad<Person>) new Maybe<Person>(Person.mk(name, 40));
+        return (Monad<Person>) new Maybe<Person>(Person.mk(name, 3));
       }
     });
   }
 
   public static void main(String[] args) {
-    System.out.println(couldBePerson(couldBeName(), couldBeAge()));
+    System.out.println(couldBePerson(new Maybe<String>("Fred"), new Maybe<Integer>(25)));
   }
 }
