@@ -56,13 +56,20 @@ final class Maybe<A> implements Monad<A> {
   @Override public String toString() {
     if (a == null) return "Nothing"; else return "Just " + a.toString();
   }
+
+  static <A> Maybe<A> just(final A a) {
+    return new Maybe<A>(a);
+  }
+  static <A> Maybe<A> nothing() {
+    return new Maybe<A>();
+  }
 }
 
 class Person {
   final String name;
   final int age;
 
-  Person(String name, int age) {
+  Person(final String name, final int age) {
     this.name = name;
     this.age = age;
   }
@@ -71,22 +78,32 @@ class Person {
     return "Person(name = '" + name + "' age = " + age + ")";
   }
 
-  static Person mk(String name, int age) {
+  static Person mk(final String name, final int age) {
     return new Person(name, age);
   }
 }
 
 class Demo {
-  // TODO: bind on maybeAge
-  static Maybe<Person> couldBePerson(Maybe<String> maybeName, Maybe<Integer> maybeAge) {
+  static Maybe<Person> couldBePerson(final Maybe<String> maybeName, final Maybe<Integer> maybeAge) {
     return maybeName.bind(/* XXX - why is this param required? */ (Monad<String>)maybeName, new F<String, Monad<Person>>() {
-      @Override public Monad<Person> f(String name) {
-        return (Monad<Person>) new Maybe<Person>(Person.mk(name, 3));
+      @Override public Monad<Person> f(final String name) {
+        return maybeAge.bind(/*XXX*/maybeAge, new F<Integer, Monad<Person>>() {
+          @Override public Monad<Person> f(final Integer age) {
+            return (Monad<Person>) Maybe.just(Person.mk(name, age));
+          }
+        });
       }
     });
   }
 
-  public static void main(String[] args) {
-    System.out.println(couldBePerson(new Maybe<String>("Fred"), new Maybe<Integer>(25)));
+  static void println(Object msg) {
+    System.out.println(msg.toString());
+  }
+
+  public static void main(final String[] args) {
+    println(couldBePerson(Maybe.just("Fred"), Maybe.just(25)));
+    println(couldBePerson(Maybe.<String>nothing(), Maybe.just(25)));
+    println(couldBePerson(Maybe.just("Fred"), Maybe.<Integer>nothing()));
+    println(couldBePerson(Maybe.<String>nothing(), Maybe.<Integer>nothing()));
   }
 }

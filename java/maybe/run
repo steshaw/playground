@@ -1,2 +1,3 @@
 javac -Xlint CompilableSolution.java && echo "CompilableSolutionDemo" && java Demo
+echo
 javac -Xlint GeneralBind.java && echo "GeneralBindDemo" && java GeneralBindDemo
