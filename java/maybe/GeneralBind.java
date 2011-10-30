@@ -37,6 +37,10 @@ final class Just<A> implements Maybe<A> {
   @Override public String toString() {
     return "Just " + a.toString();
   }
+
+  static <B> Just<B> just(B b) {
+    return new Just<B>(b);
+  }
 }
 
 final class Nothing<A> implements Maybe<A> {
@@ -46,13 +50,16 @@ final class Nothing<A> implements Maybe<A> {
   @Override public String toString() {
     return "Nothing";
   }
+  static <B> Nothing<B> nothing() {
+    return new Nothing<B>();
+  }
 }
 
 class Person {
   final String name;
   final int age;
 
-  Person(String name, int age) {
+  Person(final String name, final int age) {
     this.name = name;
     this.age = age;
   }
@@ -61,22 +68,32 @@ class Person {
     return "Person(name = '" + name + "' age = " + age + ")";
   }
 
-  static Person mk(String name, int age) {
+  static Person mk(final String name, final int age) {
     return new Person(name, age);
   }
 }
 
 class GeneralBindDemo {
-  // TODO: bind on maybeAge
-  static Maybe<Person> couldBePerson(Maybe<String> maybeName, Maybe<Integer> maybeAge) {
+  static Maybe<Person> couldBePerson(final Maybe<String> maybeName, final Maybe<Integer> maybeAge) {
     return (Maybe<Person>) maybeName.bind(new Function<String, Monad<Person>>() {
-      @Override public Maybe<Person> run(String name) {
-        return new Just<Person>(Person.mk(name, 3));
+      @Override public Maybe<Person> run(final String name) {
+        return (Maybe<Person>) maybeAge.bind(new Function<Integer, Monad<Person>>() {
+          @Override public Maybe<Person> run(final Integer age) {
+            return Just.just(Person.mk(name, age));
+          }
+        });
       }
     });
   }
 
-  public static void main(String[] args) {
-    System.out.println(couldBePerson(new Just<String>("Fred"), new Just<Integer>(25)));
+  static void println(Object msg) {
+    System.out.println(msg.toString());
+  }
+
+  public static void main(final String[] args) {
+    println(couldBePerson(Just.just("Fred"), Just.just(25)));
+    println(couldBePerson(Nothing.<String>nothing(), Just.just(25)));
+    println(couldBePerson(Just.just("Fred"), Nothing.<Integer>nothing()));
+    println(couldBePerson(Nothing.<String>nothing(), Nothing.<Integer>nothing()));
   }
 }
