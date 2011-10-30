@@ -8,7 +8,7 @@ interface Function<A, B> {
 }
 
 interface Monad<A> {
-  <B> Monad<B> bind(Function<A,B> function);
+  <B> Monad<B> bind(Function<A, B> function);
 }
 
 interface Maybe<A> extends Monad<A> {
