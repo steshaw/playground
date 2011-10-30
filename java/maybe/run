@@ -1,3 +1,5 @@
+javac -Xlint AnotherApproach.java && echo "AnotherApproachDemo" && java AnotherApproachDemo
+echo
 javac -Xlint CompilableSolution.java && echo "CompilableSolutionDemo" && java Demo
 echo
 javac -Xlint GeneralBind.java && echo "GeneralBindDemo" && java GeneralBindDemo
