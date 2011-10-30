@@ -1,5 +1,7 @@
 //
-// The "compilable solution" from the end of the post http://blog.tmorris.net/strong-type-systems/
+// Adapted from the "compilable solution" from the end of the post http://blog.tmorris.net/strong-type-systems/
+//
+// I deleted the unnecessary first argument to bind as it was the same as the implicit receiver.
 //
 
 interface F<X, Y> {
@@ -7,27 +9,23 @@ interface F<X, Y> {
 }
 
 interface Monad<A> {
-  <B> Monad<B> bind(Monad<A> ma, F<A, Monad<B>> f);
+  <B> Monad<B> bind(F<A, Monad<B>> f);
 }
 
 final class Maybe<A> implements Monad<A> {
-  public <B> Maybe<B> bind(final Monad<A> ma, final F<A, Monad<B>> f) {
-    if (ma instanceof Maybe) {
-      final A j = ((Maybe<A>)ma).just();
-      if (j == null) {
-        return new Maybe<B>();
-      } else {
-        final Monad<B> b = f.f(j);
-
-        if (b instanceof Maybe) {
-          return (Maybe<B>)b;
-        } else {
-          throw new Error("Just because we don't have higher-order types," +
-            "doesn't mean we start doing silly stuff");
-        }
-      }
+  public <B> Maybe<B> bind(final F<A, Monad<B>> f) {
+    final A a = just();
+    if (a == null) {
+      return Maybe.<B>nothing();
     } else {
-      throw new Error("I said stop doing silly stuff! Please!");
+      final Monad<B> b = f.f(a);
+
+      if (b instanceof Maybe) {
+        return (Maybe<B>)b;
+      } else {
+        throw new Error("Just because we don't have higher-order types," +
+          "doesn't mean we start doing silly stuff");
+      }
     }
   }
 
@@ -85,9 +83,9 @@ class Person {
 
 class Demo {
   static Maybe<Person> couldBePerson(final Maybe<String> maybeName, final Maybe<Integer> maybeAge) {
-    return maybeName.bind(/* XXX - why is this param required? */ (Monad<String>)maybeName, new F<String, Monad<Person>>() {
+    return maybeName.bind(new F<String, Monad<Person>>() {
       @Override public Monad<Person> f(final String name) {
-        return maybeAge.bind(/*XXX*/maybeAge, new F<Integer, Monad<Person>>() {
+        return maybeAge.bind(new F<Integer, Monad<Person>>() {
           @Override public Monad<Person> f(final Integer age) {
             return (Monad<Person>) Maybe.just(Person.mk(name, age));
           }
