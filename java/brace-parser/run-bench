@@ -1,0 +1,52 @@
+#!/bin/bash
+
+source ./env
+
+function go() {
+  commands="$@"
+
+  time $commands "$(<test.in)" "$(<test.in)" "$(<test.in)" "$(<test.in)"
+}
+
+echo "Tony Haskell"
+go ./TonyParser
+echo -e "---\n\n"
+
+echo "Tony Scala 2.7.7"
+mkdir -p classes/tp277
+SCALA277_BIN="$HOME/.shelly/local/scala-2.7.7.final/bin"
+JAVA_OPTS="-Xss10m" go $SCALA277_BIN/scala -cp classes/tp277 TonyParser
+echo -e "---\n\n"
+
+echo "Tony Scala"
+mkdir -p classes/tp291
+go scala -J-Xss10m -cp classes/tp291 TonyParser
+echo -e "---\n\n"
+
+echo "Parsec"
+go ./ParsecParser
+echo -e "---\n\n"
+
+echo "SimpleBraceParser"
+go java -Xss10m SimpleBraceParser
+echo -e "---\n\n"
+
+echo "IsBalanced"
+go java IsBalanced
+echo -e "---\n\n"
+
+echo "king1"
+JAVA_OPTS="-Xmx1024m -Xss10m" go groovy king1
+echo -e "---\n\n"
+
+echo "king2"
+JAVA_OPTS="-Xmx1024m -Xss10m" go groovy king2
+echo -e "---\n\n"
+
+echo "Krzysztof"
+go ./Krzysztof
+echo -e "---\n\n"
+
+echo "scm"
+go ./scm
+echo -e "---\n\n"

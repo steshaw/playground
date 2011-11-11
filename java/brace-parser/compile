@@ -1,0 +1,37 @@
+#!/bin/bash
+
+source ./env
+
+echo "Tony Haskell"
+ghc -O9 --make TonyParser
+echo -e "---\n\n"
+
+echo "Tony Scala 2.7.7"
+mkdir -p classes/tp277
+${SCALA277_BIN}/scalac -d classes/tp277 TonyParser.scala
+echo -e "---\n\n"
+
+echo "Tony Scala"
+mkdir -p classes/tp291
+scalac -d classes/tp291 TonyParser.scala
+echo -e "---\n\n"
+
+echo "Parsec"
+ghc -O9 --make ParsecParser
+echo -e "---\n\n"
+
+echo "SimpleBraceParser"
+javac SimpleBraceParser.java
+echo -e "---\n\n"
+
+echo "IsBalanced"
+javac IsBalanced.java
+echo -e "---\n\n"
+
+echo "Krzysztof"
+ghc -O9 --make Krzysztof
+echo -e "---\n\n"
+
+echo "scm"
+ghc -O9 --make scm
+echo -e "---\n\n"

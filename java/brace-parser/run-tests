@@ -1,0 +1,51 @@
+#!/bin/bash
+
+function go() {
+  echo "Tony Haskell"
+  ./TonyParser "$@"
+  echo -e "---\n\n"
+
+  echo "Tony Scala 2.7.7"
+  mkdir -p classes/tp277
+  SCALA277_BIN="$HOME/.shelly/local/scala-2.7.7.final/bin"
+  JAVA_OPTS="-Xss10m" $SCALA277_BIN/scala -cp classes/tp277 TonyParser "$@"
+  echo -e "---\n\n"
+
+  echo "Tony Scala"
+  mkdir -p classes/tp291
+  scala -J-Xss10m -cp classes/tp291 TonyParser "$@"
+  echo -e "---\n\n"
+
+  echo "Parsec"
+  ./ParsecParser "$@" 
+  echo -e "---\n\n"
+
+  echo "SimpleBraceParser"
+  java -Xss10m SimpleBraceParser "$@"
+  echo -e "---\n\n"
+
+  echo "IsBalanced"
+  java IsBalanced "$@"
+  echo -e "---\n\n"
+
+  echo "king1"
+  JAVA_OPTS="-Xmx1024m -Xss10m" groovy king1 "$@"
+  echo -e "---\n\n"
+
+  echo "king2"
+  JAVA_OPTS="-Xmx1024m -Xss10m" groovy king2 "$@"
+  echo -e "---\n\n"
+
+  echo "Krzysztof"
+  ./Krzysztof "$@"
+  echo -e "---\n\n"
+
+  echo "scm"
+  ./scm "$@"
+  echo -e "---\n\n"
+}
+
+echo SUCCESS
+go "" "()" "[]" "([])" "[()]" "[]()" "[][[([])]]"
+echo FAILURE
+go "(" ")" "[" "]" "][" ")(" "( )" "([)" "[)]" "([)]" "({})" "[())]"
