@@ -1,3 +1,7 @@
+//
+// From http://blog.tmorris.net/beginner-java-exercise-with-data-types/
+//
+
 // A list that is either empty or has one element.
 public abstract class NoneOrOne<A> {
   // The key abstract method (catamorphism).
