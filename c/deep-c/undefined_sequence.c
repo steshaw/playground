@@ -1,7 +1,3 @@
-//
-// Inspired by http://www.slideshare.net/olvemaudal/deep-c
-//
-
 #include <stdio.h>
 
 void foo(void) {
