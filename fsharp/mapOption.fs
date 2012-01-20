@@ -9,11 +9,15 @@
 
 module mapOption
 
+let x = [ for x in 1..10 do if x % 2 = 0 then yield x ]
+
 let xs = [1..10]
 
 let even n = n % 2 = 0
 
 let a = xs |> List.filter even
+
+let easyA = [for x in xs do if even x then yield x ]
 
 (*
  *
@@ -25,6 +29,8 @@ let a = xs |> List.filter even
  * 
  *   List.choose : ('T -> 'U option) -> 'T list -> 'U list
  *)
+
+let easyB = [for x in xs do if even x then yield x * 2 ]
 
 let b = xs |> List.choose (fun n -> if even n then Some (n * 2) else None)
 
