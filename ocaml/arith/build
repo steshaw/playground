@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ocamlc -pp camlp4o -o arith arith.ml
