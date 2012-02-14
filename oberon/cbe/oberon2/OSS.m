@@ -1,13 +1,13 @@
 MODULE OSS; (* NW 19.9.93 / 17.11.94*)
-(*  IMPORT Oberon, Texts; *)
-  
-  CONST IdLen* = 16; KW = 34;
+  IMPORT Files;  (* Oberon, Texts *)
+
+  CONST IdLen* = 32; KW = 34;
     (*symbols*) null = 0;
     times* = 1; div* = 3; mod* = 4; and* = 5; plus* = 6; minus* = 7; or* = 8;
     eql* = 9; neq* = 10; lss* = 11; geq* = 12; leq* = 13; gtr* = 14;
-    period* = 18; comma* = 19; colon* = 20; rparen* = 22; rbrak* = 23; 
-    of* = 25; then* = 26; do* = 27; 
-    lparen* = 29; lbrak* = 30; not* = 32; becomes* = 33; number* = 34; ident* = 37; 
+    period* = 18; comma* = 19; colon* = 20; rparen* = 22; rbrak* = 23;
+    of* = 25; then* = 26; do* = 27;
+    lparen* = 29; lbrak* = 30; not* = 32; becomes* = 33; number* = 34; ident* = 37;
     semicolon* = 38; end* = 40; else* = 41; elsif* = 42;
     if* = 44; while* = 46;
     array* = 54; record* = 55;
@@ -15,112 +15,112 @@ MODULE OSS; (* NW 19.9.93 / 17.11.94*)
 
   TYPE Ident* = ARRAY IdLen OF CHAR;
 
-  VAR val*: LONGINT;
+  VAR val*: INTEGER;
     id*: Ident;
     error*: BOOLEAN;
 
     ch: CHAR;
     nkw: INTEGER;
-    errpos: LONGINT;
-    R: Texts.Reader;
-    W: Texts.Writer;
+    errpos: INTEGER;
+    R: Files.File;
+    W: Files.File;
     keyTab  : ARRAY KW OF
         RECORD sym: INTEGER; id: ARRAY 12 OF CHAR END;
 
   PROCEDURE Mark*(msg: ARRAY OF CHAR);
-    VAR p: LONGINT;
-  BEGIN p := Texts.Pos(R) - 1;
+    VAR p: INTEGER;
+  BEGIN p := Files.Tell(R) - 1;
     IF p > errpos THEN
-      Texts.WriteString(W, "  pos "); Texts.WriteInt(W, p, 1);
-      Texts.Write(W, " "); Texts.WriteString(W, msg);
-      Texts.WriteLn(W); Texts.Append(Oberon.Log, W.buf)
-    END ;
+      Files.WriteString(W, "  pos "); Files.WriteLongInt(W, p, 1);
+      Files.WriteString(W, " "); Files.WriteString(W, msg);
+      Files.WriteLn(W); (* Files.Append(Oberon.Log, W.buf) *)
+    END;
     errpos := p; error := TRUE
   END Mark;
-  
+
   PROCEDURE Get*(VAR sym: INTEGER);
-  
+
     PROCEDURE Ident;
       VAR i, k: INTEGER;
     BEGIN i := 0;
       REPEAT
-        IF i < IdLen THEN id[i] := ch; INC(i) END ;
-        Texts.Read(R, ch)
+        IF i < IdLen THEN id[i] := ch; INC(i) END;
+        Files.Read(R, ch)
       UNTIL (ch < "0") OR (ch > "9") & (CAP(ch) < "A") OR (CAP(ch) > "Z");
       id[i] := 0X; k := 0;
-      WHILE (k < nkw) & (id # keyTab[k].id) DO INC(k) END ;
+      WHILE (k < nkw) & (id # keyTab[k].id) DO INC(k) END;
       IF k < nkw THEN sym := keyTab[k].sym ELSE sym := ident END
     END Ident;
 
     PROCEDURE Number;
     BEGIN val := 0; sym := number;
       REPEAT
-        IF val <= (MAX(LONGINT) - ORD(ch) + ORD("0")) DIV 10 THEN
+        IF val <= (MAX(INTEGER) - ORD(ch) + ORD("0")) DIV 10 THEN
           val := 10 * val + (ORD(ch) - ORD("0"))
         ELSE Mark("number too large"); val := 0
-        END ;
-        Texts.Read(R, ch)
+        END;
+        Files.Read(R, ch)
       UNTIL (ch < "0") OR (ch > "9")
     END Number;
-    
+
     PROCEDURE comment;
-    BEGIN Texts.Read(R, ch);
+    BEGIN Files.Read(R, ch);
       LOOP
         LOOP
-          WHILE ch = "(" DO Texts.Read(R, ch);
+          WHILE ch = "(" DO Files.Read(R, ch);
             IF ch = "*" THEN comment END
-          END ;
-          IF ch = "*" THEN Texts.Read(R, ch); EXIT END ;
-          IF R.eot THEN EXIT END ;
-          Texts.Read(R, ch)
-        END ;
-        IF ch = ")" THEN Texts.Read(R, ch); EXIT END ;
-        IF R.eot THEN Mark("comment not terminated"); EXIT END
+          END;
+          IF ch = "*" THEN Files.Read(R, ch); EXIT END;
+          IF Files.Eof(R) THEN EXIT END;
+          Files.Read(R, ch)
+        END;
+        IF ch = ")" THEN Files.Read(R, ch); EXIT END;
+        IF Files.Eof(R) THEN Mark("comment not terminated"); EXIT END
       END
     END comment;
 
   BEGIN
-    WHILE ~R.eot & (ch <= " ") DO Texts.Read(R, ch) END;
-    IF R.eot THEN sym := eof
-    ELSE 
+    WHILE ~Files.Eof(R) & (ch <= " ") DO Files.Read(R, ch) END;
+    IF Files.Eof(R) THEN sym := eof
+    ELSE
       CASE ch OF
-         "&": Texts.Read(R, ch); sym := and
-      |  "*": Texts.Read(R, ch); sym := times
-      |  "+": Texts.Read(R, ch); sym := plus
-      |  "-": Texts.Read(R, ch); sym := minus
-      |  "=": Texts.Read(R, ch); sym := eql
-      |  "#": Texts.Read(R, ch); sym := neq
-      |  "<": Texts.Read(R, ch);
-          IF ch = "=" THEN Texts.Read(R, ch); sym := leq ELSE sym := lss END
-      |  ">": Texts.Read(R, ch);
-          IF ch = "=" THEN Texts.Read(R, ch); sym := geq ELSE sym := gtr END
-      |  ";": Texts.Read(R, ch); sym := semicolon
-      |  ",": Texts.Read(R, ch); sym := comma
-      |  ":": Texts.Read(R, ch);
-          IF ch = "=" THEN Texts.Read(R, ch); sym := becomes ELSE sym := colon END
-      |  ".": Texts.Read(R, ch); sym := period
-      |  "(": Texts.Read(R, ch);
+         "&": Files.Read(R, ch); sym := and
+      |  "*": Files.Read(R, ch); sym := times
+      |  "+": Files.Read(R, ch); sym := plus
+      |  "-": Files.Read(R, ch); sym := minus
+      |  "=": Files.Read(R, ch); sym := eql
+      |  "#": Files.Read(R, ch); sym := neq
+      |  "<": Files.Read(R, ch);
+          IF ch = "=" THEN Files.Read(R, ch); sym := leq ELSE sym := lss END
+      |  ">": Files.Read(R, ch);
+          IF ch = "=" THEN Files.Read(R, ch); sym := geq ELSE sym := gtr END
+      |  ";": Files.Read(R, ch); sym := semicolon
+      |  ",": Files.Read(R, ch); sym := comma
+      |  ":": Files.Read(R, ch);
+          IF ch = "=" THEN Files.Read(R, ch); sym := becomes ELSE sym := colon END
+      |  ".": Files.Read(R, ch); sym := period
+      |  "(": Files.Read(R, ch);
           IF ch = "*" THEN comment; Get(sym) ELSE sym := lparen END
-      |  ")": Texts.Read(R, ch); sym := rparen
-      |  "[": Texts.Read(R, ch); sym := lbrak
-      |  "]": Texts.Read(R, ch); sym := rbrak
+      |  ")": Files.Read(R, ch); sym := rparen
+      |  "[": Files.Read(R, ch); sym := lbrak
+      |  "]": Files.Read(R, ch); sym := rbrak
       |  "0".."9": Number;
       |  "A" .. "Z", "a".."z": Ident
-      |  "~": Texts.Read(R, ch); sym := not
-      ELSE Texts.Read(R, ch); sym := null
+      |  "~": Files.Read(R, ch); sym := not
+      ELSE Files.Read(R, ch); sym := null
       END
     END
   END Get;
 
-  PROCEDURE Init*(T: Texts.Text; pos: LONGINT);
-  BEGIN error := FALSE; errpos := pos; Texts.OpenReader(R, T, pos); Texts.Read(R, ch)
+  PROCEDURE Init*(T: ARRAY OF CHAR; pos: INTEGER);
+  BEGIN error := FALSE; errpos := pos; R := Files.Open(T, "r"); Files.Read(R, ch)
   END Init;
-  
+
   PROCEDURE EnterKW(sym: INTEGER; name: ARRAY OF CHAR);
   BEGIN keyTab[nkw].sym := sym; COPY(name, keyTab[nkw].id); INC(nkw)
   END EnterKW;
 
-BEGIN Texts.OpenWriter(W); error := TRUE; nkw := 0;
+BEGIN W := Files.stdout; error := TRUE; nkw := 0;
   EnterKW(null, "BY");
   EnterKW(do, "DO");
   EnterKW(if, "IF");

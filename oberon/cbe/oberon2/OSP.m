@@ -1,37 +1,37 @@
 MODULE OSP; (* NW 23.9.93 / 9.2.95*)
-  IMPORT Viewers, Texts, Oberon, MenuViewers, TextFrames, OSS, OSG;
+  IMPORT Args, Out, Files, (* Viewers, Texts, Oberon, MenuViewers, TextFrames, *) OSS, OSG;
 
   CONST WordSize = 4;
-  VAR sym: INTEGER; loaded: BOOLEAN;
+  VAR sym: INTEGER; (* loaded: BOOLEAN; *)
     topScope, universe: OSG.Object; (* linked lists, end with guard *)
     guard: OSG.Object;
-    W: Texts.Writer;
-  
+    W: Files.File;
+
   PROCEDURE NewObj(VAR obj: OSG.Object; class: INTEGER);
     VAR new, x: OSG.Object;
   BEGIN x := topScope; guard.name := OSS.id;
-    WHILE x.next.name # OSS.id DO x := x.next END ;
+    WHILE x.next.name # OSS.id DO x := x.next END;
     IF x.next = guard THEN
       NEW(new); new.name := OSS.id; new.class := class; new.next := guard;
       x.next := new; obj := new
     ELSE obj := x.next; OSS.Mark("mult def")
     END
   END NewObj;
-  
+ 
   PROCEDURE find(VAR obj: OSG.Object);
     VAR s, x: OSG.Object;
   BEGIN s := topScope; guard.name := OSS.id;
     LOOP x := s.next;
-      WHILE x.name # OSS.id DO x := x.next END ;
-      IF x # guard THEN obj := x; EXIT END ;
-      IF s = universe THEN obj := x; OSS.Mark("undef"); EXIT END ;
+      WHILE x.name # OSS.id DO x := x.next END;
+      IF x # guard THEN obj := x; EXIT END;
+      IF s = universe THEN obj := x; OSS.Mark("undef"); EXIT END;
       s := s.dsc
     END
   END find;
 
   PROCEDURE FindField(VAR obj: OSG.Object; list: OSG.Object);
   BEGIN guard.name := OSS.id;
-    WHILE list.name # OSS.id DO list := list.next END ;
+    WHILE list.name # OSS.id DO list := list.next END;
     obj := list
   END FindField;
 
@@ -49,16 +49,16 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
   END CloseScope;
 
   (* -------------------- Parser ---------------------*)
-  
+ 
   PROCEDURE^ expression(VAR x: OSG.Item);
-  
+ 
   PROCEDURE selector(VAR x: OSG.Item);
     VAR y: OSG.Item; obj: OSG.Object;
   BEGIN
     WHILE (sym = OSS.lbrak) OR (sym = OSS.period) DO
       IF sym = OSS.lbrak THEN
         OSS.Get(sym); expression(y);
-        IF x.type.form = OSG.Array THEN OSG.Index(x, y) ELSE OSS.Mark("not an array") END ;
+        IF x.type.form = OSG.Array THEN OSG.Index(x, y) ELSE OSS.Mark("not an array") END;
         IF sym = OSS.rbrak THEN OSS.Get(sym) ELSE OSS.Mark("]?") END
       ELSE OSS.Get(sym);
         IF sym = OSS.ident THEN
@@ -72,13 +72,13 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
       END
     END
   END selector;
-  
+ 
   PROCEDURE factor(VAR x: OSG.Item);
     VAR obj: OSG.Object;
   BEGIN (*sync*)
     IF sym < OSS.lparen THEN OSS.Mark("ident?");
       REPEAT OSS.Get(sym) UNTIL sym >= OSS.lparen
-    END ;
+    END;
     IF sym = OSS.ident THEN find(obj); OSS.Get(sym); OSG.MakeItem(x, obj); selector(x)
     ELSIF sym = OSS.number THEN OSG.MakeConstItem(x, OSG.intType, OSS.val); OSS.Get(sym)
     ELSIF sym = OSS.lparen THEN
@@ -88,17 +88,17 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
     ELSE OSS.Mark("factor?"); OSG.MakeItem(x, guard)
     END
   END factor;
-  
+ 
   PROCEDURE term(VAR x: OSG.Item);
     VAR y: OSG.Item; op: INTEGER;
   BEGIN factor(x);
     WHILE (sym >= OSS.times) & (sym <= OSS.and) DO
       op := sym; OSS.Get(sym);
-      IF op = OSS.and THEN OSG.Op1(op, x) END ;
+      IF op = OSS.and THEN OSG.Op1(op, x) END;
       factor(y); OSG.Op2(op, x, y)
     END
   END term;
-  
+ 
   PROCEDURE SimpleExpression(VAR x: OSG.Item);
     VAR y: OSG.Item; op: INTEGER;
   BEGIN
@@ -108,11 +108,11 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
     END;
     WHILE (sym >= OSS.plus) & (sym <= OSS.or) DO
       op := sym; OSS.Get(sym);
-      IF op = OSS.or THEN OSG.Op1(op, x) END ;
+      IF op = OSS.or THEN OSG.Op1(op, x) END;
       term(y); OSG.Op2(op, x, y)
     END
   END SimpleExpression;
-  
+ 
   PROCEDURE expression(VAR x: OSG.Item);
     VAR y: OSG.Item; op: INTEGER;
   BEGIN SimpleExpression(x);
@@ -120,7 +120,7 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
       op := sym; OSS.Get(sym); SimpleExpression(y); OSG.Relation(op, x, y)
     END
   END expression;
-  
+ 
   PROCEDURE parameter(VAR fp: OSG.Object);
     VAR x: OSG.Item;
   BEGIN expression(x);
@@ -128,22 +128,22 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
     ELSE OSS.Mark("too many parameters")
     END
   END parameter;
-      
+
   PROCEDURE StatSequence;
-    VAR par, obj: OSG.Object; x, y: OSG.Item; L: LONGINT;
-    
+    VAR par, obj: OSG.Object; x, y: OSG.Item; L: INTEGER;
+ 
     PROCEDURE param(VAR x: OSG.Item);
     BEGIN
-      IF sym = OSS.lparen THEN OSS.Get(sym) ELSE OSS.Mark(")?") END ;
+      IF sym = OSS.lparen THEN OSS.Get(sym) ELSE OSS.Mark(")?") END;
       expression(x);
       IF sym = OSS.rparen THEN OSS.Get(sym) ELSE OSS.Mark(")?") END
     END param;
-      
+
   BEGIN (* StatSequence *)
     LOOP (*sync*) obj := guard;
       IF sym < OSS.ident THEN OSS.Mark("statement?");
         REPEAT OSS.Get(sym) UNTIL sym >= OSS.ident
-      END ;
+      END;
       IF sym = OSS.ident THEN
         find(obj); OSS.Get(sym); OSG.MakeItem(x, obj); selector(x);
         IF sym = OSS.becomes THEN OSS.Get(sym); expression(y); OSG.Store(x, y)
@@ -161,45 +161,45 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
                 END
               END
             END
-          END ;
+          END;
           IF obj.val < 0 THEN OSS.Mark("forward call")
           ELSIF ~IsParam(par) THEN OSG.Call(x)
           ELSE OSS.Mark("too few parameters")
           END
         ELSIF x.mode = OSG.SProc THEN
-          IF obj.val <= 3 THEN param(y) END ;
+          IF obj.val <= 3 THEN param(y) END;
           OSG.IOCall(x, y)
         ELSIF obj.class = OSG.Typ THEN OSS.Mark("illegal assignment?")
         ELSE OSS.Mark("statement?")
         END
       ELSIF sym = OSS.if THEN
         OSS.Get(sym); expression(x); OSG.CJump(x);
-        IF sym = OSS.then THEN OSS.Get(sym) ELSE OSS.Mark("THEN?") END ;
+        IF sym = OSS.then THEN OSS.Get(sym) ELSE OSS.Mark("THEN?") END;
         StatSequence; L := 0;
         WHILE sym = OSS.elsif DO
           OSS.Get(sym); OSG.FJump(L); OSG.FixLink(x.a); expression(x); OSG.CJump(x);
-          IF sym = OSS.then THEN OSS.Get(sym) ELSE OSS.Mark("THEN?") END ;
+          IF sym = OSS.then THEN OSS.Get(sym) ELSE OSS.Mark("THEN?") END;
           StatSequence
-        END ;
+        END;
         IF sym = OSS.else THEN
           OSS.Get(sym); OSG.FJump(L); OSG.FixLink(x.a); StatSequence
         ELSE OSG.FixLink(x.a)
-        END ;
+        END;
         OSG.FixLink(L);
         IF sym = OSS.end THEN OSS.Get(sym) ELSE OSS.Mark("END?") END
       ELSIF sym = OSS.while THEN
         OSS.Get(sym); L := OSG.pc; expression(x); OSG.CJump(x);
-        IF sym = OSS.do THEN OSS.Get(sym) ELSE OSS.Mark("DO?") END ;
+        IF sym = OSS.do THEN OSS.Get(sym) ELSE OSS.Mark("DO?") END;
         StatSequence; OSG.BJump(L); OSG.FixLink(x.a);
         IF sym = OSS.end THEN OSS.Get(sym) ELSE OSS.Mark("END?") END
-      END ;
+      END;
       IF sym = OSS.semicolon THEN OSS.Get(sym)
       ELSIF (sym >= OSS.semicolon) & (sym < OSS.if) OR (sym >= OSS.array) THEN EXIT
       ELSE OSS.Mark("; ?")
       END
     END
   END StatSequence;
-  
+
   PROCEDURE IdentList(class: INTEGER; VAR first: OSG.Object);
     VAR obj: OSG.Object;
   BEGIN
@@ -214,20 +214,20 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
       IF sym = OSS.colon THEN OSS.Get(sym) ELSE OSS.Mark(":?") END
     END
   END IdentList;
-  
+ 
   PROCEDURE Type(VAR type: OSG.Type);
     VAR obj, first: OSG.Object; x: OSG.Item; tp: OSG.Type;
   BEGIN type := OSG.intType; (*sync*)
     IF (sym # OSS.ident) & (sym < OSS.array) THEN OSS.Mark("type?");
       REPEAT OSS.Get(sym) UNTIL (sym = OSS.ident) OR (sym >= OSS.array)
-    END ;
+    END;
     IF sym = OSS.ident THEN
       find(obj); OSS.Get(sym);
       IF obj.class = OSG.Typ THEN type := obj.type ELSE OSS.Mark("type?") END
     ELSIF sym = OSS.array THEN
       OSS.Get(sym); expression(x);
-      IF (x.mode # OSG.Const) OR (x.a < 0) THEN OSS.Mark("bad index") END ;
-      IF sym = OSS.of THEN OSS.Get(sym) ELSE OSS.Mark("OF?") END ;
+      IF (x.mode # OSG.Const) OR (x.a < 0) THEN OSS.Mark("bad index") END;
+      IF sym = OSS.of THEN OSS.Get(sym) ELSE OSS.Mark("OF?") END;
       Type(tp); NEW(type); type.form := OSG.Array; type.base := tp;
       type.len := SHORT(x.a); type.size := type.len * tp.size
     ELSIF sym = OSS.record THEN
@@ -238,25 +238,25 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
           WHILE obj # guard DO
             obj.type := tp; obj.val := type.size; INC(type.size, obj.type.size); obj := obj.next
           END
-        END ;
+        END;
         IF sym = OSS.semicolon THEN OSS.Get(sym)
         ELSIF sym = OSS.ident THEN OSS.Mark("; ?")
         ELSE EXIT
         END
-      END ;
+      END;
       type.fields := topScope.next; CloseScope;
       IF sym = OSS.end THEN OSS.Get(sym) ELSE OSS.Mark("END?") END
     ELSE OSS.Mark("ident?")
     END
   END Type;
 
-  PROCEDURE declarations(VAR varsize: LONGINT);
+  PROCEDURE declarations(VAR varsize: INTEGER);
     VAR obj, first: OSG.Object;
-      x: OSG.Item; tp: OSG.Type; L: LONGINT;
+      x: OSG.Item; tp: OSG.Type; (* L: INTEGER; *)
   BEGIN (*sync*)
     IF (sym < OSS.const) & (sym # OSS.end) THEN OSS.Mark("declaration?");
       REPEAT OSS.Get(sym) UNTIL (sym >= OSS.const) OR (sym = OSS.end)
-    END ;
+    END;
     LOOP
       IF sym = OSS.const THEN
         OSS.Get(sym);
@@ -269,16 +269,16 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
           END;
           IF sym = OSS.semicolon THEN OSS.Get(sym) ELSE OSS.Mark(";?") END
         END
-      END ;
+      END;
       IF sym = OSS.type THEN
         OSS.Get(sym);
         WHILE sym = OSS.ident DO
           NewObj(obj, OSG.Typ); OSS.Get(sym);
-          IF sym = OSS.eql THEN OSS.Get(sym) ELSE OSS.Mark("=?") END ; 
+          IF sym = OSS.eql THEN OSS.Get(sym) ELSE OSS.Mark("=?") END;
           Type(obj.type);
           IF sym = OSS.semicolon THEN OSS.Get(sym) ELSE OSS.Mark(";?") END
         END
-      END ;
+      END;
       IF sym = OSS.var THEN
         OSS.Get(sym);
         WHILE sym = OSS.ident DO
@@ -286,10 +286,10 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
           WHILE obj # guard DO
             obj.type := tp; obj.lev := OSG.curlev;
             varsize := varsize + obj.type.size; obj.val := -varsize; obj := obj.next
-          END ;
+          END;
           IF sym = OSS.semicolon THEN OSS.Get(sym) ELSE OSS.Mark("; ?") END
         END
-      END ;
+      END;
       IF (sym >= OSS.const) & (sym <= OSS.var) THEN OSS.Mark("declaration?") ELSE EXIT END
     END
   END declarations;
@@ -298,28 +298,28 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
     CONST marksize = 8;
     VAR proc, obj: OSG.Object;
       procid: OSS.Ident;
-      locblksize, parblksize: LONGINT;
-      
+      locblksize, parblksize: INTEGER;
+
     PROCEDURE FPSection;
-      VAR obj, first: OSG.Object; tp: OSG.Type; parsize: LONGINT;
+      VAR obj, first: OSG.Object; tp: OSG.Type; parsize: INTEGER;
     BEGIN
       IF sym = OSS.var THEN OSS.Get(sym); IdentList(OSG.Par, first)
       ELSE IdentList(OSG.Var, first)
-      END ;
+      END;
       IF sym = OSS.ident THEN
         find(obj); OSS.Get(sym);
         IF obj.class = OSG.Typ THEN tp := obj.type ELSE OSS.Mark("type?"); tp := OSG.intType END
       ELSE OSS.Mark("ident?"); tp := OSG.intType
-      END ;
+      END;
       IF first.class = OSG.Var THEN
         parsize := tp.size;
-        IF tp.form >= OSG.Array THEN OSS.Mark("no struct params") END ;
+        IF tp.form >= OSG.Array THEN OSS.Mark("no struct params") END;
       ELSE parsize := WordSize
-      END ;
+      END;
       obj := first;
       WHILE obj # guard DO obj.type := tp; INC(parblksize, parsize); obj := obj.next END
     END FPSection;
-    
+
   BEGIN (* ProcedureDecl *)
     OSS.Get(sym);
     IF sym = OSS.ident THEN
@@ -330,71 +330,72 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
         OSS.Get(sym);
         IF sym = OSS.rparen THEN OSS.Get(sym)
         ELSE FPSection;
-          WHILE sym = OSS.semicolon DO OSS.Get(sym); FPSection END ;
+          WHILE sym = OSS.semicolon DO OSS.Get(sym); FPSection END;
           IF sym = OSS.rparen THEN OSS.Get(sym) ELSE OSS.Mark(")?") END
         END
-      ELSIF OSG.curlev = 1 THEN OSG.EnterCmd(procid) 
-      END ;
+      ELSIF OSG.curlev = 1 THEN OSG.EnterCmd(procid)
+      END;
       obj := topScope.next; locblksize := parblksize;
       WHILE obj # guard DO
         obj.lev := OSG.curlev;
-        IF obj.class = OSG.Par THEN DEC(locblksize, WordSize) ELSE locblksize := locblksize - obj.type.size END ;
+        IF obj.class = OSG.Par THEN DEC(locblksize, WordSize) ELSE locblksize := locblksize - obj.type.size END;
         obj.val := locblksize; obj := obj.next
-      END ;
+      END;
       proc.dsc := topScope.next;
       IF sym = OSS.semicolon THEN OSS.Get(sym) ELSE OSS.Mark(";?") END;
       locblksize := 0; declarations(locblksize);
       WHILE sym = OSS.procedure DO
         ProcedureDecl;
         IF sym = OSS.semicolon THEN OSS.Get(sym) ELSE OSS.Mark(";?") END
-      END ;
+      END;
       proc.val := OSG.pc; OSG.Enter(locblksize);
-      IF sym = OSS.begin THEN OSS.Get(sym); StatSequence END ;
-      IF sym = OSS.end THEN OSS.Get(sym) ELSE OSS.Mark("END?") END ;
+      IF sym = OSS.begin THEN OSS.Get(sym); StatSequence END;
+      IF sym = OSS.end THEN OSS.Get(sym) ELSE OSS.Mark("END?") END;
       IF sym = OSS.ident THEN
-        IF procid # OSS.id THEN OSS.Mark("no match") END ;
+        IF procid # OSS.id THEN OSS.Mark("no match") END;
         OSS.Get(sym)
-      END ;
+      END;
       OSG.Return(parblksize - marksize); CloseScope; OSG.IncLevel(-1)
     END
   END ProcedureDecl;
 
-  PROCEDURE Module(VAR S: Texts.Scanner);
-    VAR modid: OSS.Ident; varsize: LONGINT;
-  BEGIN Texts.WriteString(W, "  compiling ");
+  PROCEDURE Module((* VAR S: Texts.Scanner *));
+    VAR modid: OSS.Ident; varsize: INTEGER;
+  BEGIN Files.WriteString(W, "  compiling ");
     IF sym = OSS.module THEN
       OSS.Get(sym); OSG.Open; OpenScope; varsize := 0;
       IF sym = OSS.ident THEN
         modid := OSS.id; OSS.Get(sym);
-        Texts.WriteString(W, modid); Texts.WriteLn(W); Texts.Append(Oberon.Log, W.buf)
+        Files.WriteString(W, modid); Files.WriteLn(W); (* Texts.Append(Oberon.Log, W.buf) *)
       ELSE OSS.Mark("ident?")
-      END ;
+      END;
       IF sym = OSS.semicolon THEN OSS.Get(sym) ELSE OSS.Mark(";?") END;
       declarations(varsize);
       WHILE sym = OSS.procedure DO
         ProcedureDecl;
         IF sym = OSS.semicolon THEN OSS.Get(sym) ELSE OSS.Mark(";?") END
-      END ;
+      END;
       OSG.Header(varsize);
-      IF sym = OSS.begin THEN OSS.Get(sym); StatSequence END ;
-      IF sym = OSS.end THEN OSS.Get(sym) ELSE OSS.Mark("END?") END ;
+      IF sym = OSS.begin THEN OSS.Get(sym); StatSequence END;
+      IF sym = OSS.end THEN OSS.Get(sym) ELSE OSS.Mark("END?") END;
       IF sym = OSS.ident THEN
-        IF modid # OSS.id THEN OSS.Mark("no match") END ;
+        IF modid # OSS.id THEN OSS.Mark("no match") END;
         OSS.Get(sym)
       ELSE OSS.Mark("ident?")
-      END ;
-      IF sym # OSS.period THEN OSS.Mark(". ?") END ;
+      END;
+      IF sym # OSS.period THEN OSS.Mark(". ?") END;
       CloseScope;
       IF ~OSS.error THEN
-        COPY(modid, S.s); OSG.Close(S, varsize); Texts.WriteString(W, "code generated");
-        Texts.WriteInt(W, OSG.pc, 6); Texts.WriteLn(W); Texts.Append(Oberon.Log, W.buf)
+        (* XXX: what's this? COPY(modid, S.s); *) OSG.Close((* S, varsize *)); Files.WriteString(W, "code generated");
+        Files.WriteInt(W, OSG.pc, 6); Files.WriteLn(W); (* Texts.Append(Oberon.Log, W.buf) *)
       END
     ELSE OSS.Mark("MODULE?")
     END
   END Module;
-  
+
+(*
   PROCEDURE Compile*;
-    VAR beg, end, time: LONGINT;
+    VAR beg, end, time: INTEGER;
       S: Texts.Scanner; T: Texts.Text; v: Viewers.Viewer;
   BEGIN loaded := FALSE;
     Texts.OpenScanner(S, Oberon.Par.text, Oberon.Par.pos); Texts.Scan(S);
@@ -426,28 +427,52 @@ MODULE OSP; (* NW 23.9.93 / 9.2.95*)
     VAR S: Texts.Scanner;
   BEGIN
     IF ~OSS.error & ~loaded THEN
-      Texts.OpenScanner(S, Oberon.Par.text, Oberon.Par.pos); OSG.Load(S); loaded := TRUE
+      (* Texts.OpenScanner(S, Oberon.Par.text, Oberon.Par.pos); *) OSG.Load(S); loaded := TRUE
     END
   END Load;
 
   PROCEDURE Exec*;
     VAR S: Texts.Scanner;
-  BEGIN 
+  BEGIN
     IF loaded THEN
       Texts.OpenScanner(S, Oberon.Par.text, Oberon.Par.pos); Texts.Scan(S);
       IF S.class = Texts.Name THEN OSG.Exec(S) END
     END
   END Exec;
+*)
 
-  PROCEDURE enter(cl: INTEGER; n: LONGINT; name: OSS.Ident; type: OSG.Type);
+  PROCEDURE enter(cl: INTEGER; n: INTEGER; name: OSS.Ident; type: OSG.Type);
     VAR obj: OSG.Object;
   BEGIN NEW(obj);
     obj.class := cl; obj.val := n; obj.name := name; obj.type := type; obj.dsc := NIL;
     obj.next := topScope.next; topScope.next := obj
-  END enter; 
+  END enter;
 
-BEGIN Texts.OpenWriter(W); Texts.WriteString(W, "Oberon0 Compiler  9.2.95");
-  Texts.WriteLn(W); Texts.Append(Oberon.Log, W.buf);
+  PROCEDURE RunFile(filename: ARRAY OF CHAR);
+  BEGIN
+    OSS.Init(filename, 0); OSS.Get(sym); Module;
+    IF ~OSS.error THEN
+      OSG.Load
+    END
+  END RunFile;
+
+  PROCEDURE ProcessArgs;
+    VAR i: INTEGER;
+    VAR filename : ARRAY 1024 OF CHAR;
+  BEGIN
+    i := 1;
+    WHILE i < Args.argc DO
+      Args.GetArg(i, filename);
+      Out.String("filename: "); Out.String(filename); Out.Ln;
+      RunFile(filename);
+      INC(i);
+    END
+  END ProcessArgs;
+
+BEGIN
+  W := Files.stdout;
+  Files.WriteString(W, "Oberon0 Compiler  9.2.95");
+  Files.WriteLn(W); (* Texts.Append(Oberon.Log, W.buf); *)
   NEW(guard); guard.class := OSG.Var; guard.type := OSG.intType; guard.val := 0;
   topScope := NIL; OpenScope;
   enter(OSG.Typ, 1, "BOOLEAN", OSG.boolType);
@@ -458,5 +483,7 @@ BEGIN Texts.OpenWriter(W); Texts.WriteString(W, "Oberon0 Compiler  9.2.95");
   enter(OSG.SProc, 2, "Write", NIL);
   enter(OSG.SProc, 3, "WriteHex", NIL);
   enter(OSG.SProc, 4, "WriteLn", NIL);
-  universe := topScope
+  universe := topScope;
+  (* Out.String("MAX(INTEGER) = "); Out.Int(MAX(INTEGER), 1); Out.Ln; *)
+  ProcessArgs;
 END OSP.
