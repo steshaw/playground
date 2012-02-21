@@ -1,0 +1,38 @@
+@SysInclude { doc }
+@SysInclude { eq }
+@SysInclude { graph }
+@Document 
+    @InitialSpace { tex }
+    @InitialFont { Palatino Base 12p }
+@Text @Begin
+@Display @Heading { Sample Lout Document }
+@PP
+This is a sample paragraph. It is really just intended as filler, not as anything special. I should probably put in things like ``scare quotes'', and shouldn't avoid things like apostrophes so everyone can get a better sense of how things look. Maybe a sentence with a lot of different letters? How about: grumpy wizards make toxic brew for the evil Queen and Jack. I stole that from Google web fonts.@FootNote { You've heard of Google right? } What do you think?
+
+@PP
+Here is a new paragraph. Let's add words in @B bold and @I italics, shall we? How about @S { Small Caps }? We can even do a @ShadowBox { Shadow Box } if we like.
+
+@QuotedDisplay {
+This is a sample paragraph in a quotation display. It is really just intended as filler, not as anything special. I should probably put in things like ``scare quotes'', and shouldn't avoid things like apostrophes so everyone can get a better sense of how things look. Maybe a sentence with a lot of different letters? How about: grumpy wizards make toxic brew for the evil Queen and Jack. I stole that from Google web fonts. What do you think?
+}
+
+@Heading { A Numbered List }
+@NumberedList
+    @ListItem One
+    @ListItem Two
+@EndList
+
+@Heading { Displayed Mathematics }
+@Display @Eq { T(n) = big sum from i=0 to n-1 2 sup i = 2 sup n - 1}
+
+@LeftDisplay @Heading { A Sample Graph }
+@Graph
+abovecaption { New South Wales road deaths
+(per 100 million vehicle km) }
+{
+@Data points { plus } pairs { dashed }
+{ 1963 5.6 1971 4.3 1976 3.7 1979 3.4
+1982 2.9 1985 2.3 1988 2.0 }
+}
+
+@End @Text
