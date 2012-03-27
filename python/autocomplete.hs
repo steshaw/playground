@@ -48,8 +48,8 @@ allPrefixes t =
     cs = M.fold f [] (children t)
     f n as = as ++ (allPrefixes n)
 
-autoComplete :: String -> Trie -> [String]
-autoComplete prefix t =
+autocomplete :: String -> Trie -> [String]
+autocomplete prefix t =
   maybe [] allPrefixes (findNode prefix t)
 
 cities =
