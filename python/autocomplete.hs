@@ -33,7 +33,7 @@ insert (k:ks) t =
 findNode :: String -> Trie -> Maybe Trie
 findNode [] t = Just $ t
 findNode (k:ks) t =
-  M.lookup k (children t) >>= \t' -> 
+  M.lookup k (children t) >>= \t' ->
     findNode ks t'
 
 find :: String -> Trie -> Maybe String
@@ -49,10 +49,8 @@ allPrefixes t =
     f n as = as ++ (allPrefixes n)
 
 autoComplete :: String -> Trie -> [String]
-autoComplete prefix t = 
-  case findNode prefix t of
-    Nothing -> []
-    Just n -> allPrefixes n
+autoComplete prefix t =
+  maybe [] allPrefixes (findNode prefix t)
 
 cities =
   [ "New York"
