@@ -33,14 +33,12 @@ insert (k:ks) t =
 findNode :: String -> Trie -> Maybe Trie
 findNode [] t = Just $ t
 findNode (k:ks) t =
-  case M.lookup k (children t) of
-    Nothing -> Nothing
-    Just t' -> findNode ks t'
+  M.lookup k (children t) >>= \t' -> 
+    findNode ks t'
 
 find :: String -> Trie -> Maybe String
-find w t = case findNode w t of
-  Nothing -> Nothing
-  Just t' -> if terminates t' then Just $ value t' else Nothing
+find w t = findNode w t >>= \t' ->
+  if terminates t' then Just $ value t' else Nothing
 
 allPrefixes :: Trie -> [String]
 allPrefixes t =
@@ -55,3 +53,14 @@ autoComplete prefix t =
   case findNode prefix t of
     Nothing -> []
     Just n -> allPrefixes n
+
+cities =
+  [ "New York"
+  , "New Jersey"
+  , "New Orleans"
+  , "San Fransisco"
+  , "New Hampshire"
+  , "Boston"
+  ]
+
+citrie = foldr insert empty cities
