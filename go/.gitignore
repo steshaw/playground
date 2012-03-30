@@ -1,3 +1,7 @@
 *.hi
 *.o
 hello1
+coroutines
+hello
+printers
+thread-ring

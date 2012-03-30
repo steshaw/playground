@@ -1,0 +1,5 @@
+#!/bin/bash
+
+file=$1
+
+6g ${file}.go && 6l -o ${file} ${file}.6 && ./${file}
