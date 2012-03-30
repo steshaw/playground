@@ -6,6 +6,7 @@ package main
 
 import "fmt"
 import "os"
+import "strconv"
 
 type Day int
 
@@ -34,6 +35,23 @@ func print(args ...Stringer) {
    os.Stdout.WriteString("\n")
 }
 
+type Any interface {}
+
+func printAny(args ...Any) {
+   for i, arg := range args {
+      if i > 0 { os.Stdout.WriteString(" ") }
+      switch a := arg.(type) {  // "type switch"
+         case Stringer: os.Stdout.WriteString(a.String())
+         case int:      os.Stdout.WriteString(strconv.Itoa(a))
+         case string:   os.Stdout.WriteString(a)
+         // more types can be used
+         default:       os.Stdout.WriteString("????")
+      }
+   }
+   os.Stdout.WriteString("\n")
+}
+
 func main() {
    print(Day(1), Day(3), Day(0), Fahrenheit(26.45), Fahrenheit(72.29), Day(-1), Day(7))
+   printAny(Day(1), "was", Fahrenheit(72.29))
 }
