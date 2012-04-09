@@ -59,6 +59,6 @@ timer_tests:
 clean:	
 	rm -rf *.beam lists.ebeam erl_crash.dump 
 	rm -rf trigramsOS.tab trigramsS.tab trigrams.dict 
-	cd ets_trigrams; make_clean
-	cd socket_dist; make_clean
+#	cd ets_trigrams; make_clean
+	cd socket_dist; make clean
 
