@@ -1,0 +1,23 @@
+Neel Krishnaswami posted this compiler to reddit.
+
+See http://www.reddit.com/r/programming/comments/711ha/llvmbased_miniml_compiler_in_100_lines_of_ocaml/c05eyms
+
+kubalaa asks:
+
+A compiler for a functional language in 100 lines would have been worth seeing. Too bad.
+
+neelk responds:
+
+Sure thing! Here's a compiler for the pure lambda calculus using a cbv evaluation strategy. It compiles to a triple-style pseudo-assembly, which you can easily change to your favorite actual assembly language. The registers I use are:
+
+* sp -- the stack pointer; points to the topmost occupied element of the stack. The stack grows upwards, so incrementing it yields a new slot.
+* hp -- the heap pointer; points to the next free pointer. Allocation consists of bumping the heap pointer. You aren't getting deallocation in 100 LOC. :-)
+* ep -- the environment register. Hold a pointer to the current environment for lexical variables.
+* ret -- the return pointer. Where the current function should return to.
+* work -- a scratch register
+* newenv -- where we store the environment of a function we're about to call
+* calltgt -- where we store the address of a function we're about to jump to
+
+The compiler is insanely junky, but hey, it's ninety lines of code. There are exactly two interesting things it does. First, it does closure conversion, and uses expr to represent regular asts and cexpr for closure converted expressions. Second, it uses a perhaps excessively-slick bit of higher order functional programming to do relocation and backpatching in a purely functional way. Basically, a relocatable piece of code is a function that takes in its start address, and returns a pair consisting of the length of the generated code, and another function which actually produces the code once you give it a table of offsets for the closure addresses.
+
+Some of the junky things I do is put too much code into the call sequence, rather than into the closure body. Another junky thing is that stack manipulation is incredibly lazy and naive; you could clean it up, shrink the generated code, and probably get rid of a couple of registers. Also, variable references are linear time, since I scan a linked list to find them.
