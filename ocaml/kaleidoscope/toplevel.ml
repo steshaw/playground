@@ -2,6 +2,8 @@
  * Top-Level parsing and JIT Driver
  *===----------------------------------------------------------------------===*)
 
+open Llvm
+
 (* top ::= definition | external | expression | ';' *)
 let rec main_loop stream =
   match Stream.peek stream with
@@ -16,16 +18,19 @@ let rec main_loop stream =
       begin
         try match token with
         | Token.Def ->
-            ignore(Parser.parse_definition stream);
+            let e = Parser.parse_definition stream in
             print_endline "parsed a function definition.";
+            dump_value (Codegen.codegen_func e);
         | Token.Extern ->
-            ignore(Parser.parse_extern stream);
+            let e = Parser.parse_extern stream in
             print_endline "parsed an extern.";
+            dump_value (Codegen.codegen_proto e);
         | _ ->
             (* Evaluate a top-level expression into an anonymous function. *)
-            ignore(Parser.parse_toplevel stream);
+            let e = Parser.parse_toplevel stream in
             print_endline "parsed a top-level expr";
-        with Stream.Error s ->
+            dump_value (Codegen.codegen_func e);
+        with Stream.Error s | Codegen.Error s ->
           (* Skip token for error recovery. *)
           Stream.junk stream;
           print_endline s;
