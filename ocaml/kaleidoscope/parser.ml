@@ -82,6 +82,17 @@ let rec parse_primary = parser
 
   | [< >] -> raise (Stream.Error "unknown token when expecting an expression.")
 
+(* unary
+ *   ::= primary
+ *   ::= '!' unary *)
+and parse_unary = parser
+  (* If this is a unary operator, read it. *)
+  | [< 'Token.Kwd op when op != '(' && op != ')'; operand=parse_expr >] ->
+      Ast.Unary (op, operand)
+
+  (* If the current token is not an operator, it must be a primary expr. *)
+  | [< stream >] -> parse_primary stream
+
 (* binoprhs
  *   ::= ('+' primary)* *)
 and parse_bin_rhs expr_prec lhs stream =
@@ -97,7 +108,7 @@ and parse_bin_rhs expr_prec lhs stream =
         Stream.junk stream;
 
         (* Parse the primary expression after the binary operator. *)
-        let rhs = parse_primary stream in
+        let rhs = parse_unary stream in
 
         (* Okay, we know this is a binop. *)
         let rhs =
@@ -121,7 +132,7 @@ and parse_bin_rhs expr_prec lhs stream =
 (* expression
  *   ::= primary binoprhs *)
 and parse_expr = parser
-  | [< lhs=parse_primary; stream >] -> parse_bin_rhs 0 lhs stream
+  | [< lhs=parse_unary; stream >] -> parse_bin_rhs 0 lhs stream
 
 (* prototype
  *   ::= id '(' id* ')'
@@ -160,13 +171,13 @@ let parse_prototype =
     let args = Array.of_list (List.rev args) in
 
     (* Verify right number of arguments for operator. *)
-  if Array.length args != kind
-  then raise (Stream.Error "invalid number of operands for operator")
-  else
-    if kind == 1 then
-      Ast.Prototype (name, args)
+    if Array.length args != kind
+    then raise (Stream.Error "invalid number of operands for operator")
     else
-      Ast.BinOpPrototype (name, args, binary_precedence)
+      if kind == 1 then
+        Ast.Prototype (name, args)
+      else
+        Ast.BinOpPrototype (name, args, binary_precedence)
 
   | [< >] ->
       raise (Stream.Error "expected function name in prototype")

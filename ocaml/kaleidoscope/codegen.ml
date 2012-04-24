@@ -17,6 +17,15 @@ let rec codegen_expr = function
   | Ast.Variable name ->
       (try Hashtbl.find named_values name with
         | Not_found -> raise (Error "unknown variable name"))
+  | Ast.Unary (op, operand) ->
+      let operand = codegen_expr operand in
+      let callee = "unary" ^ (String.make 1 op) in
+      let callee =
+        match lookup_function callee the_module with
+        | Some callee -> callee
+        | None -> raise (Error "unknown unary oeprator")
+      in
+      build_call callee [|operand|] "unop" builder
   | Ast.Binary (op, lhs, rhs) ->
       let lhs_val = codegen_expr lhs in
       let rhs_val = codegen_expr rhs in
@@ -146,7 +155,7 @@ let rec codegen_expr = function
         | None -> const_float double_type 1.0
       in
 
-      let next_var = build_add variable step_val "nextvar" builder in
+      let next_var = build_fadd variable step_val "nextvar" builder in
 
       (* Compute the end condition. *)
       let end_cond = codegen_expr end_ in

@@ -10,6 +10,9 @@ type expr =
   (* variant for referencing a variable, like "a". *)
   | Variable of string
 
+  (* variant for a unary operator. *)
+  | Unary of char * expr
+
   (* variant for a binary operator. *)
   | Binary of char * expr * expr
 
