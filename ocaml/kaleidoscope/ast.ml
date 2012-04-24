@@ -25,7 +25,9 @@ type expr =
 (* proto - This type represents the "prototype" for a function, which captures
  * its name, and its argument names (thus implicitly the number of arguments the
  * function takes). *)
-type proto = Prototype of string * string array
+type proto = 
+  | Prototype of string * string array
+  | BinOpPrototype of string * string array * int
 
 (* func - This type represents a function definition itself. *)
 type func = Function of proto * expr

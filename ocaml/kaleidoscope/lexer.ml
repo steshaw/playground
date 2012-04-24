@@ -49,6 +49,8 @@ and lex_ident buffer = parser
       | "else" -> [< 'Token.Else; stream >]
       | "for" -> [< 'Token.For; stream >]
       | "in" -> [< 'Token.In; stream >]
+      | "binary" -> [< 'Token.Binary; stream >]
+      | "unary" -> [< 'Token.Unary; stream >]
       | id -> [< 'Token.Ident id; stream >]
 
 and lex_comment = parser
