@@ -25,6 +25,9 @@ type expr =
   (* variant for for/in. *)
   | For of string * expr * expr * expr option * expr
 
+  (* variant for var/in *)
+  | Var of (string * expr option) array * expr
+
 (* proto - This type represents the "prototype" for a function, which captures
  * its name, and its argument names (thus implicitly the number of arguments the
  * function takes). *)

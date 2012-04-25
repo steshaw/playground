@@ -20,3 +20,6 @@ type token =
 
   (* operators *)
   | Binary | Unary
+
+  (* var definition *)
+  | Var

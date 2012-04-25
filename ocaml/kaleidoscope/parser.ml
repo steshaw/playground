@@ -80,6 +80,19 @@ let rec parse_primary = parser
             raise (Stream.Error "expected '=' after for")
       end stream
 
+  (* varexpr
+   *   ::= 'var' identifier ('=' expression?
+   *             (',' identifier ('=' expression)?)* 'in' expression *)
+  | [< 'Token.Var;
+       (* At least one variable name is required. *)
+       'Token.Ident id ?? "expected identifier after var";
+       init=parse_var_init;
+       var_names=parse_var_names [(id, init)];
+       (* At this point, we have to have 'in'. *)
+       'Token.In ?? "expected 'in' keyword after 'var'";
+       body=parse_expr >] ->
+      Ast.Var (Array.of_list (List.rev var_names), body)
+
   | [< >] -> raise (Stream.Error "unknown token when expecting an expression.")
 
 (* unary
@@ -128,6 +141,18 @@ and parse_bin_rhs expr_prec lhs stream =
         parse_bin_rhs expr_prec lhs stream
       end
   | _ -> lhs
+
+and parse_var_init = parser
+  (* read in the optional initializer. *)
+  | [< 'Token.Kwd '='; e=parse_expr >] -> Some e
+  | [< >] -> None
+
+and parse_var_names accumulator = parser
+  | [< 'Token.Kwd ',';
+       'Token.Ident id ?? "expected identifier list after var";
+       init=parse_var_init;
+       e=parse_var_names ((id, init) :: accumulator) >] -> e
+  | [< >] -> accumulator
 
 (* expression
  *   ::= primary binoprhs *)

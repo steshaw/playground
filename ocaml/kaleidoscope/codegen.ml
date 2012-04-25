@@ -235,6 +235,52 @@ let rec codegen_expr = function
       (* for expr always returns 0.0. *)
       const_null double_type
 
+  | Ast.Var (var_names, body) ->
+      let old_bindings = ref [] in
+
+      let the_function = block_parent (insertion_block builder) in
+
+      (* Register all variables and emit their initialiser. *)
+      Array.iter (fun (var_name, init) ->
+          (* Emit the initialiser before adding the variable to scope, this
+           * prevents the initialiser from referencing the variable itself, and
+           * permits stuff like this:
+           *   var = 1 in
+           *     var a = a in ... # refers to outer 'a'.
+           *)
+          let init_val =
+            match init with
+            | Some init -> codegen_expr init
+            | None -> const_float double_type 0.0 (* default value of a var is 0.0 if no initialiser *)
+          in
+
+          let alloca = create_entry_block_alloca the_function var_name in
+          ignore (build_store init_val alloca builder);
+
+          (* Remember the old variable binding so that we can restore the binding
+           * when we unrecurse. *)
+          begin
+            try
+              let old_value = Hashtbl.find named_values var_name in
+              old_bindings := (var_name, old_value) :: !old_bindings;
+            with Not_found -> ()
+          end;
+
+          (* Remember this binding. *)
+          Hashtbl.add named_values var_name alloca;
+      ) var_names;
+
+      (* Codegen the body, now that all vars are in scope. *)
+      let body_val = codegen_expr body in
+
+      (* Pop all our vars from scope. *)
+      List.iter (fun (var_name, old_value) ->
+        Hashtbl.add named_values var_name old_value
+      ) !old_bindings;
+
+      (* Return the body computation. *)
+      body_val
+
 let codegen_proto = function
   | Ast.Prototype (name, args) 
   | Ast.BinOpPrototype (name, args, _) ->
@@ -310,8 +356,10 @@ let codegen_func the_fpm = function
         (* Finish off the function. *)
         let _ = build_ret ret_val builder in
 
+(*
         print_endline "dump before analysis:";
         dump_value the_function;
+*)
 
         (* Validate the generated code, checking for consistency. *)
         Llvm_analysis.assert_valid_function the_function;
@@ -319,8 +367,10 @@ let codegen_func the_fpm = function
         (* Optimize the function. *)
         let _ = PassManager.run_function the_function the_fpm in
 
+(*
         print_endline "dump after analysis:";
         dump_value the_function;
+*)
 
         the_function
       with e ->
