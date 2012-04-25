@@ -35,7 +35,7 @@ END
 open Printf
 
 let program, run =
-  try Gram.parse prog Loc.ghost (Stream.of_channel (open_in "fib.ml")) with
+  try Gram.parse prog Loc.ghost (Stream.of_channel (open_in "fib.minml")) with
   | Loc.Exc_located(loc, e) ->
       printf "%s at line %d\n" (Printexc.to_string e) (Loc.start_line loc);
       exit 1
