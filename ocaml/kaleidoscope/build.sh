@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LLVM_OCAML_LIB=/Users/steshaw/.shelly/local/llvm-3.0/lib/ocaml
+LLVM_OCAML_LIB=$(llvm-config --libdir)/ocaml
 
 Build() {
   ocamlbuild \
