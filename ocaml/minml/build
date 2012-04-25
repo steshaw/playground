@@ -10,4 +10,6 @@
 # 102334155
 
 LLVM_OCAML_LIB=$(llvm-config --libdir)/ocaml
-ocamlc -I $LLVM_OCAML_LIB -g -dtypes -pp camlp4oof -I +camlp4 dynlink.cma camlp4lib.cma -cc g++ llvm.cma llvm_bitwriter.cma minml.ml -o minml
+ocamlc -I $LLVM_OCAML_LIB -g -dtypes -pp camlp4oof -I +camlp4 dynlink.cma camlp4lib.cma -cc g++ \
+         llvm.cma llvm_bitwriter.cma \
+         minml.ml -o minml
