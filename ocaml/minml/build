@@ -1,14 +1,5 @@
 #!/bin/bash
 
-# Jon's build instructions:
-
-# $ ocamlc -g -dtypes -pp camlp4oof -I +camlp4 dynlink.cma camlp4lib.cma -cc g++ llvm.cma llvm_bitwriter.cma minml.ml -o minml
-# $ ./minml run.bc <fib.ml
-# $ llc -f run.bc -o run.s
-# $ gcc run.s -o run
-# $ ./run
-# 102334155
-
 LLVM_OCAML_LIB=$(llvm-config --libdir)/ocaml
 ocamlc -I $LLVM_OCAML_LIB -g -dtypes -pp camlp4oof -I +camlp4 dynlink.cma camlp4lib.cma -cc g++ \
          llvm.cma llvm_bitwriter.cma \

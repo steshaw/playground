@@ -1,4 +1,6 @@
 minml
+minml.annot
 fib
-fib.bc
-fib.s
+fib2
+*.bc
+*.s

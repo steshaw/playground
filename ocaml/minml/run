@@ -1,6 +1,13 @@
 #!/bin/bash
 
-./minml fib.bc &&
-  llc fib.bc &&
-  clang fib.s -o fib &&
-  ./fib
+if [[ $# -ne 1 ]]; then
+  echo usage: $0 file
+  exit 1
+fi
+
+file=${1%.minml}
+
+./minml $file.bc <$file.minml &&
+  llc $file.bc &&
+  clang $file.s -o $file &&
+  ./$file
