@@ -10,7 +10,7 @@ Build() {
 }
 
 if [[ $# -eq 0 ]]; then
-  Build toy.native
+  Build kaleidoscope.native
 else
   Build "$@"
 fi
