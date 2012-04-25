@@ -2,8 +2,6 @@
 
 # Jon's build instructions:
 
-#-I /Users/steshaw/.shelly/apps/llvm-3.0/lib/ocaml
-
 # $ ocamlc -g -dtypes -pp camlp4oof -I +camlp4 dynlink.cma camlp4lib.cma -cc g++ llvm.cma llvm_bitwriter.cma minml.ml -o minml
 # $ ./minml run.bc <fib.ml
 # $ llc -f run.bc -o run.s
@@ -11,6 +9,5 @@
 # $ ./run
 # 102334155
 
-# Doesn't work with ocaml 3.11.2 ... doesn't have camlp4oof. 
-# Tried camlp4o and camlp4r but no luck.
-ocamlc -g -dtypes -pp camlp4oof -I +camlp4 dynlink.cma camlp4lib.cma -cc g++ llvm.cma llvm_bitwriter.cma minml.ml -o minml
+LLVM_OCAML_LIB=$(llvm-config --libdir)/ocaml
+ocamlc -I $LLVM_OCAML_LIB -g -dtypes -pp camlp4oof -I +camlp4 dynlink.cma camlp4lib.cma -cc g++ llvm.cma llvm_bitwriter.cma minml.ml -o minml
