@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir -p output &&
+    cd output &&
+    cp ../hello.tex .
+    cp ../mybib.bib .
+    pdflatex ../hello &&
+    bibtex hello &&
+    pdflatex ../hello &&
+    pdflatex ../hello &&
+    cp hello.pdf ..
