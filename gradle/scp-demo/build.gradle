@@ -1,0 +1,47 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+description = 'scp Demo'
+group = 'org.steshaw'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = 1.6
+
+jar {
+  manifest {
+    attributes("Main-Class": "Main")
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+configurations {
+  deployerJars
+}
+
+dependencies {
+  deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
+}
+
+uploadArchives {
+  repositories.mavenDeployer {
+    configuration = configurations.deployerJars
+    repository(url: "scp://steshaw-dv6.bigpond/home/steshaw/tmp/apps/scp-demo/deploy") {
+      authentication(userName: "steshaw", password: "secret")
+    }
+  }
+}
+
+task huzzah {
+  doFirst {
+    println "Huzzah - first!"
+  }
+  doLast {
+    println "Huzzah - last!"
+  }
+}
+
+task hurray << {
+  println "Hurray - I am shorter!"
+}
