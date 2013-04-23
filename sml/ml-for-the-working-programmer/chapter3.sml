@@ -47,3 +47,16 @@ fun revAppend [] ys = ys
 
 (* efficient rev uses revAppend *)
 fun rev xs = revAppend xs [];
+
+fun zip _       []      = []
+  | zip []       _      = []
+  | zip (x::xs) (y::ys) = (x, y) :: (zip xs ys)
+
+fun unzip [] = ([], [])
+  | unzip ((x, y) :: ps) = 
+  let val (xs, ys) = unzip ps
+  in (x::xs, y::ys)
+  end
+
+fun runzip [] xs ys = (xs, ys)
+  | runzip ((x,y) :: ps) xs ys = runzip ps (x::xs) (y::ys)
