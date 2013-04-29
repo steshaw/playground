@@ -1,17 +1,31 @@
+datatype degree = Duke | Marquis | Earl | Viscount | Baron;
+
 datatype person = King
-                | Peer of string * string * int
+                | Peer of degree * string * int
                 | Knight of string
                 | Peasant of string;
+
+fun lady Duke     = "Duchess"
+  | lady Marquis  = "Marchioness"
+  | lady Earl     = "Countess"
+  | lady Viscount = "Viscountess"
+  | lady Baron    = "Baroness";
+
+fun degreeToString Duke     = "Duke"
+  | degreeToString Marquis  = "Marquis"
+  | degreeToString Earl     = "Earl"
+  | degreeToString Viscount = "Viscount"
+  | degreeToString Baron    = "Baron";
 
 King;
 Peer;
 Knight;
 Peasant;
 
-fun title King                    = "His Majesty the King"
-  | title (Peer(deg,territory,_)) = "The " ^ deg ^ " of " ^ territory
-  | title (Knight name)           = "Sir " ^ name
-  | title (Peasant name)          = name;
+fun title _ King                                    = "His Majesty the King"
+  | title degreeToString (Peer(degree,territory,_)) = "The " ^ (degreeToString degree) ^ " of " ^ territory
+  | title _ (Knight name)                           = "Sir " ^ name
+  | title _ (Peasant name)                          = name;
 
 fun superior (King, Peer _)        = true
   | superior (King, Knight _)      = true
