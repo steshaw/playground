@@ -27,7 +27,7 @@ fun title _ King                                    = "His Majesty the King"
   | title _ (Knight name)                           = "Sir " ^ name
   | title _ (Peasant name)                          = name;
 
-fun superior (King, Peer _)        = true
+fun superior (Knig, Peer _)        = true
   | superior (King, Knight _)      = true
   | superior (King, Peasant _)     = true
   | superior (Peer _, Knight _)    = true
@@ -49,3 +49,12 @@ fun rank King              = 4
 
 (* faithfully matches function 'superior' *)
 fun superior'' p1 p2 = (rank p1) > (rank p2);
+
+datatype ('a, 'b) sum = In1 of 'a | In2 of 'b;
+
+type Person = ((unit, degree * string * int) sum, (string, string) sum) sum;
+
+fun personToPerson King            = In1(In1 ()) : Person
+  | personToPerson (Peer(d, t, n)) = In1(In2(d, t, n))
+  | personToPerson (Knight(s))     = In2(In1(s))
+  | personToPerson (Peasant(s))    = In2(In2(s));
