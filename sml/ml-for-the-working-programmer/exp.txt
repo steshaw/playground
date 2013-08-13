@@ -1,0 +1,5 @@
+
+  (landed | saintly | ~landed | ~saintly)
+& (~rich  | saintly | ~landed | ~saintly)
+& (landed | rich    | ~landed | ~saintly)
+& (~rich  | rich    | ~landed | ~saintly)
