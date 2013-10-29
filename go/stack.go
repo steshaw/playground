@@ -13,28 +13,28 @@ import (
   "runtime"
 )
 
-func stack22() {
-  var a [22]int
-    as := a[:0]
-    for i := 0; i < 22; i++ { 
-      as = append(as, 99) 
-    }
+func stack10() {
+  var a [10]int
+  as := a[:0]
+  for i := 0; i < 22; i++ { 
+    as = append(as, 3)
+  }
 }
 
 func stack100() {
-  var a [100]int
-    as := a[:0]
-    for i := 0; i < 100; i++ { 
-      as = append(as, 99) 
-    }
+  var a [10]int
+  as := a[:0]
+  for i := 0; i < 100; i++ { 
+    as = append(as, 3) 
+  }
 }
 
 func stack1000() {
-  var a [1000]int
-    as := a[:0]
-    for i := 0; i < 1000; i++ { 
-      as = append(as, 99) 
-    }
+  var a [10]int
+  as := a[:0]
+  for i := 0; i < 1000; i++ { 
+    as = append(as, 3) 
+  }
 }
 
 func reportHeap(str string) {
@@ -47,7 +47,7 @@ func reportHeap(str string) {
 //func TestStack(t *testing.T) {
 func main() {
   reportHeap("stack 22 HEAP (before):")
-  stack22()
+  stack10()
   reportHeap("stack 22 HEAP (after):")
 
   reportHeap("stack 100 HEAP (before):")
