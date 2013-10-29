@@ -8,26 +8,33 @@ package main
 
 import (
 //  "fmt"
-  "os"
+//  "os"
 //  "testing"
   "runtime"
 )
 
-func stack() {
+func stack22() {
   var a [22]int
     as := a[:0]
     for i := 0; i < 22; i++ { 
-      as = append(as, 22) 
+      as = append(as, 99) 
     }
 }
 
-func stackOverrun() {
-  var a [22]int
-  as := a[:0]
+func stack100() {
+  var a [100]int
+    as := a[:0]
+    for i := 0; i < 100; i++ { 
+      as = append(as, 99) 
+    }
+}
 
-  for i := 0; i < 100; i++ {
-    as = append(as, 22)
-  }
+func stack1000() {
+  var a [1000]int
+    as := a[:0]
+    for i := 0; i < 1000; i++ { 
+      as = append(as, 99) 
+    }
 }
 
 func reportHeap(str string) {
@@ -39,13 +46,17 @@ func reportHeap(str string) {
 
 //func TestStack(t *testing.T) {
 func main() {
-  reportHeap("stack HEAP (before):")
-  stack()
-  reportHeap("stack HEAP (after):")
+  reportHeap("stack 22 HEAP (before):")
+  stack22()
+  reportHeap("stack 22 HEAP (after):")
 
-  reportHeap("stackOverrun HEAP (before):")
-  stackOverrun()
-  reportHeap("stackOverrun HEAP (after):")
+  reportHeap("stack 100 HEAP (before):")
+  stack100()
+  reportHeap("stack 100 HEAP (after):")
 
-  os.Stdout.Sync()
+  reportHeap("stack 1000 HEAP (before):")
+  stack1000()
+  reportHeap("stack 1000 HEAP (after):")
+
+//  os.Stdout.Sync()
 }
