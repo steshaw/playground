@@ -4,6 +4,11 @@ index : Fin n -> Vect n a -> a
 index fZ     (x :: xs) = x
 index (fS k) (x :: xs) = Main.index k xs
 
+-- Long-handed declaration of `index` above.
+index2 : {n:Nat} -> {a:Type} -> (i:Fin n) -> (xs:Vect n a) -> a
+index2 fZ     (x :: xs) = x
+index2 (fS k) (x :: xs) = index2 k xs
+
 as : Vect 4 Integer
 as = [1,2,3,4]
 
