@@ -1,0 +1,5 @@
+idris --codegen javascript -o hello.js hello.idr
+idris -o hello hello.idr
+idris -o reverse reverse.idr
+idris --check prims.idr
+idris --check Nat.idr
