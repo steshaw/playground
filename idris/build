@@ -6,3 +6,4 @@ idris --check Nat.idr
 idris vectIndex.idr -o vectIndex
 idris --check vectPredicate.idr
 idris evens.idr -o evens
+idris greet.idr -o greet
