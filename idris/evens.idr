@@ -1,17 +1,21 @@
 module Main
 
-even       : Nat -> Bool
-even Z     = True
-even (S k) = odd k
-  where
-    odd       : Nat -> Bool
-    odd Z     = False
+mutual
+  even       : Nat -> Bool
+  even Z     = True
+  even (S k) = odd k
 
-    odd (S k) = even k
+  odd       : Nat -> Bool
+  odd Z     = False
+  odd (S k) = even k
 
 main : IO ()
 main = do
   putStrLn $ show $ even Z
+  putStrLn $ show $ odd Z
   putStrLn $ show $ even (S Z)
+  putStrLn $ show $ odd (S Z)
   putStrLn $ show $ even (S (S Z))
+  putStrLn $ show $ odd (S (S Z))
   putStrLn $ show $ even (S (S (S Z)))
+  putStrLn $ show $ odd (S (S (S Z)))
