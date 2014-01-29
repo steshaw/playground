@@ -4,3 +4,4 @@ idris -o reverse reverse.idr
 idris --check prims.idr
 idris --check Nat.idr
 idris vectIndex.idr -o vectIndex
+idris --check vectPredicate.idr
