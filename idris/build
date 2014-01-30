@@ -7,3 +7,4 @@ idris vectIndex.idr -o vectIndex
 idris --check vectPredicate.idr
 idris evens.idr -o evens
 idris greet.idr -o greet
+idris bounds.idr -o bounds
