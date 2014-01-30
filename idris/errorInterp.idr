@@ -11,10 +11,10 @@ data Expr
 EnvT : Type
 EnvT = List (String, ValT)
 
-EvalT : Type -> Type
-EvalT a = a -> EnvT -> Maybe a
+EvalT : Type
+EvalT = EnvT -> Maybe ValT
 
-fetch : String -> EnvT -> Maybe ValT
+fetch : String -> EvalT
 fetch id Nil              = Nothing
 fetch id ((var, val)::xs) =
   if (id == var) then (Just val) else (fetch id xs)
