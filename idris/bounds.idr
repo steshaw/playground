@@ -12,10 +12,10 @@ unsafeDrawPoint x y = do
   putStr ")"
   putStrLn ""
 
-drawPoint : (x : Int) -> (y : Int) -> so (inBounds x y) -> IO ()
-drawPoint x y p = unsafeDrawPoint x y
+drawPoint : (x : Int) -> (y : Int) -> {default oh p : so (inBounds x y)} -> IO ()
+drawPoint x y = unsafeDrawPoint x y
 
 main : IO ()
 main = do
-  drawPoint 0 0 oh
-  drawPoint (640-1) (480-1) oh
+  drawPoint 0 0
+  drawPoint (640-1) (480-1)
