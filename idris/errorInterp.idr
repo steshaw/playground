@@ -11,18 +11,29 @@ data Expr
 EnvT : Type
 EnvT = List (String, ValT)
 
-EvalT : Type -> Type
-EvalT a = EnvT -> Maybe a
+data Eval : Type -> Type where
+  MkEval : (EnvT -> Maybe a) -> Eval a
 
-fetch : String -> EvalT ValT
+fetch : String -> EnvT -> Maybe ValT
 fetch id Nil              = Nothing
 fetch id ((var, val)::xs) =
   if (id == var) then (Just val) else (fetch id xs)
 
-eval : Expr -> EnvT -> Maybe ValT
-eval (Var var) env = fetch var env
-eval (Val val) env = [| val |]
-eval (Add x y) env = [| eval x env + eval y env |]
+fetchE : String -> Eval ValT
+fetchE id = MkEval (\env => fetch id env)
+
+instance Functor Eval where
+  map f (MkEval g) = MkEval (\env => map f (g env))
+
+instance Applicative Eval where
+  pure val = MkEval (\env => Just val)
+
+  (MkEval f) <$> (MkEval g) = MkEval (\env => f env <$> g env)
+
+eval : Expr -> Eval ValT
+eval (Var var) = fetchE var
+eval (Val val) = [| val |]
+eval (Add x y) = [| eval x + eval y |]
 
 env : EnvT
 env = [("a", 1), ("b", 2), ("c", 3)]
