@@ -12,7 +12,7 @@ EnvT : Type
 EnvT = List (String, ValT)
 
 data Eval : Type -> Type where
-  MkEval : (EnvT -> Maybe a) -> Eval a
+  MkEval : {a : Type} -> (EnvT -> Maybe a) -> Eval a
 
 fetch : String -> EnvT -> Maybe ValT
 fetch id Nil              = Nothing
