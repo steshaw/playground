@@ -13,7 +13,7 @@ insert i (Node left a right) =
 
 toList : BTree a -> List a
 toList Leaf = Nil
-toList (Node left a right) = btree.toList left ++ [a] ++ btree.toList right
+toList (Node left a right) = btree.toList left ++ (a :: btree.toList right)
 
 toTree : Ord a => List a -> BTree a
 toTree Nil       = Leaf
