@@ -15,3 +15,6 @@ maybeAdd' x y = (Just (+) `maybeApp` x) `maybeApp` y
 
 maybeAdd'' : MaybeAddT
 maybeAdd'' x y = pure (+) <$> x <$> y
+
+maybeAdd''' : MaybeAddT
+maybeAdd''' x y = [| x + y |]
