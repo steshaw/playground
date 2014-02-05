@@ -13,32 +13,11 @@ clean:
 hello.js:
 	idris --codegen javascript -o hello.js hello.idr
 
-hello:
-	idris -o hello hello.idr
+$(BIN): %: %.idr
+	idris $< -o $@
 
-reverse:
-	idris -o reverse reverse.idr
-
-vectIndex:
-	idris vectIndex.idr -o vectIndex
-
-evens:
-	idris evens.idr -o evens
-
-greet:
-	idris greet.idr -o greet
-
-bounds:
-	idris bounds.idr -o bounds
-
-bmain:
-	idris bmain.idr -o bmain
-
-prims.ibc:
-	idris --check prims.idr
-
-vectPredicate.ibc:
-	idris --check vectPredicate.idr
+$(IBC): %.ibc: %.idr
+	idris --check $<
 
 Nat.ibc:
 	idris --noprelude --check Nat.idr
