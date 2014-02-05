@@ -1,10 +1,9 @@
 JS = hello.js
 BIN = hello reverse vectIndex evens greet bounds bmain
-IBC = prims.ibc vectPredicate.ibc
-IBC_NO_PRELUDE = Nat.ibc
+IBC = Nat.ibc prims.ibc vectPredicate.ibc
 
 .PHONY: all
-all: $(JS) $(BIN) $(IBC) $(IBC_NO_PRELUDE)
+all: $(JS) $(BIN) $(IBC)
 
 .PHONY: clean
 clean:
@@ -17,7 +16,6 @@ $(BIN): %: %.idr
 	idris $< -o $@
 
 $(IBC): %.ibc: %.idr
-	idris --check $<
+	idris --check $(IDRIS_FLAGS) $<
 
-Nat.ibc:
-	idris --noprelude --check Nat.idr
+Nat.ibc: IDRIS_FLAGS = --noprelude
