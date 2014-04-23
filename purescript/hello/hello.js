@@ -710,9 +710,20 @@ PS.Debug_Trace = (function () {
 var PS = PS || {};
 PS.Main = (function () {
     "use strict";
+    var Prelude = PS.Prelude;
     var Debug_Trace = PS.Debug_Trace;
-    var main = Debug_Trace.trace("Hello, PureScript!");
+    var Control_Monad_Eff = PS.Control_Monad_Eff;
+    var times = function (n) {
+        return function (action) {
+            return (n === 0) ? Debug_Trace.trace("done") : function __do() {
+    action();
+    return times(n - 1)(action)();
+};
+        };
+    };
+    var main = times(10)(Debug_Trace.trace("Hello, PureScript!"));
     return {
-        main: main
+        main: main, 
+        times: times
     };
 })();
