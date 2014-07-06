@@ -18,3 +18,5 @@ Z     + y = y
 (*) : Nat -> Nat -> Nat
 Z     * y = Z
 (S k) * y = y + k * y
+
+
