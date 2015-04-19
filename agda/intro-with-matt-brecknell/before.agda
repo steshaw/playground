@@ -1,7 +1,8 @@
 -- Matthew Brecknell @mbrcknl
 -- BFPG.org, March 2015
 
-open import Agda.Primitive using (_⊔_)
+-- open import Agda.Primitive using (_⊔_)
+-- open import Data.String
 
 postulate
   String : Set
@@ -12,13 +13,13 @@ data bool : Set where
   tt : bool
   ff : bool
 
-ex₀ : bool → String
-ex₀ b = ?
-
-{-
-
 if_then_else_ : forall {T : Set} → bool → T → T → T
-if b then x else y = ?
+if tt then x else y = x
+if ff then x else y = y
+
+ex₀ : bool → String
+ex₀ tt = "true"
+ex₀ ff = "false"
 
 data ℕ : Set where
   zero : ℕ
@@ -27,10 +28,11 @@ data ℕ : Set where
 {-# BUILTIN NATURAL ℕ #-}
 
 _plus_ : ℕ → ℕ → ℕ
-m plus n = ?
+zero plus n = n
+succ m plus n = succ (m plus n)
 
 ex₁ : ℕ
-ex₁ = ?
+ex₁ = 10 plus 32
 
 data [_] (α : Set) : Set where
   ◇ : [ α ]
@@ -39,10 +41,11 @@ data [_] (α : Set) : Set where
 infixr 6 _,_
 
 _++_ : ∀ {α} → [ α ] → [ α ] → [ α ]
-xs ++ ys = ?
+◇ ++ ys = ys
+(x , xs) ++ ys = x , (xs ++ ys)
 
 ex₂ : [ ℕ ]
-ex₂ = ?
+ex₂ = (1 , 2 , 3 , ◇) ++ (4 , 5 , 6 , ◇)
 
 data _≡_ {α : Set} (x : α) : α → Set where
   refl : x ≡ x
@@ -51,10 +54,14 @@ data _≡_ {α : Set} (x : α) : α → Set where
 -- {-# BUILTIN REFL refl #-}
 
 ex₃ : (2 plus 3) ≡ 5
-ex₃ = ?
+ex₃ = refl
 
-ex₄ : 0 ≡ 1
-ex₄ = ?
+data Zero : Set where
+
+ex₄ : 0 ≡ 1 → Zero
+ex₄ ()
+
+{-
 
 ex₅ : ∀ n → (n plus 0) ≡ n
 ex₅ n = ?
@@ -176,4 +183,3 @@ twice : ∀ {Γ : [ Type ]} {T : Type} → Γ ⊢ ((T ▷ T) ▷ (T ▷ T))
 twice = ?
 
 -}
-
