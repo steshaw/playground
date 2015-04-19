@@ -13,7 +13,7 @@ data Bool : Set where
   true : Bool
   false : Bool
 
-if_then_else_ : forall {T : Set} → Bool → T → T → T
+if_then_else_ : ∀ {ℓ} {T : Set ℓ} → Bool → T → T → T
 if true then x else y = x
 if false then x else y = y
 
@@ -83,30 +83,31 @@ ex₆ ex₇ : String + ℕ
 ex₆ = « "Hi"
 ex₇ = » 42
 
-record twice (β : Set) : Set where
+record twice (α β : Set) : Set where
   constructor _,_
   field
     fst : Bool
-    snd : β
+    snd : if fst then α else β
 
-tosum : {β : Set} → (β + β) → twice β
+tosum : {α β : Set} → (α + β) → twice α β
 tosum (« x) = true , x
 tosum (» x) = false , x
 
-l : twice ℕ
+l : twice ℕ String
 l = tosum (« 3)
 
-r : twice ℕ
+r : twice String ℕ
 r = tosum (» 4)
 
-unsum : {β : Set} → twice β → β + β
-unsum (fst , snd) = if fst then « snd else » snd
+unsum : {α β : Set} → twice α β → α + β
+unsum (true , snd) = « snd
+unsum (false , snd) = » snd
 
-tosum∘unsum : {β : Set} (p : twice β) → (tosum (unsum p)) ≡ p
+tosum∘unsum : {α β : Set} (p : twice α β) → (tosum (unsum p)) ≡ p
 tosum∘unsum (true , snd) = refl
 tosum∘unsum (false , snd) = refl
 
-unsum∘tosum : {β : Set} (p : β + β) → (unsum (tosum p)) ≡ p
+unsum∘tosum : {α β : Set} (p : α + β) → (unsum (tosum p)) ≡ p
 unsum∘tosum (« x) = refl
 unsum∘tosum (» x) = refl
 
