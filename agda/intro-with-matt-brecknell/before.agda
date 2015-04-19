@@ -47,7 +47,7 @@ _++_ : ∀ {α} → [ α ] → [ α ] → [ α ]
 ex₂ : [ ℕ ]
 ex₂ = (1 , 2 , 3 , ◇) ++ (4 , 5 , 6 , ◇)
 
-data _≡_ {α : Set} (x : α) : α → Set where
+data _≡_ {ℓ} {α : Set ℓ} (x : α) : α → Set ℓ where
   refl : x ≡ x
 
 -- {-# BUILTIN EQUALITY _≡_ #-}
@@ -61,13 +61,18 @@ data Zero : Set where
 ex₄ : 0 ≡ 1 → Zero
 ex₄ ()
 
-{-
+another : ∀ n → (0 plus n) ≡ n
+another n = refl
+
+cong : {α β : Set} (f : α → β) {x y : α} → x ≡ y → f x ≡ f y
+cong _ refl = refl
 
 ex₅ : ∀ n → (n plus 0) ≡ n
-ex₅ n = ?
+ex₅ zero = refl
+ex₅ (succ n) = cong succ (ex₅ n)
 
-cong : ∀ {α β : Set} {x y : α} {f : α → β} → x ≡ y → f x ≡ f y
-cong eq = ?
+{-
+
 
 --
 -- Sigma types
