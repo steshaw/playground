@@ -83,14 +83,14 @@ ex₆ ex₇ : String + ℕ
 ex₆ = « "Hi"
 ex₇ = » 42
 
-record Sigma (I : Set) (F : I -> Set) : Set where
+record ∑ (I : Set) (F : I -> Set) : Set where
   constructor _,_
   field
     fst : I
     snd : F fst
 
 _∨_ : Set → Set → Set
-_∨_ a b = Sigma Bool (λ fst → if fst then a else b)
+_∨_ a b = ∑ Bool (λ fst → if fst then a else b)
 
 tosum : {α β : Set} → (α + β) → α ∨ β
 tosum (« x) = true , x
