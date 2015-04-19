@@ -89,24 +89,24 @@ record Sigma (I : Set) (F : I -> Set) : Set where
     fst : I
     snd : F fst
 
-twice : Set → Set → Set
-twice a b = Sigma Bool (λ fst → if fst then a else b)
+_∨_ : Set → Set → Set
+_∨_ a b = Sigma Bool (λ fst → if fst then a else b)
 
-tosum : {α β : Set} → (α + β) → twice α β
+tosum : {α β : Set} → (α + β) → α ∨ β
 tosum (« x) = true , x
 tosum (» x) = false , x
 
-l : twice ℕ String
+l : ℕ ∨ String
 l = tosum (« 3)
 
-r : twice String ℕ
+r : String ∨ ℕ
 r = tosum (» 4)
 
-unsum : {α β : Set} → twice α β → α + β
+unsum : {α β : Set} → α ∨ β → α + β
 unsum (true , snd) = « snd
 unsum (false , snd) = » snd
 
-tosum∘unsum : {α β : Set} (p : twice α β) → (tosum (unsum p)) ≡ p
+tosum∘unsum : {α β : Set} (p : α ∨ β) → (tosum (unsum p)) ≡ p
 tosum∘unsum (true , snd) = refl
 tosum∘unsum (false , snd) = refl
 
