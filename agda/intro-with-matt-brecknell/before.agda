@@ -93,18 +93,24 @@ tosum : {β : Set} → (β + β) → twice β
 tosum (« x) = true , x
 tosum (» x) = false , x
 
+l : twice ℕ
+l = tosum (« 3)
+
+r : twice ℕ
+r = tosum (» 4)
+
+unsum : {β : Set} → twice β → β + β
+unsum (fst , snd) = if fst then « snd else » snd
+
+tosum∘unsum : {β : Set} (p : twice β) → (tosum (unsum p)) ≡ p
+tosum∘unsum (true , snd) = refl
+tosum∘unsum (false , snd) = refl
+
+unsum∘tosum : {β : Set} (p : β + β) → (unsum (tosum p)) ≡ p
+unsum∘tosum (« x) = refl
+unsum∘tosum (» x) = refl
+
 {-
-
-
-unsum : ∀ {β : Set} → twice β → β + β
-unsum t = ?
-
-tosum∘unsum : ∀ {β : Set} (p : twice β) → (tosum (unsum p)) ≡ p
-tosum∘unsum t = ?
-
-unsum∘tosum : ∀ {β : Set} (p : β + β) → (unsum (tosum p)) ≡ p
-unsum∘tosum s = ?
-
 --
 -- Pi types
 --
