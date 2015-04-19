@@ -9,17 +9,17 @@ postulate
 
 {-# BUILTIN STRING String #-}
 
-data bool : Set where
-  tt : bool
-  ff : bool
+data Bool : Set where
+  true : Bool
+  false : Bool
 
-if_then_else_ : forall {T : Set} → bool → T → T → T
-if tt then x else y = x
-if ff then x else y = y
+if_then_else_ : forall {T : Set} → Bool → T → T → T
+if true then x else y = x
+if false then x else y = y
 
-ex₀ : bool → String
-ex₀ tt = "true"
-ex₀ ff = "false"
+ex₀ : Bool → String
+ex₀ true = "true"
+ex₀ false = "false"
 
 data ℕ : Set where
   zero : ℕ
@@ -71,9 +71,6 @@ ex₅ : ∀ n → (n plus 0) ≡ n
 ex₅ zero = refl
 ex₅ (succ n) = cong succ (ex₅ n)
 
-{-
-
-
 --
 -- Sigma types
 --
@@ -83,17 +80,21 @@ data _+_ (α β : Set) : Set where
   »_ : β → α + β
 
 ex₆ ex₇ : String + ℕ
-ex₆ = ?
-ex₇ = ?
+ex₆ = « "Hi"
+ex₇ = » 42
 
 record twice (β : Set) : Set where
   constructor _,_
   field
-    fst : bool
+    fst : Bool
     snd : β
 
-tosum : ∀ {β : Set} → β + β → twice β
-tosum s = ?
+tosum : {β : Set} → (β + β) → twice β
+tosum (« x) = true , x
+tosum (» x) = false , x
+
+{-
+
 
 unsum : ∀ {β : Set} → twice β → β + β
 unsum t = ?
