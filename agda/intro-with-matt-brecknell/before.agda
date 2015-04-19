@@ -13,7 +13,7 @@ data Bool : Set where
   true : Bool
   false : Bool
 
-if_then_else_ : ∀ {ℓ} {T : Set ℓ} → Bool → T → T → T
+if_then_else_ : ∀ {ℓ} {T : Bool → Set ℓ} → (b : Bool) → T true → T false → T b
 if true then x else y = x
 if false then x else y = y
 
@@ -83,11 +83,14 @@ ex₆ ex₇ : String + ℕ
 ex₆ = « "Hi"
 ex₇ = » 42
 
-record twice (α β : Set) : Set where
+record Sigma (I : Set) (F : I -> Set) : Set where
   constructor _,_
   field
-    fst : Bool
-    snd : if fst then α else β
+    fst : I
+    snd : F fst
+
+twice : Set → Set → Set
+twice a b = Sigma Bool (λ fst → if fst then a else b)
 
 tosum : {α β : Set} → (α + β) → twice α β
 tosum (« x) = true , x
