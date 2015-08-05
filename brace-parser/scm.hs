@@ -1,4 +1,4 @@
-import System(getArgs)
+import System.Environment (getArgs)
 
 consume s ('[':xs) = consume ('[':s) xs
 consume ('[':s) (']':xs) = consume s xs
