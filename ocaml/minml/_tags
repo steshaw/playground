@@ -1,0 +1,2 @@
+<*.ml>: pp(camlp4oof.opt), use_llvm, use_camlp4
+<*.{byte,native}>: use_llvm, use_camlp4

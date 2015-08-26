@@ -1,6 +1,24 @@
 #!/bin/bash
 
-LLVM_OCAML_LIB=$(llvm-config --libdir)/ocaml
-ocamlc -I $LLVM_OCAML_LIB -g -dtypes -pp camlp4oof -I +camlp4 dynlink.cma camlp4lib.cma -cc g++ \
-         llvm.cma llvm_bitwriter.cma \
-         minml.ml -o minml
+set -eu
+set -x
+
+#ocamlc \
+#    -I +camlp4 \
+#    -pp camlp4oof \
+#    minml.ml \
+#    -o minml \
+#    $(ocamlfind -query llvm)/llvm.cma
+
+ocamlc \
+  -I ~/.opam/4.02.2/lib/llvm llvm.cma \
+  -I ~/.opam/4.02.2/lib/ocaml dynlink.cma \
+  -I ~/.opam/4.02.2/lib/ocaml/camlp4 camlp4lib.cma \
+  -I +camlp4 \
+  -pp camlp4oof \
+  minml.ml \
+  -o minml
+  -cclib -lstdlib++ \
+  -xc++
+
+#  -cc clang++ \
