@@ -1,5 +1,6 @@
 module  Main
 
+||| Calculate the average length of words in a string.
 average : (str : String) -> Double
 average str = let num_words = word_count str
                   total_length = sum (word_lengths (words str)) in
