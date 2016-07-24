@@ -1,0 +1,6 @@
+package treeTag
+
+pkgs = effects
+
+executable = treeTag
+main = treeTag

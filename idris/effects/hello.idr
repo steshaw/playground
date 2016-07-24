@@ -3,7 +3,10 @@ module Main
 import Effects
 import Effect.StdIO
 
-hello : Eff () [STDIO]
+Hello : Type
+Hello = Eff () [STDIO]
+
+hello : Hello
 hello = putStrLn "Hello world!"
 
 main : IO ()
