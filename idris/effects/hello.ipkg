@@ -1,0 +1,6 @@
+package hello
+
+pkgs = effects
+
+executable = hello
+main = hello
