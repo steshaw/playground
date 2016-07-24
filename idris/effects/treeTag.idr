@@ -39,7 +39,7 @@ treeTagAuxE (Node l x r) = do
   pure (Node l' (i, x) r')
 
 treeTagE : (i : Int) -> BTree a -> BTree (Int, a)
-treeTagE i tree = runPure (do { put i; treeTagAuxE tree })
+treeTagE i tree = runPureInit [i] $ treeTagAuxE tree
 
 main : IO ()
 main = printLn (treeTag 1 testTree)
