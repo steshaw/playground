@@ -10,4 +10,4 @@ hello : Hello
 hello = putStrLn "Hello world!"
 
 main : IO ()
-main = run hello
+main = runInit [()] hello
