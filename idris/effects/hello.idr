@@ -2,12 +2,14 @@ module Main
 
 import Effects
 import Effect.StdIO
+import Effect.State
 
 Hello : Type
-Hello = Eff () [STDIO]
+Hello = Eff () [STDIO, 'Line ::: STATE Int]
 
 hello : Hello
-hello = putStrLn "Hello world!"
+hello = do
+  putStrLn "Hello world!"
 
 main : IO ()
-main = runInit [()] hello
+main = runInit [(), 'Line := 99] hello
