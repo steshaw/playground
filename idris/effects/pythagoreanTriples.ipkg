@@ -1,0 +1,6 @@
+package pythagoreanTriples
+
+pkgs = effects
+
+executable = pythagoreanTriples
+main = pythagoreanTriples
