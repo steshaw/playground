@@ -9,4 +9,7 @@ func main() {
 	).Scan(
 		&ReadUser.ID, &ReadUser.Name, &ReadUser.First, &ReadUser.Last, &ReadUser.Email,
 	)
+
+	a = b + c + s +
+		x + y
 }
