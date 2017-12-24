@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>q and cite</title>
+    <style>
+      body {
+        font-size: 24px;
+      }
+      .example {
+        margin-top: 16px;
+        margin-bottom: 16px;
+      }
+      .example > * {
+        margin-left: 3em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>q and cite examples</h1>
+
+    Some examples from the <a href="https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-q-element">HTML Living Standard</a>.
+
+    <div class="example">Here is a simple example of the use of the q element:
+
+      <p>The man said <q>Things that are impossible just take
+      longer</q>. I disagreed with him.</p>
+    </div>
+
+    <div class="example">Here is an example with both an explicit citation link
+      in the q element, and an explicit citation outside:
+
+      <p>The W3C page <cite>About W3C</cite> says the W3C's
+      mission is <q cite="https://www.w3.org/Consortium/">To lead the
+      World Wide Web to its full potential by developing protocols and
+      guidelines that ensure long-term growth for the Web</q>. I
+      disagree with this mission.</p>
+    </div>
+
+    <div class="example">In the following example, the quotation itself 
+      contains a quotation:
+
+      <p>In <cite>Example One</cite>, he writes <q>The man
+      said <q>Things that are impossible just take longer</q>. I
+      disagreed with him</q>. Well, I disagree even more!</p>
+    </div>
+
+    <div class="example">
+      In the following example, quotation marks are used instead of the q element:
+
+      <p>His best argument was ❝I disagree❞, which I thought was laughable.</p>
+    </div>
+
+
+    <div class="example">
+      In the following example, there is no quote — the quotation marks are used to name a word. Use of the q element in this case would be inappropriate.
+
+
+      <p>The word "ineffable" could have been used to describe the disaster
+      resulting from the campaign's mismanagement.</p>
+    </div>
+
+  </body>
+</html>
