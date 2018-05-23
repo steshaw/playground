@@ -62,11 +62,80 @@ createEmpties = replicate _ []
 transposeHelper : (x : Vect n elem) ->
   (xsTrans : Vect n (Vect len elem)) ->
   Vect n (Vect (S len) elem)
-transposeHelper [] [] = []
-transposeHelper (x :: xs) (y :: ys) = (x :: y) :: transposeHelper xs ys
+transposeHelper x xsTrans = zipWith (::) x xsTrans
 
 transposeMat : Vect m (Vect n elem) -> Vect n (Vect m elem)
 transposeMat [] = createEmpties
 transposeMat (x :: xs) =
   let xsTrans = transposeMat xs
   in transposeHelper x xsTrans
+
+transposeMatEg1 : transposeMat [[1,2], [3,4], [5,6]] = [[1, 3, 5], [2, 4, 6]]
+transposeMatEg1 = Refl
+
+addVector : Num a => (x : Vect m a) -> (y : Vect m a) -> Vect m a
+addVector [] [] = []
+addVector (x :: xs) (y :: ys) = x + y :: addVector xs ys
+
+addMatrix : Num a => Vect n (Vect m a) -> Vect n (Vect m a) -> Vect n (Vect m a)
+addMatrix [] [] = []
+addMatrix (x :: xs) (y :: ys) = addVector x y :: addMatrix xs ys
+
+addMatrixEg1 : addMatrix [[1,2], [3,4]] [[5,6], [7,8]] = [[6, 8], [10, 12]]
+addMatrixEg1 = Refl
+
+{-
+  [[1, 2],
+   [3, 4],
+   [5, 6]]
+  [[7, 11],
+   [8, 12],
+   [9, 13],
+   [10, 14]]
+-}
+
+{-
+The value in row x, column y in the result is the sum of the product of
+corresponding elements in row x of the left input, and column y of the
+right input.
+
+2x1 x 1x2 = 2x2
+
+| 1 | | 3 4 | = | 3 4 |
+| 2 |           | 6 8 |
+
+| 1 | | 3 | = | 3 4 |
+| 2 | | 4 |   | 6 8 |
+
+-}
+
+sumProducts : Num numType => Vect m numType -> Vect m numType -> numType
+sumProducts [] [] = 0
+sumProducts (x :: xs) (y :: ys) = (x * y) + sumProducts xs ys
+
+easyMulMatrix : Num numType =>
+  (xs : Vect n (Vect m numType)) ->
+  (ysTrans : Vect p (Vect m numType)) ->
+  Vect n (Vect p numType)
+easyMulMatrix [] ysTrans = []
+easyMulMatrix (x :: xs) ysTrans =
+  let sp = map (sumProducts x) ysTrans
+  in sp :: easyMulMatrix xs ysTrans
+
+mulMatrix : Num numType =>
+  Vect n (Vect m numType) ->
+  Vect m (Vect p numType) ->
+  Vect n (Vect p numType)
+mulMatrix xs ys = let ysTrans = transposeMat ys in easyMulMatrix xs ysTrans
+
+mulMatrixEg1 :
+  mulMatrix
+    [[1, 2],
+     [3, 4],
+     [5, 6]]
+    [[ 7,  8,  9, 10],
+     [11, 12, 13, 14]] =
+    [[29, 32, 35, 38],
+    [65, 72, 79, 86],
+    [101, 112, 123, 134]]
+mulMatrixEg1 = Refl
