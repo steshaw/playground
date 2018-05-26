@@ -88,14 +88,6 @@ processCommand (Search s) store =
            let resultsPerLine = concat $ intersperse "\n" $
                  map (\(i, item) => "  " ++ show i ++ ": " ++ item) results
            in Just ("Results:\n" ++ resultsPerLine ++ "\n", store)
---  let indexedItems = zip [1..(size store)] (items store)
---  in
-{-
-  case filter (isInfixOf s) (items store) of
-    (len ** results) =>
-      let perLine = concat $ intersperse "\n" $ map ("  " ++) results
-      in Just ("Results:\n" ++ perLine ++ "\n", store)
--}
 processCommand Size store =
   Just ("Size: " ++ show (size store) ++ "\n", store)
 processCommand Quit _ =
