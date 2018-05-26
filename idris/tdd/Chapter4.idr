@@ -89,21 +89,34 @@ maxMaybe (Just x) (Just y) = Just $ max x y
 -- 4.2 Defining dependent data types
 --
 
-data PowerSource = Petrol | Pedal
+data PowerSource = Petrol | Pedal | Electric
 
 data Vehicle : PowerSource -> Type where
+  Unicycle : Vehicle Pedal
   Bicycle : Vehicle Pedal
   Car : (fuel : Nat) -> Vehicle Petrol
+  ElectricCar : (fuel : Nat) -> Vehicle Electric
+  Motocycle : (fuel : Nat) -> Vehicle Petrol
   Bus : (fuel : Nat) -> Vehicle Petrol
+  Tram : Vehicle Electric
 
 wheels : Vehicle _ -> Nat
+wheels Unicycle = 1
 wheels Bicycle = 2
 wheels (Car fuel) = 4
+wheels (ElectricCar fuel) = 4
+wheels (Motocycle fuel) = 2
 wheels (Bus fuel) = 4
+wheels Tram = 4
 
+-- Problem: Electric cars can be refuel in addition to petrol ones.
+-- However, electric trams do not need refueling. So, our current model
+-- doesn't reflect reality very well...
 refuel : Vehicle Petrol -> Vehicle Petrol
 refuel (Car fuel) = Car 100
+refuel (Motocycle fuel) = Car 80
 refuel (Bus fuel) = Bus 200
+refuel Unicycle impossible
 refuel Bicycle impossible
 
 {-
