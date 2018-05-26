@@ -20,8 +20,7 @@ data Shape
   | ||| A circle, with its radius
     Circle Double
 
-namespace Natural
-  data Nat = Z | S Natural.Nat
+data MyNat = Z | S MyNat
 
 data Infinite = Forever Infinite
 
@@ -85,3 +84,55 @@ maxMaybe Nothing Nothing = Nothing
 maxMaybe Nothing x = x
 maxMaybe x Nothing = x
 maxMaybe (Just x) (Just y) = Just $ max x y
+
+--
+-- 4.2 Defining dependent data types
+--
+
+data PowerSource = Petrol | Pedal
+
+data Vehicle : PowerSource -> Type where
+  Bicycle : Vehicle Pedal
+  Car : (fuel : Nat) -> Vehicle Petrol
+  Bus : (fuel : Nat) -> Vehicle Petrol
+
+wheels : Vehicle _ -> Nat
+wheels Bicycle = 2
+wheels (Car fuel) = 4
+wheels (Bus fuel) = 4
+
+refuel : Vehicle Petrol -> Vehicle Petrol
+refuel (Car fuel) = Car 100
+refuel (Bus fuel) = Bus 200
+refuel Bicycle impossible
+
+{-
+Type parameters and indices
+
+- "A parameter is unchanged across the entire structure".
+  They are "parametric" (as in "parametricity").
+- "An index may change across a structure".
+
+I don't like this definition of the distinction (it's a bit hard to say why).
+i.e. that it's about "changing across the structure (or not)". Looks like you
+can pattern match on an index by not a parameter (recall the "free thereoms"
+from parametricity due to that). And yet I recall Conor saying that we
+ought to be able to choose when we can pattern match on types too.
+
+I recall that Idris infers which arguments in a data type definitino are
+indices and which are parameters. Perhaps there's something of a distinction
+could be gathered from the description of the inference algorithm.
+
+See "Terminology: parameters and indices" on p105.
+-}
+
+-- Vect is indexed by length and parameterised by elemType.
+data Vect : (length: Nat) -> (elemType : Type) -> Type where
+  Nil : Vect Z a
+  (::) : (x : a) -> (xs : Vect k a) -> Vect (S k) a
+
+%name Vect xs, ys, zs
+
+append : Vect n elem -> Vect m elem -> Vect (n + m) elem
+append [] ys = ys
+append (x :: xs) ys = x :: append xs ys
