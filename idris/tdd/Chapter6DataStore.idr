@@ -74,18 +74,21 @@ indices xs = loop 0 xs
 zipWithIndex : Vect n a -> Vect n (Integer, a)
 zipWithIndex xs = zip (indices xs) xs
 
+getEntry : (store : DataStore) -> (i : Integer) -> Maybe (String, DataStore)
+getEntry store i =
+  let
+    item = tryIndex i (items store)
+    message = maybe "Index out of range\n" (\item =>
+      "Item: " ++ ?showItem item ++ "\n") item
+  in Just (message, store)
+
 processCommand :
   (store : DataStore) ->
   (command : Command (schema store)) ->
   Maybe (String, DataStore)
 processCommand store (Add item) =
   Just ("ID " ++ show (size store) ++ "\n", addToStore store item)
-processCommand store (Get i) =
-  let
-    item = tryIndex i (items store)
-    message = maybe "Index out of range\n" (\item =>
-      "Item: " ++ ?showItem item ++ "\n") item
-  in Just (message, store)
+processCommand store (Get i) = getEntry store i
 processCommand store (Search s) =
   ?rethinkSearch
 {-
@@ -103,10 +106,8 @@ processCommand store (Search s) =
 -}
 processCommand store Size =
   Just ("Size: " ++ show (size store) ++ "\n", store)
-processCommand _ Quit =
-  Nothing
-processCommand store Empty =
-  Just ("", store)
+processCommand _ Quit = Nothing
+processCommand store Empty = Just ("", store)
 
 processInput : DataStore -> String -> Maybe (String, DataStore)
 processInput store input =
@@ -116,8 +117,12 @@ processInput store input =
 
 partial
 main : IO ()
-main = replWith emptyDataStore "\nCommand: " processInput
+main = replWith initialStore "\nCommand: " processInput
   where
     schema : Schema
     schema = SInt .+. SString
-    emptyDataStore = MkDataStore schema 0 []
+    initialStore = MkDataStore schema _
+      [ (0, "zero")
+      , (1, "one")
+      , (2, "two")
+      ]
