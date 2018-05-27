@@ -21,15 +21,15 @@ SchemaType SString = String
 SchemaType SInt = Int
 SchemaType (l .+. r) = (SchemaType l, SchemaType r)
 
-data DataStore : Type where
-  MkData :
-    (schema : Schema) ->
-    (size : Nat) ->
-    (items : Vect size (SchemaType schema)) ->
-    DataStore
+record DataStore where
+  constructor MkDataStore
+  schema : Schema
+  size : Nat
+  items : Vect size (SchemaType schema)
 
 %name DataStore store, store1, store2, store3
 
+{-
 size : DataStore -> Nat
 size (MkData _ size _) = size
 
@@ -38,7 +38,7 @@ schema (MkData schema _ _) = schema
 
 items : (store: DataStore) -> Vect (size store) (SchemaType (schema store))
 items (MkData _ _ items) = items
---items (MkData size items) = items
+-}
 
 {-
 addToStore : DataStore -> String -> DataStore
