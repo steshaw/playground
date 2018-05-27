@@ -1,5 +1,7 @@
 module Chapter6
 
+import Data.Vect
+
 %default total
 
 StringOrInt : Bool -> Type
@@ -59,6 +61,8 @@ adder (S k) acc = \i => adder k (acc + i)
 data Format
   = Number Format
   | Str Format
+  | FChar Format
+  | FDouble Format
   | Lit String Format
   | End
 
@@ -67,12 +71,16 @@ data Format
 PrintfType : Format -> Type
 PrintfType (Number format) = (i : Int) -> PrintfType format
 PrintfType (Str format) = (s : String) -> PrintfType format
+PrintfType (FChar format) = (c : Char) -> PrintfType format
+PrintfType (FDouble format) = (c : Double) -> PrintfType format
 PrintfType (Lit s format) = PrintfType format
 PrintfType End = String
 
 printfFmt : (fmt : Format) -> (acc : String) -> PrintfType fmt
 printfFmt (Number format) acc = \i => printfFmt format (acc ++ show i)
 printfFmt (Str format) acc = \s => printfFmt format (acc ++ s)
+printfFmt (FChar format) acc = \c => printfFmt format (acc ++ singleton c)
+printfFmt (FDouble format) acc = \d => printfFmt format (acc ++ show d)
 printfFmt (Lit lit format) acc = printfFmt format (acc ++ lit)
 printfFmt End acc = acc
 
@@ -80,6 +88,8 @@ toFormat : (cs : List Char) -> Format
 toFormat [] = End
 toFormat ('%' :: 'd' :: cs) = Number (toFormat cs)
 toFormat ('%' :: 's' :: cs) = Str (toFormat cs)
+toFormat ('%' :: 'c' :: cs) = FChar (toFormat cs)
+toFormat ('%' :: 'f' :: cs) = FDouble (toFormat cs)
 toFormat ('%' :: cs) = Lit "%" (toFormat cs)
 toFormat (c :: cs) =
   case toFormat cs of
@@ -88,3 +98,33 @@ toFormat (c :: cs) =
 
 printf : (fmt : String) -> PrintfType (toFormat (unpack fmt))
 printf fmt = printfFmt _ ""
+
+-- Exercises
+
+Matrix : Nat -> Nat -> Type
+Matrix n m = Vect n (Vect m Double)
+
+zeroMatrix : Matrix 2 3
+zeroMatrix = [[0, 0, 0], [0, 0, 0]]
+
+{-
+TupleVect 0 ty = ()
+TupleVect 1 ty = (ty, ())
+TupleVect 2 ty = (ty, (ty, ()))
+-}
+
+TupleVect : (n : Nat) -> (ty : Type) -> Type
+TupleVect Z ty = ()
+TupleVect (S k) ty = (ty, TupleVect k ty)
+
+tupleVectEg1 : TupleVect 4 Nat
+tupleVectEg1 = (1, 2, 3, 4, ())
+
+tupleVectEg2 : TupleVect 0 Nat
+tupleVectEg2 = ()
+
+tupleVectEg3 : TupleVect 1 Nat
+tupleVectEg3 = (1, ())
+
+tupleVectEg4 : TupleVect 2 Nat
+tupleVectEg4 = (2, (1, ()))
