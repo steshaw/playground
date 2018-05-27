@@ -29,53 +29,34 @@ record DataStore where
 
 %name DataStore store, store1, store2, store3
 
-{-
-size : DataStore -> Nat
-size (MkData _ size _) = size
+addToStore : (store: DataStore) -> SchemaType (schema store) -> DataStore
+addToStore (MkDataStore schema size items) x =
+  MkDataStore schema _ (items ++ [x])
 
-schema : DataStore -> Schema
-schema (MkData schema _ _) = schema
+data Command : Schema -> Type where
+  Add : SchemaType schema -> Command schema
+  Get : Integer -> Command schema
+  Search : String -> Command schema
+  Size : Command schema
+  Quit : Command schema
+  Empty : Command schema
 
-items : (store: DataStore) -> Vect (size store) (SchemaType (schema store))
-items (MkData _ _ items) = items
--}
-
-{-
-addToStore : DataStore -> String -> DataStore
-addToStore (MkData size items) x = MkData _ (items ++ [x])
-
-sumInputs : Integer -> String -> Maybe (String, Integer)
-sumInputs tot input =
-  let val = cast input in
-  if val <= 0 then Nothing -- quit
-  else
-    let total2 = tot + val
-    in Just ("Subtotal: " ++ show total2 ++ "\n", total2)
-
-data Command
-  = Add String
-  | Get Integer
-  | Search String
-  | Size
-  | Quit
-  | Empty
-
-parseCommandHelper : (cmd : String) -> (args : String) -> Maybe Command
-parseCommandHelper "add" str = Just (Add str)
-parseCommandHelper "get" i =
+parseCommandHelper : (schema : Schema) -> (cmd : String) -> (args : String) -> Maybe (Command schema)
+parseCommandHelper schema "add" str = Just (Add (?parseBySchema str))
+parseCommandHelper schema "get" i =
   if all isDigit (unpack i)
   then Just (Get (cast i))
   else Nothing
-parseCommandHelper "search" str = Just (Search str)
-parseCommandHelper "size" "" = Just Size
-parseCommandHelper "quit" "" = Just Quit
-parseCommandHelper "" "" = Just Empty
-parseCommandHelper _ _ = Nothing
+parseCommandHelper schema "search" str = Just (Search str)
+parseCommandHelper schema "size" "" = Just Size
+parseCommandHelper schema "quit" "" = Just Quit
+parseCommandHelper schema "" "" = Just Empty
+parseCommandHelper _ _ _ = Nothing
 
-parseCommand : (input : String) -> Maybe Command
-parseCommand input =
+parseCommand : (schema : Schema) -> (input : String) -> Maybe (Command schema)
+parseCommand schema input =
   case span (/= ' ') input of
-    (cmd, args) => parseCommandHelper cmd (ltrim args)
+    (cmd, args) => parseCommandHelper schema cmd (ltrim args)
 
 tryIndex : Integer -> Vect n a -> Maybe a
 tryIndex x xs {n} =
@@ -94,41 +75,49 @@ zipWithIndex : Vect n a -> Vect n (Integer, a)
 zipWithIndex xs = zip (indices xs) xs
 
 processCommand :
-  (command : Command) ->
   (store : DataStore) ->
+  (command : Command (schema store)) ->
   Maybe (String, DataStore)
-processCommand (Add s) store =
-  Just ("ID " ++ show (size store) ++ "\n", addToStore store s)
-processCommand (Get i) store =
+processCommand store (Add item) =
+  Just ("ID " ++ show (size store) ++ "\n", addToStore store item)
+processCommand store (Get i) =
   let
     item = tryIndex i (items store)
     message = maybe "Index out of range\n" (\item =>
-      "Item: " ++ item ++ "\n") item
+      "Item: " ++ ?showItem item ++ "\n") item
   in Just (message, store)
-processCommand (Search s) store =
+processCommand store (Search s) =
+  ?rethinkSearch
+{-
+--
+-- Probably just search through all the strings.
+-- Alternatively turn the integers to strings too
+-- and do "full text" search.
+--
   let indexedItems = zipWithIndex (items store)
   in case filter (isInfixOf s . snd) indexedItems of
          (len ** results) =>
            let resultsPerLine = concat $ intersperse "\n" $
                  map (\(i, item) => "  " ++ show i ++ ": " ++ item) results
            in Just ("Results:\n" ++ resultsPerLine ++ "\n", store)
-processCommand Size store =
+-}
+processCommand store Size =
   Just ("Size: " ++ show (size store) ++ "\n", store)
-processCommand Quit _ =
+processCommand _ Quit =
   Nothing
-processCommand Empty store =
+processCommand store Empty =
   Just ("", store)
 
 processInput : DataStore -> String -> Maybe (String, DataStore)
 processInput store input =
-  case parseCommand input of
+  case parseCommand (schema store) input of
     Nothing => Just ("You've entered an unknown command\n", store)
-    (Just command) => processCommand command store
+    (Just command) => processCommand store command
 
 partial
 main : IO ()
 main = replWith emptyDataStore "\nCommand: " processInput
   where
-    emptyDataStore = MkData 0 []
-
--}
+    schema : Schema
+    schema = SInt .+. SString
+    emptyDataStore = MkDataStore schema 0 []
