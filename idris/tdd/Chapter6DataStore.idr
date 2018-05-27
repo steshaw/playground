@@ -34,7 +34,9 @@ addToStore (MkDataStore schema size items) x =
   MkDataStore schema _ (items ++ [x])
 
 data Command : Schema -> Type where
+  SetSchema : (newSchema : Schema) -> Command schema
   List : Command schema
+  Clear : Command schema
   Add : SchemaType schema -> Command schema
   Get : Integer -> Command schema
   Search : String -> Command schema
@@ -73,12 +75,32 @@ parseBySchema schema input =
     Just (val, "") => Just val
     Just _ => Nothing
 
+parseSchema : List String -> Maybe Schema
+parseSchema ("String" :: xs) =
+  case xs of
+    [] => Just SString
+    _ => case parseSchema xs of
+           Nothing => Nothing
+           Just schema => Just (SString .+. schema)
+parseSchema ("Int" :: xs) =
+  case xs of
+    [] => Just SInt
+    _ => case parseSchema xs of
+           Nothing => Nothing
+           Just schema => Just (SInt .+. schema)
+parseSchema _ = Nothing
+
 parseCommandHelper :
   (schema : Schema) ->
   (cmd : String) ->
   (args : String) ->
   Maybe (Command schema)
+parseCommandHelper schema "schema" args =
+  case parseSchema (words args) of
+    Nothing => Nothing
+    (Just schema) => Just (SetSchema schema)
 parseCommandHelper schema "list" "" = Just List
+parseCommandHelper schema "clear" "" = Just Clear
 parseCommandHelper schema "add" str =
   case parseBySchema schema str of
     Nothing => Nothing
@@ -129,16 +151,28 @@ getEntry store i =
       "Item: " ++ (display item) ++ "\n") item
   in Just (message, store)
 
+setSchema : (store : DataStore) -> Schema -> Maybe DataStore
+setSchema store schema =
+  case size store of
+    Z => Just (MkDataStore schema _ [])
+    _ => Nothing
+
 processCommand :
   (store : DataStore) ->
   (command : Command (schema store)) ->
   Maybe (String, DataStore)
+processCommand store (SetSchema schema) =
+  case setSchema store schema of
+    Nothing => Just ("Can't update schema when you have existing items", store)
+    Just store => Just ("Updated schema", store)
 processCommand store List =
   let
     indexedItems = zipWithIndex (items store)
     resultsPerLine = concat $ intersperse "\n" $
       map (\(i, item) => "  " ++ show i ++ ": " ++ display item) indexedItems
   in Just ("Items:\n" ++ resultsPerLine ++ "\n", store)
+processCommand store Clear =
+  Just ("Cleared", MkDataStore (schema store) _ [])
 processCommand store (Add item) =
   Just ("ID " ++ show (size store) ++ "\n", addToStore store item)
 processCommand store (Get i) = getEntry store i
