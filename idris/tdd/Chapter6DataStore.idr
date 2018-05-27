@@ -1,22 +1,46 @@
+--
+-- DataStore with schemas.
+--
 module Main
 
 import Data.Vect
 
 %default total
 
+infixr 5 .+.
+
+data Schema
+  = SString
+  | SInt
+  | (.+.) Schema Schema
+
+%name Schema schema, schema1, schema2, schema3
+
+SchemaType : Schema -> Type
+SchemaType SString = String
+SchemaType SInt = Int
+SchemaType (l .+. r) = (SchemaType l, SchemaType r)
+
 data DataStore : Type where
-  MkData : (size : Nat) ->
-    (items : Vect size String) ->
+  MkData :
+    (schema : Schema) ->
+    (size : Nat) ->
+    (items : Vect size (SchemaType schema)) ->
     DataStore
 
 %name DataStore store, store1, store2, store3
 
 size : DataStore -> Nat
-size (MkData size items) = size
+size (MkData _ size _) = size
 
-items : (store: DataStore) -> Vect (size store) String
-items (MkData size items) = items
+schema : DataStore -> Schema
+schema (MkData schema _ _) = schema
 
+items : (store: DataStore) -> Vect (size store) (SchemaType (schema store))
+items (MkData _ _ items) = items
+--items (MkData size items) = items
+
+{-
 addToStore : DataStore -> String -> DataStore
 addToStore (MkData size items) x = MkData _ (items ++ [x])
 
@@ -106,3 +130,5 @@ main : IO ()
 main = replWith emptyDataStore "\nCommand: " processInput
   where
     emptyDataStore = MkData 0 []
+
+-}
