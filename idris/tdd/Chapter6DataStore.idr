@@ -53,42 +53,46 @@ parsePrefix SString input = getQuoted (unpack input)
     getQuoted : List Char -> Maybe (String, String)
     getQuoted ('\"' :: xs) =
       case span (/= '"') xs of
-        (quoted, '"' :: rest) => Just (pack quoted, ltrim (pack rest))
-        _ => Nothing
-    getQuoted _ = Nothing
+        (quoted, '"' :: rest) => pure (pack quoted, ltrim (pack rest))
+        _ => empty
+    getQuoted _ = empty
 parsePrefix SInt input =
   case span isDigit input of
-    ("", rest) => Nothing
-    (num, rest) => Just (cast num, ltrim rest)
+    ("", rest) => empty
+    (num, rest) => pure (cast num, ltrim rest)
 parsePrefix (lschema .+. rschema) input =
   case parsePrefix lschema input of
-    Nothing => Nothing
+    Nothing => empty
     Just (lval, remainingInput) =>
       case parsePrefix rschema remainingInput of
-        Nothing => Nothing
-        Just (rval, rest) => Just ((lval, rval), rest)
+        Nothing => empty
+        Just (rval, rest) => pure ((lval, rval), rest)
 
 parseBySchema : (schema : Schema) -> (input : String) -> Maybe (SchemaType schema)
 parseBySchema schema input =
   case parsePrefix schema input of
-    Nothing => Nothing
-    Just (val, "") => Just val
-    Just _ => Nothing
+    Nothing => empty
+    Just (val, "") => pure val
+    Just _ => empty
 
 parseSchema : List String -> Maybe Schema
 parseSchema ("String" :: xs) =
   case xs of
-    [] => Just SString
-    _ => case parseSchema xs of
-           Nothing => Nothing
-           Just schema => Just (SString .+. schema)
+    [] => pure SString
+    _ => do schema <- parseSchema xs
+            pure (SString .+. schema)
 parseSchema ("Int" :: xs) =
   case xs of
-    [] => Just SInt
-    _ => case parseSchema xs of
-           Nothing => Nothing
-           Just schema => Just (SInt .+. schema)
+    [] => pure SInt
+    _ => do schema <- parseSchema xs
+            pure (SInt .+. schema)
 parseSchema _ = Nothing
+
+parseInteger : String -> Maybe Integer
+parseInteger input =
+  case all isDigit (unpack input) of
+    True => pure $ cast input
+    False => empty
 
 parseCommandHelper :
   (schema : Schema) ->
@@ -96,25 +100,19 @@ parseCommandHelper :
   (args : String) ->
   Maybe (Command schema)
 parseCommandHelper schema "schema" args =
-  case parseSchema (words args) of
-    Nothing => Nothing
-    (Just schema) => Just (SetSchema schema)
-parseCommandHelper schema "list" "" = Just List
-parseCommandHelper schema "clear" "" = Just Clear
+  SetSchema <$> parseSchema (words args)
+parseCommandHelper schema "list" "" = pure List
+parseCommandHelper schema "clear" "" = pure Clear
 parseCommandHelper schema "add" str =
-  case parseBySchema schema str of
-    Nothing => Nothing
-    Just x => Just (Add x)
-parseCommandHelper schema "get" i =
-  if all isDigit (unpack i)
-  then Just (Get (cast i))
-  else Nothing
-parseCommandHelper schema "search" str = Just (Search str)
-parseCommandHelper schema "size" "" = Just Size
-parseCommandHelper schema "quit" "" = Just Quit
-parseCommandHelper schema "exit" "" = Just Quit -- alias for "quit"
-parseCommandHelper schema "" "" = Just Empty
-parseCommandHelper _ _ _ = Nothing
+  Add <$> parseBySchema schema str
+parseCommandHelper schema "get" input =
+  Get <$> parseInteger input
+parseCommandHelper schema "search" str = pure $ Search str
+parseCommandHelper schema "size" "" = pure Size
+parseCommandHelper schema "quit" "" = pure Quit
+parseCommandHelper schema "exit" "" = pure Quit -- alias for "quit"
+parseCommandHelper schema "" "" = pure Empty
+parseCommandHelper _ _ _ = empty
 
 parseCommand : (schema : Schema) -> (input : String) -> Maybe (Command schema)
 parseCommand schema input =
@@ -122,10 +120,9 @@ parseCommand schema input =
     (cmd, args) => parseCommandHelper schema cmd (ltrim args)
 
 tryIndex : Integer -> Vect n a -> Maybe a
-tryIndex x xs {n} =
-  case integerToFin x n of
-    Nothing => Nothing
-    Just x => Just $ index x xs
+tryIndex x xs {n} = do
+  x <- integerToFin x n
+  pure $ index x xs
 
 indices : Vect n a -> Vect n Integer
 indices xs = loop 0 xs
@@ -163,18 +160,18 @@ processCommand :
   Maybe (String, DataStore)
 processCommand store (SetSchema schema) =
   case setSchema store schema of
-    Nothing => Just ("Can't update schema when you have existing items", store)
-    Just store => Just ("Updated schema", store)
+    Nothing => pure ("Can't update schema when you have existing items", store)
+    Just store => pure ("Updated schema", store)
 processCommand store List =
   let
     indexedItems = zipWithIndex (items store)
     resultsPerLine = concat $ intersperse "\n" $
       map (\(i, item) => "  " ++ show i ++ ": " ++ display item) indexedItems
-  in Just ("Items:\n" ++ resultsPerLine ++ "\n", store)
+  in pure ("Items:\n" ++ resultsPerLine ++ "\n", store)
 processCommand store Clear =
-  Just ("Cleared", MkDataStore (schema store) _ [])
+  pure ("Cleared", MkDataStore (schema store) _ [])
 processCommand store (Add item) =
-  Just ("ID " ++ show (size store) ++ "\n", addToStore store item)
+  pure ("ID " ++ show (size store) ++ "\n", addToStore store item)
 processCommand store (Get i) = getEntry store i
 processCommand store (Search s) =
   ?rethinkSearch
@@ -192,9 +189,9 @@ processCommand store (Search s) =
            in Just ("Results:\n" ++ resultsPerLine ++ "\n", store)
 -}
 processCommand store Size =
-  Just ("Size: " ++ show (size store) ++ "\n", store)
-processCommand _ Quit = Nothing
-processCommand store Empty = Just ("", store)
+  pure ("Size: " ++ show (size store) ++ "\n", store)
+processCommand _ Quit = empty
+processCommand store Empty = pure ("", store)
 
 processInput : DataStore -> String -> Maybe (String, DataStore)
 processInput store input =
