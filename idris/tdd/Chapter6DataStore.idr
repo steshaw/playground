@@ -34,6 +34,7 @@ addToStore (MkDataStore schema size items) x =
   MkDataStore schema _ (items ++ [x])
 
 data Command : Schema -> Type where
+  List : Command schema
   Add : SchemaType schema -> Command schema
   Get : Integer -> Command schema
   Search : String -> Command schema
@@ -41,8 +42,47 @@ data Command : Schema -> Type where
   Quit : Command schema
   Empty : Command schema
 
-parseCommandHelper : (schema : Schema) -> (cmd : String) -> (args : String) -> Maybe (Command schema)
-parseCommandHelper schema "add" str = Just (Add (?parseBySchema str))
+parsePrefix :
+  (schema : Schema) ->
+  (input: String) ->
+  Maybe (SchemaType schema, String)
+parsePrefix SString input = getQuoted (unpack input)
+  where
+    getQuoted : List Char -> Maybe (String, String)
+    getQuoted ('\"' :: xs) =
+      case span (/= '"') xs of
+        (quoted, '"' :: rest) => Just (pack quoted, ltrim (pack rest))
+        _ => Nothing
+    getQuoted _ = Nothing
+parsePrefix SInt input =
+  case span isDigit input of
+    ("", rest) => Nothing
+    (num, rest) => Just (cast num, ltrim rest)
+parsePrefix (lschema .+. rschema) input =
+  case parsePrefix lschema input of
+    Nothing => Nothing
+    Just (lval, remainingInput) =>
+      case parsePrefix rschema remainingInput of
+        Nothing => Nothing
+        Just (rval, rest) => Just ((lval, rval), rest)
+
+parseBySchema : (schema : Schema) -> (input : String) -> Maybe (SchemaType schema)
+parseBySchema schema input =
+  case parsePrefix schema input of
+    Nothing => Nothing
+    Just (val, "") => Just val
+    Just _ => Nothing
+
+parseCommandHelper :
+  (schema : Schema) ->
+  (cmd : String) ->
+  (args : String) ->
+  Maybe (Command schema)
+parseCommandHelper schema "list" "" = Just List
+parseCommandHelper schema "add" str =
+  case parseBySchema schema str of
+    Nothing => Nothing
+    Just x => Just (Add x)
 parseCommandHelper schema "get" i =
   if all isDigit (unpack i)
   then Just (Get (cast i))
@@ -50,6 +90,7 @@ parseCommandHelper schema "get" i =
 parseCommandHelper schema "search" str = Just (Search str)
 parseCommandHelper schema "size" "" = Just Size
 parseCommandHelper schema "quit" "" = Just Quit
+parseCommandHelper schema "exit" "" = Just Quit -- alias for "quit"
 parseCommandHelper schema "" "" = Just Empty
 parseCommandHelper _ _ _ = Nothing
 
@@ -74,18 +115,30 @@ indices xs = loop 0 xs
 zipWithIndex : Vect n a -> Vect n (Integer, a)
 zipWithIndex xs = zip (indices xs) xs
 
+display : SchemaType schema -> String
+display {schema = SString} string = show string
+display {schema = SInt} int = show int
+display {schema = (lschema .+. rschema)} (a, b) =
+  display a ++ ", " ++ display b
+
 getEntry : (store : DataStore) -> (i : Integer) -> Maybe (String, DataStore)
 getEntry store i =
   let
     item = tryIndex i (items store)
     message = maybe "Index out of range\n" (\item =>
-      "Item: " ++ ?showItem item ++ "\n") item
+      "Item: " ++ (display item) ++ "\n") item
   in Just (message, store)
 
 processCommand :
   (store : DataStore) ->
   (command : Command (schema store)) ->
   Maybe (String, DataStore)
+processCommand store List =
+  let
+    indexedItems = zipWithIndex (items store)
+    resultsPerLine = concat $ intersperse "\n" $
+      map (\(i, item) => "  " ++ show i ++ ": " ++ display item) indexedItems
+  in Just ("Items:\n" ++ resultsPerLine ++ "\n", store)
 processCommand store (Add item) =
   Just ("ID " ++ show (size store) ++ "\n", addToStore store item)
 processCommand store (Get i) = getEntry store i
