@@ -1,14 +1,18 @@
+|||
+||| Equality as a _type_.
+|||
 module Chapter8
+
+import Data.Vect
 
 %default total
 
---
--- Equality as a _type_.
---
-
-data Vect : Nat -> Type -> Type where
-  Nil : Vect Z a
-  (::) : a -> Vect k a -> Vect (S k) a
+{-
+namespace MyVect
+  data Vect : Nat -> Type -> Type where
+    Nil : MyVect.Vect Z a
+    (::) : a -> MyVect.Vect k a -> MyVect.Vect (S k) a
+-}
 
 data EqNat : (a : Nat) -> (b : Nat) -> Type where
   Same : (a : Nat) -> EqNat a a
@@ -30,7 +34,7 @@ exactLength len v {m} =
     Nothing => empty
     Just (Same _) => pure v
 
--- `checkEqNat` without using `sameS`.
+||| `checkEqNat` without using `sameS`.
 checkEqNat2 : (a : Nat) -> (b : Nat) -> Maybe (EqNat a b)
 checkEqNat2 Z Z = Just (Same 0)
 checkEqNat2 Z (S k) = Nothing
@@ -45,9 +49,7 @@ data Equal : (a : t) -> (b : t) -> Type where
 congruence : {f : a -> b} -> (eq : Equal k j) -> Equal (f k) (f j)
 congruence {f} (Reflexive k) = Reflexive (f k)
 
---
--- Version of `checkEqNat` using the generic equality, `Equal`.
---
+||| Version of `checkEqNat` using the generic equality, `Equal`.
 checkEqNat3 : (a : Nat) -> (b : Nat) -> Maybe (Equal a b)
 checkEqNat3 Z Z = Just (Reflexive 0)
 checkEqNat3 Z (S k) = Nothing
@@ -56,9 +58,7 @@ checkEqNat3 (S k) (S j) = do
   eq <- checkEqNat3 k j
   pure (congruence eq)
 
---
--- Version of `checkEqNat` using Idris' built-in equality type, (=).
---
+||| Version of `checkEqNat` using Idris' built-in equality type, (=).
 checkEqNat4 : (num1 : Nat) -> (num2 : Nat) -> Maybe (num1 = num2)
 checkEqNat4 Z Z = pure Refl
 checkEqNat4 Z (S k) = Nothing
@@ -71,4 +71,36 @@ checkEqNat4 (S k) (S j) = do
 -- Exercises
 --
 
-same_cons : {xs : List a} -> {ys : List a} -> xs = ys -> x :: xs = x :: ys
+sameCons : {xs : List a} -> {ys : List a} -> xs = ys -> x :: xs = x :: ys
+sameCons = cong
+
+same_lists :
+  {xs : List a} ->
+  {ys : List a} ->
+  x = y ->
+  xs = ys ->
+  x :: xs = y :: ys
+same_lists Refl prf2 = cong prf2
+
+data Equal3 : (a : t) -> (b : t) -> (c : t) -> Type where
+  Reflexive3 : Equal3 a a a
+
+|||
+||| if x y z are all equal then the successors of x y z are equal too.
+|||
+allSameS : (x, y, z : Nat) -> Equal3 x y z -> Equal3 (S x) (S y) (S z)
+allSameS z z z Reflexive3 = Reflexive3 {a = S z}
+
+myReverse : Vect n elem -> Vect n elem
+myReverse [] = []
+myReverse {n = S k} (x :: xs) =
+  let result = myReverse xs ++ [x]
+  in rewrite plusCommutative 1 k
+  in result
+
+myReverse2 : Vect n elem -> Vect n elem
+myReverse2 [] = []
+myReverse2 (x :: xs) = proof1 (myReverse2 xs ++ [x])
+  where
+    proof1 : Vect (len + 1) elem -> Vect (S len) elem
+    proof1 {len} xs = rewrite (plusCommutative 1 len) in xs
