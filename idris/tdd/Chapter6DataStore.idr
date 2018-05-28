@@ -11,13 +11,22 @@ infixr 5 .+.
 
 data Schema
   = SString
+  | SChar
   | SInt
   | (.+.) Schema Schema
+
+showSchema : Schema -> String
+showSchema SString = "String"
+showSchema SChar = "Char"
+showSchema SInt = "Int"
+showSchema (lschema .+. rschema) =
+  showSchema lschema ++ ", " ++ showSchema rschema
 
 %name Schema schema, schema1, schema2, schema3
 
 SchemaType : Schema -> Type
 SchemaType SString = String
+SchemaType SChar = Char
 SchemaType SInt = Int
 SchemaType (l .+. r) = (SchemaType l, SchemaType r)
 
@@ -34,6 +43,7 @@ addToStore (MkDataStore schema size items) x =
   MkDataStore schema _ (items ++ [x])
 
 data Command : Schema -> Type where
+  GetSchema : Command schema
   SetSchema : (newSchema : Schema) -> Command schema
   List : Command schema
   Clear : Command schema
@@ -51,11 +61,15 @@ parsePrefix :
 parsePrefix SString input = getQuoted (unpack input)
   where
     getQuoted : List Char -> Maybe (String, String)
-    getQuoted ('\"' :: xs) =
+    getQuoted ('"' :: xs) =
       case span (/= '"') xs of
         (quoted, '"' :: rest) => pure (pack quoted, ltrim (pack rest))
         _ => empty
     getQuoted _ = empty
+parsePrefix SChar input =
+  case (unpack input) of
+    ('\'' :: c :: '\'' :: rest) => pure (c, ltrim (pack rest))
+    _ => empty
 parsePrefix SInt input =
   case span isDigit input of
     ("", rest) => empty
@@ -75,18 +89,19 @@ parseBySchema schema input =
     Just (val, "") => pure val
     Just _ => empty
 
-parseSchema : List String -> Maybe Schema
-parseSchema ("String" :: xs) =
-  case xs of
-    [] => pure SString
-    _ => do schema <- parseSchema xs
-            pure (SString .+. schema)
-parseSchema ("Int" :: xs) =
-  case xs of
-    [] => pure SInt
-    _ => do schema <- parseSchema xs
-            pure (SInt .+. schema)
-parseSchema _ = Nothing
+mutual
+  pickSchema : Schema -> (xs : List String) -> Maybe Schema
+  pickSchema schema xs =
+    case xs of
+      [] => pure schema
+      _ => do rSchema <- parseSchema xs
+              pure (schema .+. rSchema)
+
+  parseSchema : List String -> Maybe Schema
+  parseSchema ("String" :: xs) = pickSchema SString xs
+  parseSchema ("Char" :: xs) = pickSchema SChar xs
+  parseSchema ("Int" :: xs) = pickSchema SInt xs
+  parseSchema _ = Nothing
 
 parseInteger : String -> Maybe Integer
 parseInteger input =
@@ -99,12 +114,14 @@ parseCommandHelper :
   (cmd : String) ->
   (args : String) ->
   Maybe (Command schema)
+parseCommandHelper schema "schema" "" = pure GetSchema
 parseCommandHelper schema "schema" args =
   SetSchema <$> parseSchema (words args)
 parseCommandHelper schema "list" "" = pure List
 parseCommandHelper schema "clear" "" = pure Clear
 parseCommandHelper schema "add" str =
   Add <$> parseBySchema schema str
+parseCommandHelper schema "get" "" = pure List
 parseCommandHelper schema "get" input =
   Get <$> parseInteger input
 parseCommandHelper schema "search" str = pure $ Search str
@@ -136,6 +153,7 @@ zipWithIndex xs = zip (indices xs) xs
 
 display : SchemaType schema -> String
 display {schema = SString} string = show string
+display {schema = SChar} char = show char
 display {schema = SInt} int = show int
 display {schema = (lschema .+. rschema)} (a, b) =
   display a ++ ", " ++ display b
@@ -158,6 +176,8 @@ processCommand :
   (store : DataStore) ->
   (command : Command (schema store)) ->
   Maybe (String, DataStore)
+processCommand store GetSchema =
+  pure ("Schema: " ++ showSchema (schema store), store)
 processCommand store (SetSchema schema) =
   case setSchema store schema of
     Nothing => pure ("Can't update schema when you have existing items", store)
@@ -174,20 +194,12 @@ processCommand store (Add item) =
   pure ("ID " ++ show (size store) ++ "\n", addToStore store item)
 processCommand store (Get i) = getEntry store i
 processCommand store (Search s) =
-  ?rethinkSearch
-{-
---
--- Probably just search through all the strings.
--- Alternatively turn the integers to strings too
--- and do "full text" search.
---
-  let indexedItems = zipWithIndex (items store)
+  let indexedItems = zipWithIndex $ map display (items store)
   in case filter (isInfixOf s . snd) indexedItems of
          (len ** results) =>
            let resultsPerLine = concat $ intersperse "\n" $
                  map (\(i, item) => "  " ++ show i ++ ": " ++ item) results
            in Just ("Results:\n" ++ resultsPerLine ++ "\n", store)
--}
 processCommand store Size =
   pure ("Size: " ++ show (size store) ++ "\n", store)
 processCommand _ Quit = empty
