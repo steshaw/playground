@@ -1,5 +1,5 @@
 |||
-||| Equality: expressing relationships between data
+||| # 8. Equality: expressing relationships between data
 |||
 ||| Revisiting Chapter 8 again. Found it pretty hard going,
 ||| needing to peek at solutions to complete the exercises.
@@ -8,7 +8,7 @@
 module Chapter8c
 
 --
--- 8.1 Guaranteeing equivalence of data with equality types
+-- ## 8.1 Guaranteeing equivalence of data with equality types
 --
 
 data Vect : Nat -> Type -> Type where
@@ -55,3 +55,53 @@ exactLength2 : (len : Nat) -> (input : Vect m a) -> Maybe (Vect len a)
 exactLength2 len input {m} = do
   Same _ <- checkEqNat0 len m
   pure input
+
+-- ### 8.1.6 Equality in general: the = type
+
+data Equal : a -> b -> Type where
+  Reflexive : a `Equal` a
+
+checkEqNat2 : (n1 : Nat) -> (n2 : Nat) -> Maybe (n1 = n2)
+checkEqNat2 Z Z = Just Refl
+checkEqNat2 Z (S k) = Nothing
+checkEqNat2 (S k) Z = Nothing
+checkEqNat2 (S k) (S j) =
+  case checkEqNat2 k j of
+    Nothing => Nothing
+    Just prf => pure (cong prf)
+
+checkEqNat3 : (n1 : Nat) -> (n2 : Nat) -> Maybe (n1 = n2)
+checkEqNat3 Z Z = Just Refl
+checkEqNat3 Z (S k) = Nothing
+checkEqNat3 (S k) Z = Nothing
+checkEqNat3 (S k) (S j) =
+  case checkEqNat3 k j of
+    Nothing => Nothing
+    Just Refl => pure Refl
+
+-- "Golfing" the maybe failure here doesn't work.
+{-
+checkEqNat4 : (n1 : Nat) -> (n2 : Nat) -> Maybe (n1 = n2)
+checkEqNat4 Z Z = Just Refl
+checkEqNat4 Z (S k) = Nothing
+checkEqNat4 (S k) Z = Nothing
+checkEqNat4 (S k) (S j) = do
+  Just Refl <- checkEqNat4 k j
+  pure Refl
+-}
+
+-- Exercises
+
+sameCons : {x : a} -> {xs : List a} -> {ys : List a} -> xs = ys -> x :: xs = x :: ys
+sameCons Refl = Refl
+
+sameLists : {xs : List a} -> {ys : List a} -> x = y -> xs = ys -> x :: xs = y :: ys
+sameLists Refl Refl = Refl
+
+data ThreeEq : (a : t) -> (b : t) -> (c : t) -> Type where
+  MkThreeEq : ThreeEq a a a
+
+%name ThreeEq eq, eq1, eq2, eq3
+
+allSameS : (x, y, z : Nat) -> ThreeEq x y z -> ThreeEq (S x) (S y) (S z)
+allSameS z z z MkThreeEq = MkThreeEq
