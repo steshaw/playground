@@ -15,12 +15,14 @@ data Vect : Nat -> Type -> Type where
   Nil :Vect Z a
   (::) : a -> Vect k a -> Vect (S k) a
 
+%name Vect xs, ys, zs
+
 exactLength1 : (len : Nat) -> (input : Vect m a) -> Maybe (Vect len a)
 exactLength1 len input {m} =
   case len == m of
     False => Nothing
-    True => ?exactLength_rhs_2 -- <-- fails here because `==` doesn't retain
-                               -- a relationship between `len` and `m`.
+    True => ?failsHere  -- <-- fails here because `==` doesn't retain
+                        -- a relationship between `len` and `m`.
 
 data EqNat : (n1 : Nat) -> (n2 : Nat) -> Type where
   Same : (n : Nat) -> EqNat n n
@@ -105,3 +107,95 @@ data ThreeEq : (a : t) -> (b : t) -> (c : t) -> Type where
 
 allSameS : (x, y, z : Nat) -> ThreeEq x y z -> ThreeEq (S x) (S y) (S z)
 allSameS z z z MkThreeEq = MkThreeEq
+
+--
+-- ## 8.2 Equality in practice: types and reasoning
+--
+
+(++) : Vect n elem -> Vect m elem -> Vect (n + m) elem
+(++) [] ys = ys
+(++) (x :: xs) ys = x :: (xs ++ ys)
+
+-- Trying to avoid `rewrite` by using pattern matching.
+{-
+myReverse : Vect n elem -> Vect n elem
+myReverse [] = []
+myReverse (x :: xs) = helper x xs
+  where
+  helper : elem -> Vect k elem -> Vect (S k) elem
+  helper x xs {k} =
+    case plusCommutative k 1 of
+      case_val => ?something (myReverse xs ++ [x])
+-}
+
+myReverse1 : Vect n elem -> Vect n elem
+myReverse1 [] = []
+myReverse1 {n = S k} (x :: xs) = -- <-- No idea where `n = S k` comes from here.
+  let result = myReverse1 xs ++ [x]
+  in rewrite plusCommutative 1 k in result
+
+myReverse2 : Vect n elem -> Vect n elem
+myReverse2 [] {n = Z} = []
+myReverse2 (x :: xs) {n = (S k)} =
+  rewrite plusCommutative 1 k
+  in (myReverse2 xs ++ [x])
+
+myReverse3 : Vect n elem -> Vect n elem
+myReverse3 [] = []
+myReverse3 (x :: xs) = reverseProof (myReverse3 xs ++ [x])
+  where
+  reverseProof : Vect (k + 1) elem -> Vect (S k) elem
+  reverseProof result {k} = rewrite plusCommutative 1 k in result
+
+--
+-- ### 8.2.5 Appending vectors, revisited
+--
+
+append1Nil : (ys : Vect m elem) -> Vect (plus m 0) elem
+append1Nil ys {m} = rewrite plusZeroRightNeutral m in ys
+
+append1Cons : Vect (S (m + k)) elem -> Vect (plus m (S k)) elem
+append1Cons xs {m} {k} = rewrite sym (plusSuccRightSucc m k) in xs
+
+append1 : Vect n elem -> Vect m elem -> Vect (m + n) elem
+append1 [] ys = append1Nil ys
+append1 (x :: xs) ys = append1Cons (x :: append1 xs ys)
+
+--
+-- Exercises
+--
+
+myPlusZeroRightNeutral : (left : Nat) -> left + 0 = left
+myPlusZeroRightNeutral Z = Refl
+myPlusZeroRightNeutral (S k) =
+  let r = myPlusZeroRightNeutral k
+  in cong r
+
+myPlusSuccRightSucc : (left : Nat) -> (right : Nat) -> S (left + right) = left + S right
+myPlusSuccRightSucc Z right = Refl
+myPlusSuccRightSucc (S k) m =
+  let r = myPlusSuccRightSucc k m
+  in cong r
+
+myPlusCommutes : (n : Nat) -> (m : Nat) -> n + m = m + n
+myPlusCommutes Z m =     rewrite (plusZeroRightNeutral m) in Refl {x = m}
+myPlusCommutes (S k) m =
+  let r = myPlusCommutes k m
+  in rewrite sym (plusSuccRightSucc m k) in cong r
+
+reverseProofNil : (acc : Vect m a) -> Vect (plus m 0) a
+reverseProofNil acc {m} = rewrite myPlusZeroRightNeutral m in acc
+
+reverseProofCons :  Vect ((S m) + k) a -> Vect (plus m (S k)) a
+reverseProofCons xs {m} {k} = rewrite sym (myPlusSuccRightSucc m k) in xs
+
+myReverse4 : Vect n a -> Vect n a
+myReverse4 xs = reverse' [] xs
+  where
+  reverse' : Vect m a -> Vect n a -> Vect (m + n) a
+  reverse' acc [] = reverseProofNil acc
+  reverse' acc (x :: xs) = reverseProofCons (reverse' (x :: acc) xs)
+
+--
+-- ## 8.3 The empty type and decidability
+--
