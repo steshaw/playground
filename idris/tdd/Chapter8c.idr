@@ -7,6 +7,8 @@
 
 module Chapter8c
 
+%default total
+
 --
 -- ## 8.1 Guaranteeing equivalence of data with equality types
 --
@@ -21,8 +23,8 @@ exactLength1 : (len : Nat) -> (input : Vect m a) -> Maybe (Vect len a)
 exactLength1 len input {m} =
   case len == m of
     False => Nothing
-    True => ?failsHere  -- <-- fails here because `==` doesn't retain
-                        -- a relationship between `len` and `m`.
+    True => ?cannotBeFilled -- <-- fails here because `==` doesn't retain
+                            -- a relationship between `len` and `m`.
 
 data EqNat : (n1 : Nat) -> (n2 : Nat) -> Type where
   Same : (n : Nat) -> EqNat n n
@@ -199,3 +201,82 @@ myReverse4 xs = reverse' [] xs
 --
 -- ## 8.3 The empty type and decidability
 --
+
+data MyVoid
+
+myTwoPlusTwoNotFive : 2 + 2 = 5 -> MyVoid
+myTwoPlusTwoNotFive Refl impossible
+
+twoPlusTwoNotFive : 2 + 2 = 5 -> Void
+twoPlusTwoNotFive Refl impossible
+
+partial
+loop : MyVoid
+loop = loop
+
+valueNotSucc : (n : Nat) -> n = S n -> MyVoid
+valueNotSucc _ Refl impossible
+
+{-
+myVoid1 : MyVoid -> a
+myVoid1 _ impossible
+-}
+
+myVoid2 : Void -> a
+myVoid2 _ impossible
+
+zeroNotSucc : (0 = S k) -> Void
+zeroNotSucc Refl impossible
+
+succNotZero : (S k = 0) -> Void
+succNotZero Refl impossible
+
+noRec : (contra : (k = j) -> Void) -> (S k = S j) -> Void
+noRec contra Refl = contra Refl
+
+checkEqNat5 : (n1 : Nat) -> (n2 : Nat) -> Dec (n1 = n2)
+checkEqNat5 Z Z = Yes Refl
+checkEqNat5 Z (S k) = No zeroNotSucc
+checkEqNat5 (S k) Z = No succNotZero
+checkEqNat5 (S k) (S j) =
+  case checkEqNat5 k j of
+    Yes prf => Yes (cong prf)
+    No contra => No (noRec contra)
+
+--
+-- ### 8.3.3 DecEq: an interface for decidable equality
+--
+
+interface MyDecEq ty where
+  decEq : (val1 : ty) -> (val2 : ty) -> Dec (val1 = val2)
+
+exactLength3 : (len : Nat) -> (input : Vect m a) -> Maybe (Vect len a)
+exactLength3 len input {m} =
+  case decEq len m of
+    Yes Refl => pure input
+    No contra => empty
+
+headUnequal : DecEq a =>
+  {xs : Vect n a} ->
+  {ys : Vect n a} ->
+  (contra : (x = y) -> Void) ->
+  ((x :: xs) = (y :: ys)) ->
+  Void
+headUnequal contra Refl = contra Refl
+
+tailUnequal : DecEq a =>
+  {xs : Vect n a} ->
+  {ys : Vect n a} ->
+  (contra : (xs = ys) -> Void) ->
+  ((x :: xs) = (y :: ys)) ->
+  Void
+tailUnequal contra Refl = contra Refl
+
+implementation DecEq a => DecEq (Vect n a) where
+  decEq [] [] = Yes Refl
+  decEq (x :: xs) (y :: ys) =
+    case decEq x y of
+      Yes Refl => case decEq xs ys of
+        Yes Refl => Yes Refl
+        No contra => No (tailUnequal contra)
+      No contra => No (headUnequal contra)
