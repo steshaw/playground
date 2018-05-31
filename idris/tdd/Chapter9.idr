@@ -1,7 +1,7 @@
 |||
 ||| 9: Predicates: expressing assumptions and contracts in types
 |||
-module Chapter9
+module Main
 
 %default total
 
@@ -132,3 +132,85 @@ isLast (x :: []) value = case decEq x value of
 isLast (x :: (y :: xs)) value = case isLast (y :: xs) value of
                                      Yes prf => Yes (LastCons prf)
                                      No contra => No (notCons contra)
+
+--
+-- 9.2 Expressing program state in types: a guessing game
+--
+
+data HangmanState : (guessesLeft : Nat) -> (lettersLeft : Nat) -> Type where
+  MkHangmanState :
+    {guessesLeft : Nat} ->
+    (word : String) ->
+    (missing : Vect lettersLeft Char) ->
+    HangmanState guessesLeft lettersLeft
+
+%name HangmanState state, state1, state2, state3
+
+data Finished : Type where
+  Lost : (game : HangmanState 0 (S letters)) -> Finished
+  Won  : (game : HangmanState (S guesses) 0) -> Finished
+
+data ValidInput : List Char -> Type where
+  Letter : (c : Char) -> ValidInput [c]
+
+Uninhabited (ValidInput []) where
+  uninhabited (Letter _) impossible
+
+Uninhabited (ValidInput (x :: y :: xs)) where
+  uninhabited (Letter _) impossible
+
+isValidInput : (cs : List Char) -> Dec (ValidInput cs)
+isValidInput [] = No absurd
+isValidInput (c :: []) = Yes (Letter c)
+isValidInput (_ :: (_ :: _)) = No absurd
+
+isValidString : (s : String) -> Dec (ValidInput (unpack s))
+isValidString s = isValidInput (unpack s)
+
+partial
+readGuess : IO (x ** ValidInput x)
+readGuess = do
+  putStr "Guess: "
+  input <- getLine
+  case isValidString input of
+    Yes prf => pure (_ ** prf)
+    No contra => do
+      putStrLn "Invalid - enter a letter"
+      readGuess
+
+processGuess :
+  (letter : Char) ->
+  HangmanState (S guesses) (S letters) ->
+  Either
+    (HangmanState guesses (S letters))
+    (HangmanState (S guesses) letters)
+processGuess letter (MkHangmanState word missing) =
+  case isElem letter missing of
+    Yes prf => Right (MkHangmanState word (removeElem3 letter missing))
+    No contra => Left (MkHangmanState word missing)
+
+partial
+game : HangmanState (S guesses) (S letters) -> IO Finished
+game state {guesses} {letters} = do
+  (_ ** Letter letter) <- readGuess
+  case processGuess (toUpper letter) state of
+    Left state => do
+      putStrLn "Wrong!"
+      case guesses of
+        Z => pure (Lost state)
+        S k => game state
+    Right state => do
+      putStrLn "Right!"
+      case letters of
+        Z => pure (Won state)
+        S k => game state
+
+partial
+main : IO ()
+main = do
+  result <- game {guesses = 6} (MkHangmanState "Test" ['T', 'E', 'S'])
+  case result of
+    Lost (MkHangmanState word missing) =>
+    putStrLn ("You lose. The word was " ++ word)
+    Won game =>
+      putStrLn "You win!"
