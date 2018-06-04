@@ -1,6 +1,10 @@
-module Chapter11
+|||
+||| # 11 Streams and processes: working with infinite data
+|||
+module Main
 
 import Data.Primitives.Views
+import System
 
 %default total
 
@@ -40,18 +44,18 @@ label : List a -> List (Integer, a)
 label = labelWith [0..]
 
 partial
-quiz : Stream Int -> (score : Nat) -> IO ()
-quiz (num1 :: num2 :: nums) score = do
+quiz1 : Stream Int -> (score : Nat) -> IO ()
+quiz1 (num1 :: num2 :: nums) score = do
   putStrLn $ "Score so far: " ++ show score
   putStr $ show num1 ++ " * " ++ show num2 ++ "? "
   answer <- getLine
   if cast answer == num1 * num2
     then do
       putStrLn "Correct!"
-      quiz nums (score + 1)
+      quiz1 nums (score + 1)
     else do
       putStrLn $ "Wrong, the answer is " ++ show (num1 * num2)
-      quiz nums score
+      quiz1 nums score
 
 randoms : Int -> Stream Int
 randoms seed =
@@ -103,3 +107,77 @@ squareRoot : (number : Double) -> Double
 squareRoot number =
   squareRootBound 100 number 0.00000000001
     (squareRootApprox number number)
+
+--
+-- ## 11.2 Infinite processes: writing interactive total programs
+--
+
+data InfIO : Type where
+  Do : IO a -> (a -> Inf InfIO) -> InfIO
+
+loopPrint1 : String -> InfIO
+loopPrint1 msg =
+  Do (putStrLn msg) (\_ => loopPrint1 msg)
+
+partial
+run1 : InfIO -> IO ()
+run1 (Do action cont) = do
+  result <- action
+  run1 (cont result)
+
+data Fuel = Dry | More (Lazy Fuel)
+
+tank : Nat -> Fuel
+tank Z = Dry
+tank (S k) = More (tank k)
+
+run : Fuel -> InfIO -> IO ()
+run Dry y = putStrLn "Out of fuel"
+run (More fuel) (Do action cont) = do
+  result <- action
+  run fuel (cont result)
+
+partial
+forever : Fuel
+forever = More forever
+
+(>>=) : IO a -> (a -> Inf InfIO) -> InfIO
+(>>=) = Do
+
+loopPrint : String -> InfIO
+loopPrint msg = do
+  putStrLn msg
+  loopPrint msg
+
+quiz : Stream Int -> (score : Nat) -> InfIO
+quiz (num1 :: num2 :: nums) score = do
+  putStrLn $ "Score so far: " ++ show score
+  putStr $ show num1 ++ " * " ++ show num2 ++ "? "
+  answer <- getLine
+  if cast answer == num1 * num2
+    then do
+      putStrLn "Correct!"
+      quiz nums (score + 1)
+    else do
+      putStrLn $ "Wrong, the answer is " ++ show (num1 * num2)
+      quiz nums score
+
+doQuiz : InfIO
+doQuiz = do
+  seed <- time
+  quiz (arithInputs (fromInteger seed)) 0
+
+partial
+main : IO ()
+main = run forever doQuiz
+
+--
+-- Exercises
+--
+
+totalREPL : (prompt : String) -> (action : String -> String) -> InfIO
+totalREPL prompt action = do
+  putStr prompt
+  line <- getLine
+  putStrLn $ action line
+  totalREPL prompt action
