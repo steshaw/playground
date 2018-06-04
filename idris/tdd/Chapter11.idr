@@ -297,6 +297,12 @@ namespace ArithCmdDo
     PutStr2 : String -> Command2 ()
     GetLine2 : Command2 String
 
+    ReadFile : (filepath : String) -> Command2 (Either FileError String)
+    WriteFile :
+      (filepath : String) ->
+      (contents : String) ->
+      Command2 (Either FileError ())
+
     Pure : ty -> Command2 ty
     Bind : Command2 a -> (a -> Command2 b) -> Command2 b
 
@@ -307,6 +313,8 @@ namespace ArithCmdDo
   runCommand : Command2 a -> IO a
   runCommand (PutStr2 x) = putStr x
   runCommand GetLine2 = getLine
+  runCommand (ReadFile filePath) = readFile filePath
+  runCommand (WriteFile filePath contents) = writeFile filePath contents
   runCommand (Pure val) = pure val
   runCommand (Bind action cont) = do
     result <- runCommand action
@@ -328,26 +336,26 @@ namespace ArithCmdDo
       then Pure QuitCmd
       else Pure (Answer (cast answer))
 
-  quiz2 : Stream Int -> (score : Nat) -> ConsoleIO2 Nat
-  quiz2 (num1 :: num2 :: nums) score = do
-    PutStr2 $ "Score so far: " ++ show score
+  quiz2 : Stream Int -> (score : Nat) -> (total_ : Nat) -> ConsoleIO2 (Nat, Nat)
+  quiz2 (num1 :: num2 :: nums) score total_ = do
+    PutStr2 $ "Score so far: " ++ show score ++ "/" ++ show total_
     PutStr2 "\n"
     input <- readInput $ show num1 ++ " * " ++ show num2 ++ "? "
     case input of
       Answer answer => if answer == num1 * num2
         then correct
         else wrong
-      QuitCmd => Quit score
+      QuitCmd => Quit (score, total_)
   where
-    correct : ConsoleIO2 Nat
+    correct : ConsoleIO2 (Nat, Nat)
     correct = do
       PutStr2 "Correct!\n"
-      quiz2 nums (score + 1)
-    wrong : ConsoleIO2 Nat
+      quiz2 nums (score + 1) (total_ + 1)
+    wrong : ConsoleIO2 (Nat, Nat)
     wrong = do
       PutStr2 $ "Wrong, the answer is " ++ show (num1 * num2)
       PutStr2 "\n"
-      quiz2 nums score
+      quiz2 nums score (total_ + 1)
 
   run : Fuel -> ConsoleIO2 a -> IO (Maybe a)
   run fuel (Quit val) = pure (Just val)
@@ -356,17 +364,83 @@ namespace ArithCmdDo
     result <- runCommand command
     run fuel (cont result)
 
-  doQuiz : Integer -> ConsoleIO2 Nat
+  doQuiz : Integer -> ConsoleIO2 (Nat, Nat)
   doQuiz seed =
-    quiz2 (arithInputs (fromInteger seed)) 0
+    quiz2 (arithInputs (fromInteger seed)) 0 0
 
   doMain : Fuel -> IO ()
   doMain fuel = do
     seed <- time
-    Just score <- ArithCmdDo.run fuel $ doQuiz seed
+    Just (score, total_) <- ArithCmdDo.run fuel $ doQuiz seed
       | Nothing => putStrLn "Ran out of fuel :("
-    putStrLn $ "Final score: " ++ show score
+    putStrLn $ "Final score: " ++ show score ++ "/" ++ show total_
 
   partial
   main : IO ()
   main = ArithCmdDo.doMain forever
+
+  data Cmd : Type where
+    Cat : (filePath : String) -> Cmd
+    Copy : (sourcePath : String) -> (destinationPath : String) -> Cmd
+    Exit : Cmd
+    Empty : Cmd
+
+  parseCmd : String -> Either String Cmd
+  parseCmd input = case split (== ' ') input of
+    ["cat", filePath] => Right (Cat filePath)
+    ["cp", src, dst] => Right (Copy src dst)
+    ["copy", src, dst] => Right (Copy src dst)
+    ["exit"] => Right Exit
+    [""] => Right Empty
+    [] => Right Empty
+    _ => Left "invalid command"
+
+  doCat : (filePath : String) -> Command2 ()
+  doCat filePath = do
+    Right contents <- ReadFile filePath
+      | Left fileError => do
+          PutStr2 ("Error: " ++ show fileError ++ "\n")
+    PutStr2 contents
+
+  doCopy : (src : String) -> (dst : String) -> Command2 ()
+  doCopy src dst = do
+    PutStr2 $ "Copying " ++ src ++ " to " ++ dst ++ "\n"
+    Right contents <- ReadFile src
+      | Left fileError => do
+          PutStr2 ("Error: " ++ show fileError ++ "\n")
+    Right () <- WriteFile dst contents
+      | Left fileError => do
+          PutStr2 ("Error: " ++ show fileError ++ "\n")
+    Pure ()
+
+  evalCmd : Cmd -> Command2 Bool
+  evalCmd (Cat filePath) = do
+    doCat filePath
+    Pure False
+  evalCmd (Copy src dst) = do
+    doCopy src dst
+    Pure False
+  evalCmd Exit = do
+    PutStr2 "Exiting..."
+    Pure True
+  evalCmd Empty = Pure False
+
+  shell : String -> ConsoleIO2 ()
+  shell prompt = do
+    PutStr2 prompt
+    input <- GetLine2
+    case parseCmd input of
+      Left error => do
+        PutStr2 $ "Error: " ++ error ++ "\n"
+        shell prompt
+      Right cmd => do
+        shouldExit <- evalCmd cmd
+        if shouldExit then
+          Quit ()
+        else shell prompt
+
+  partial
+  shellMain : IO ()
+  shellMain = do
+    result <- run forever (shell "$ ")
+    printLn result
