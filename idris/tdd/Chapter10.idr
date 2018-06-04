@@ -228,7 +228,3 @@ palindromeList xs with (vList xs)
 
 palindrome : String -> Bool
 palindrome = palindromeList . unpack
-
---
--- ## 10.3 Data abstraction: hiding the structure of data using views
---
