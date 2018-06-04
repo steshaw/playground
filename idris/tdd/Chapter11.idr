@@ -181,3 +181,192 @@ totalREPL prompt action = do
   line <- getLine
   putStrLn $ action line
   totalREPL prompt action
+
+--
+-- ## 11.3 Interactive programs with termination
+--
+
+namespace InteractiveProgramsWithTermination
+
+  greet1 : InfIO
+  greet1 = do
+    putStr "Enter your name: "
+    name <- getLine
+    putStrLn ("Hello " ++ name)
+    greet1
+
+  data RunIO : Type -> Type where
+    Quit : a -> RunIO a
+    Do : IO a -> (a -> Inf (RunIO b)) -> RunIO b
+
+  (>>=) : IO a -> (a -> Inf (RunIO b)) -> RunIO b
+  (>>=) = Do
+
+  greet : RunIO ()
+  greet = do
+    putStr "Enter your name: "
+    name <- getLine
+    if name == ""
+      then do
+        putStrLn "Bye bye!"
+        Quit ()
+      else do
+        putStrLn ("Hello " ++ name)
+        greet
+
+  run : Fuel -> RunIO a -> IO (Maybe a)
+  run _ (Quit value) = pure (Just value)
+  run (More fuel) (Do action cont) = do
+    result <- action
+    run fuel (cont result)
+  run Dry _ = pure Nothing
+
+  partial
+  main1 : IO ()
+  main1 = do
+    r <- run forever greet
+    printLn r
+
+namespace DomainSpecificCommands
+
+  data Command : Type -> Type where
+    PutStr : String -> Command ()
+    GetLine : Command String
+
+  data ConsoleIO : Type -> Type where
+    Quit : a -> ConsoleIO a
+    Do : Command a -> (a -> Inf (ConsoleIO b)) -> ConsoleIO b
+
+  (>>=) : Command a -> (a -> Inf (ConsoleIO b)) -> ConsoleIO b
+  (>>=) = Do
+
+  runCommand : Command a -> IO a
+  runCommand (PutStr x) = putStr x
+  runCommand GetLine = getLine
+
+  run : Fuel -> ConsoleIO a -> IO (Maybe a)
+  run fuel (Quit val) = pure (Just val)
+  run Dry (Do y f) = pure Nothing
+  run (More fuel) (Do command cont) = do
+    result <- runCommand command
+    run fuel (cont result)
+
+  quiz : Stream Int -> (score : Nat) -> ConsoleIO Nat
+  quiz (num1 :: num2 :: nums) score = do
+    PutStr $ "Score so far: " ++ show score
+    PutStr "\n"
+    PutStr $ show num1 ++ " * " ++ show num2 ++ "? "
+    answer <- GetLine
+    if toLower answer == "quit"
+      then Quit score
+      else
+        if cast answer == num1 * num2
+          then correct
+          else wrong
+  where
+    correct = do
+      PutStr "Correct!\n"
+      quiz nums (score + 1)
+    wrong = do
+      PutStr $ "Wrong, the answer is " ++ show (num1 * num2)
+      PutStr "\n"
+      quiz nums score
+
+  doQuiz : Integer -> ConsoleIO Nat
+  doQuiz seed =
+    quiz (arithInputs (fromInteger seed)) 0
+
+  doMain : Fuel -> IO ()
+  doMain fuel = do
+    seed <- time
+    Just score <- DomainSpecificCommands.run fuel $ doQuiz seed
+      | Nothing => putStrLn "Ran out of fuel :("
+    putStrLn $ "Final score: " ++ show score
+
+  partial
+  main : IO ()
+  main = doMain forever
+
+namespace ArithCmdDo
+
+  data Input
+    = Answer Int
+    | QuitCmd
+
+  data Command2 : Type -> Type where
+    PutStr2 : String -> Command2 ()
+    GetLine2 : Command2 String
+
+    Pure : ty -> Command2 ty
+    Bind : Command2 a -> (a -> Command2 b) -> Command2 b
+
+  data ConsoleIO2 : Type -> Type where
+    Quit : a -> ConsoleIO2 a
+    Do : Command2 a -> (a -> Inf (ConsoleIO2 b)) -> ConsoleIO2 b
+
+  runCommand : Command2 a -> IO a
+  runCommand (PutStr2 x) = putStr x
+  runCommand GetLine2 = getLine
+  runCommand (Pure val) = pure val
+  runCommand (Bind action cont) = do
+    result <- runCommand action
+    runCommand (cont result)
+
+  namespace Command2Do
+    (>>=) : Command2 a -> (a -> Command2 b) -> Command2 b
+    (>>=) = Bind
+
+  namespace ConsoleIO2Do
+    (>>=) : Command2 a -> (a -> Inf (ConsoleIO2 b)) -> ConsoleIO2 b
+    (>>=) = Do
+
+  readInput : (prompt : String) -> Command2 Input
+  readInput prompt = do
+    PutStr2 prompt
+    answer <- GetLine2
+    if toLower answer == "quit"
+      then Pure QuitCmd
+      else Pure (Answer (cast answer))
+
+  quiz2 : Stream Int -> (score : Nat) -> ConsoleIO2 Nat
+  quiz2 (num1 :: num2 :: nums) score = do
+    PutStr2 $ "Score so far: " ++ show score
+    PutStr2 "\n"
+    input <- readInput $ show num1 ++ " * " ++ show num2 ++ "? "
+    case input of
+      Answer answer => if answer == num1 * num2
+        then correct
+        else wrong
+      QuitCmd => Quit score
+  where
+    correct : ConsoleIO2 Nat
+    correct = do
+      PutStr2 "Correct!\n"
+      quiz2 nums (score + 1)
+    wrong : ConsoleIO2 Nat
+    wrong = do
+      PutStr2 $ "Wrong, the answer is " ++ show (num1 * num2)
+      PutStr2 "\n"
+      quiz2 nums score
+
+  run : Fuel -> ConsoleIO2 a -> IO (Maybe a)
+  run fuel (Quit val) = pure (Just val)
+  run Dry (Do y f) = pure Nothing
+  run (More fuel) (Do command cont) = do
+    result <- runCommand command
+    run fuel (cont result)
+
+  doQuiz : Integer -> ConsoleIO2 Nat
+  doQuiz seed =
+    quiz2 (arithInputs (fromInteger seed)) 0
+
+  doMain : Fuel -> IO ()
+  doMain fuel = do
+    seed <- time
+    Just score <- ArithCmdDo.run fuel $ doQuiz seed
+      | Nothing => putStrLn "Ran out of fuel :("
+    putStrLn $ "Final score: " ++ show score
+
+  partial
+  main : IO ()
+  main = ArithCmdDo.doMain forever
