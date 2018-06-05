@@ -1,5 +1,7 @@
 module StateMonad
 
+%default total
+
 data State : (stateType : Type) -> Type -> Type where
   Get : State stateType stateType
   Put : stateType -> State stateType ()

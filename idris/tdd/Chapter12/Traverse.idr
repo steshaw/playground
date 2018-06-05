@@ -1,5 +1,7 @@
 module Main
 
+%default total
+
 crew : List String
 crew =
   [ "Lister"

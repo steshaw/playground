@@ -1,5 +1,7 @@
 module TreeLabelType
 
+%default total
+
 data Tree a
   = Empty
   | Node (Tree a) a (Tree a)
