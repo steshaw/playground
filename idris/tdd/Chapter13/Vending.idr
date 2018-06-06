@@ -22,6 +22,7 @@ strToInput "vend" = Just VEND
 strToInput "change" = Just CHANGE
 strToInput "exit" = Just EXIT
 strToInput "quit" = Just EXIT
+strToInput "stop" = Just EXIT
 strToInput s =
   if all isDigit (unpack s)
   then Just (REFILL (cast s))
@@ -52,7 +53,7 @@ data MachineIO : VendState -> Type where
   Do :
     MachineCmd a state1 state2 ->
     (a -> Inf (MachineIO state2)) ->
-    MachineIO state1 -- <<- why is this `state1` rather than `state2`?
+    MachineIO state1 -- <<- XXX: Why is this `state1` rather than `state2`?
 
 namespace MachineDo
   (>>=) :
