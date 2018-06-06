@@ -52,11 +52,43 @@ runStack stack (cmd >>= cont) = do
   (res, newStack) <- runStack stack cmd
   runStack newStack (cont res)
 
-doAdd : StackCmd () (2 + height) (1 + height)
+-- XXX: Argh: how to use this to reduce duplication with tryAdd/Mul/Sub.
+BinOp : Nat -> Type
+BinOp height = StackCmd () (2 + height) (1 + height)
+
+doAdd : BinOp height
 doAdd = do
   v1 <- Pop
   v2 <- Pop
   Push $ v1 + v2
+
+doSub : BinOp height
+doSub = do
+  v1 <- Pop
+  v2 <- Pop
+  Push $ v2 - v1
+
+doMul : BinOp height
+doMul = do
+  v1 <- Pop
+  v2 <- Pop
+  Push $ v2 * v1
+
+doNeg : StackCmd () (1 + height) (1 + height)
+doNeg = do
+  v <- Pop
+  Push $ negate v
+
+doDiscard : StackCmd Integer (1 + height) height
+doDiscard = do
+  v <- Pop
+  Pure v
+
+doDuplicate : StackCmd Integer (1 + height) (2 + height)
+doDuplicate = do
+  v <- Top
+  Push v
+  Pure v
 
 data StackIO : Nat -> Type where
   Quit : StackIO height
@@ -92,11 +124,26 @@ run (More fuel) stack (Do cmd cont) = do
 data Input
   = Number Integer
   | Add
+  | Sub
+  | Mul
+  | Neg
+  | Discard
+  | Duplicate
   | Empty
   | Exit
 
 strToInput : String -> Maybe Input
 strToInput "add" = Just Add
+strToInput "sub" = Just Sub
+strToInput "subtract" = Just Sub
+strToInput "mul" = Just Mul
+strToInput "multiply" = Just Mul
+strToInput "neg" = Just Neg
+strToInput "negate" = Just Neg
+strToInput "discard" = Just Discard
+strToInput "pop" = Just Discard
+strToInput "duplicate" = Just Duplicate
+strToInput "dup" = Just Duplicate
 strToInput "" = Just Empty
 strToInput "quit" = Just Exit
 strToInput ":q" = Just Exit
@@ -118,6 +165,54 @@ mutual
     PutStr "Fewer than two items on the stack\n"
     stackCalc
 
+  trySub : StackIO height
+  trySub {height = (S (S _))} = do
+    doSub
+    result <- Top
+    PutStr (show result ++ "\n")
+    stackCalc
+  trySub {height = _} = do
+    PutStr "Fewer than two items on the stack\n"
+    stackCalc
+
+  tryMul : StackIO height
+  tryMul {height = (S (S _))} = do
+    doMul
+    result <- Top
+    PutStr (show result ++ "\n")
+    stackCalc
+  tryMul {height = _} = do
+    PutStr "Fewer than two items on the stack\n"
+    stackCalc
+
+  tryNeg : StackIO height
+  tryNeg {height = (S _)} = do
+    doNeg
+    result <- Top
+    PutStr (show result ++ "\n")
+    stackCalc
+  tryNeg {height = _} = do
+    PutStr "Needs at least one item on the stack\n"
+    stackCalc
+
+  tryDiscard : StackIO height
+  tryDiscard {height = (S _)} = do
+    v <- doDiscard
+    PutStr ("Discarded " ++ show v ++ "\n")
+    stackCalc
+  tryDiscard {height = _} = do
+    PutStr "Needs at least one item on the stack\n"
+    stackCalc
+
+  tryDuplicate : StackIO height
+  tryDuplicate {height = (S _)} = do
+    v <- doDuplicate
+    PutStr ("Duplicated " ++ show v ++ "\n")
+    stackCalc
+  tryDuplicate {height = _} = do
+    PutStr "Needs at least one item on the stack\n"
+    stackCalc
+
   stackCalc : StackIO height
   stackCalc = do
     PutStr "> "
@@ -130,6 +225,11 @@ mutual
         Push x
         stackCalc
       (Just Add) => tryAdd
+      (Just Sub) => trySub
+      (Just Mul) => tryMul
+      (Just Neg) => tryNeg
+      (Just Discard) => tryDiscard
+      (Just Duplicate) => tryDuplicate
       (Just Empty) => stackCalc
       (Just Exit) => do
         PutStr "bye!\n"
