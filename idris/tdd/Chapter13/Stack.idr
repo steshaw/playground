@@ -59,12 +59,16 @@ doAdd = do
   Push $ v1 + v2
 
 data StackIO : Nat -> Type where
+  Quit : StackIO height
   Do :
     StackCmd a height1 height2 ->
     (a -> Inf (StackIO height2)) -> -- XXX: again `height2` seems ignored...
     StackIO height1
 
 namespace StackDo
+  pure : StackIO height
+  pure = Quit
+
   (>>=) :
     StackCmd a height1 height2 ->
     (a -> Inf (StackIO height2)) ->
@@ -79,6 +83,8 @@ forever = More forever
 
 run : Fuel -> Vect height Integer -> StackIO height -> IO ()
 run Dry _ _ = pure ()
+run (More fuel) stack Quit =
+  putStrLn $ "Quitting. Stack = " ++ show stack
 run (More fuel) stack (Do cmd cont) = do
   (res, newStack) <- runStack stack cmd
   run fuel newStack (cont res)
@@ -86,10 +92,16 @@ run (More fuel) stack (Do cmd cont) = do
 data Input
   = Number Integer
   | Add
+  | Empty
+  | Exit
 
 strToInput : String -> Maybe Input
-strToInput "" = Nothing
 strToInput "add" = Just Add
+strToInput "" = Just Empty
+strToInput "quit" = Just Exit
+strToInput ":q" = Just Exit
+strToInput "exit" = Just Exit
+strToInput "stop" = Just Exit
 strToInput str =
   if all isDigit (unpack str)
   then Just (Number (cast str))
@@ -118,6 +130,10 @@ mutual
         Push x
         stackCalc
       (Just Add) => tryAdd
+      (Just Empty) => stackCalc
+      (Just Exit) => do
+        PutStr "bye!\n"
+        Quit
 
 partial
 main : IO ()
