@@ -115,6 +115,11 @@ mutual
   Monad Command where
     (>>=) = Bind
 
+updateGameState : (GameState -> GameState) -> Command ()
+updateGameState f = do
+  state <- GetGameState
+  PutGameState $ f state
+
 data Fuel = Dry | More (Lazy Fuel)
 
 runCommand :
@@ -176,15 +181,13 @@ mutual
   correct : ConsoleIO GameState
   correct = do
     PutStr "Correct!\n"
-    state <- GetGameState
-    PutGameState (addCorrect state)
+    updateGameState addCorrect
     quiz
 
   wrong : Int -> ConsoleIO GameState
   wrong answer = do
     PutStr ("Wrong, the answer is " ++ show answer ++ "\n")
-    state <- GetGameState
-    PutGameState (addWrong state)
+    updateGameState addWrong
     quiz
 
   quiz : ConsoleIO GameState
@@ -215,3 +218,45 @@ main = do
     run forever (randoms (fromInteger seed)) initState quiz
       | _ => putStrLn "Ran out of fuel :("
   putStrLn ("Final score: " ++ show state)
+
+--
+-- Exercises
+--
+
+record Votes where
+  constructor MkVotes
+  upvotes : Nat
+  downvotes : Nat
+
+%name Votes votes
+
+record Article where
+  constructor MkArticle
+  title : String
+  url : String
+  votes : Votes
+
+%name Article article
+
+initPage : (title : String) -> (url : String) -> Article
+initPage title url = MkArticle title url (MkVotes 0 0)
+
+getScore : Article -> Integer
+getScore (MkArticle title url (MkVotes upvotes downvotes)) =
+  cast upvotes - cast downvotes
+
+badSite : Article
+badSite = MkArticle "Bad Page" "http://example.com/bad" (MkVotes 5 47)
+
+goodSite : Article
+goodSite = MkArticle "Good Page" "http://example.com/good" (MkVotes 101 7)
+
+addUpvote : Article -> Article
+addUpvote = record {
+  votes->upvotes $= (+1)
+}
+
+addDownvote : Article -> Article
+addDownvote = record {
+  votes->downvotes $= (+1)
+}
