@@ -2,7 +2,7 @@
 -- ### 13.1.3 Infinite states: modeling a vending machine
 --
 
-module Vending
+module Main
 
 %default total
 
@@ -14,6 +14,18 @@ data Input
   | VEND
   | CHANGE
   | REFILL Nat
+  | EXIT
+
+strToInput : String -> Maybe Input
+strToInput "insert" = Just COIN
+strToInput "vend" = Just VEND
+strToInput "change" = Just CHANGE
+strToInput "exit" = Just EXIT
+strToInput "quit" = Just EXIT
+strToInput s =
+  if all isDigit (unpack s)
+  then Just (REFILL (cast s))
+  else Nothing
 
 data MachineCmd :
   Type ->
@@ -36,10 +48,11 @@ where
     MachineCmd b state1 state3
 
 data MachineIO : VendState -> Type where
+  Quit : MachineIO state
   Do :
     MachineCmd a state1 state2 ->
     (a -> Inf (MachineIO state2)) ->
-    MachineIO state1
+    MachineIO state1 -- <<- why is this `state1` rather than `state2`?
 
 namespace MachineDo
   (>>=) :
@@ -47,6 +60,37 @@ namespace MachineDo
     (a -> Inf (MachineIO state2)) ->
     MachineIO state1
   (>>=) = Do
+
+runMachine : MachineCmd ty inState outState -> IO ty
+runMachine InsertCoin = putStrLn "Coin inserted"
+runMachine Vend = putStrLn "Please take your chocolate"
+runMachine GetCoins {inState = (pounds, chocs)} = do
+  putStrLn (show pounds ++ " coins returned")
+runMachine (Refill bars) = do
+  putStrLn ("Chocolate remaining: " ++ show bars)
+runMachine (Display msg) = putStrLn msg
+runMachine GetInput {inState = (pounds, chocs)} = do
+  putStrLn ("Coins: " ++ show pounds ++ "; " ++ "Stock: " ++ show chocs)
+  putStr "> "
+  line <- getLine
+  pure (strToInput line)
+runMachine (Pure x) = pure x
+runMachine (action >>= cont) = do
+  v <- runMachine action
+  runMachine (cont v)
+
+data Fuel = Dry | More (Lazy Fuel)
+
+partial
+forever : Fuel
+forever = More forever
+
+run : Fuel -> MachineIO state -> IO ()
+run Dry y = pure ()
+run (More fuel) (Do cmd cont) = do
+  v <- runMachine cmd
+  run fuel (cont v)
+run (More _) Quit = putStrLn "quitting..."
 
 mutual
   vend : MachineIO (pounds, chocs)
@@ -85,3 +129,10 @@ mutual
         Display "Change returned"
         machineLoop
       REFILL num => refill num
+      EXIT => Quit
+
+partial
+main : IO ()
+main = do
+  result <- run forever (machineLoop {pounds = 0} {chocs = 1})
+  putStrLn $ "Final result = " ++ show result
