@@ -11,6 +11,10 @@ data ATMState = Ready | CardInserted | Session
 
 data PINCheck = CorrectPIN | IncorrectPIN
 
+data HasCard : ATMState -> Type where
+  HasCardInserted : HasCard CardInserted
+  HasSession : HasCard Session
+
 data ATMCmd :
   (ty : Type) ->
   ATMState ->
@@ -18,7 +22,7 @@ data ATMCmd :
   Type
 where
   InsertCard : ATMCmd () Ready (const CardInserted)
-  EjectCard : ATMCmd () state (const Ready)
+  EjectCard : {auto hasCard : HasCard state} -> ATMCmd () state (const Ready)
   GetPIN : ATMCmd PIN CardInserted (const CardInserted)
 
   CheckPIN : PIN -> ATMCmd PINCheck CardInserted
@@ -54,6 +58,12 @@ atm = do
     IncorrectPIN => do
       Message "Incorrect PIN"
       EjectCard
+
+-- This program is now rejected.
+{-
+badATM : ATMCmd () Ready (const Ready)
+badATM = EjectCard
+-}
 
 testPIN : Vect 4 Char
 testPIN = ['1', '2', '3', '4']
