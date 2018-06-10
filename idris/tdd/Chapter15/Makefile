@@ -3,7 +3,8 @@ all: \
 	AdderMismatch \
 	AdderBlocking \
 	AdderService \
-	Processes
+	Processes \
+	Process
 
 AdderChannel: AdderChannel.idr
 	idris -o $@ $<
@@ -18,4 +19,7 @@ AdderService: AdderService.idr
 	idris -o $@ $<
 
 Processes: Processes.idr
+	idris -o $@ $<
+
+Process: Process.idr
 	idris -o $@ $<
