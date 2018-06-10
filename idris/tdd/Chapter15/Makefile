@@ -1,4 +1,4 @@
-all: \
+EXES := \
 	AdderChannel \
 	AdderMismatch \
 	AdderBlocking \
@@ -8,26 +8,33 @@ all: \
 	ProcessState \
 	ProcessGeneric
 
+all: ${EXES}
+
 AdderChannel: AdderChannel.idr
-	idris -o $@ $<
+	time idris -o $@ $<
 
 AdderMismatch: AdderMismatch.idr
-	idris -o $@ $<
+	time idris -o $@ $<
 
 AdderBlocking: AdderBlocking.idr
-	idris -o $@ $<
+	time idris -o $@ $<
 
 AdderService: AdderService.idr
-	idris -o $@ $<
+	time idris -o $@ $<
 
 Processes: Processes.idr
-	idris -o $@ $<
+	time idris -o $@ $<
 
 Process: Process.idr
-	idris -o $@ $<
+	time idris -o $@ $<
 
 ProcessState: ProcessState.idr
-	idris -o $@ $<
+	time idris -o $@ $<
 
 ProcessGeneric: ProcessGeneric.idr
-	idris -o $@ $<
+	time idris -o $@ $<
+
+.PHONY: clean
+clean:
+	-rm *.ibc
+	-rm ${EXES}
