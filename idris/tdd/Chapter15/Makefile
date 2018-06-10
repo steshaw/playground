@@ -6,7 +6,8 @@ EXES := \
 	Processes \
 	Process \
 	ProcessState \
-	ProcessGeneric
+	ProcessGeneric \
+	ListProcess
 
 all: ${EXES}
 
@@ -32,6 +33,9 @@ ProcessState: ProcessState.idr
 	time idris -o $@ $<
 
 ProcessGeneric: ProcessGeneric.idr
+	time idris -o $@ $<
+
+ListProcess: ListProcess.idr
 	time idris -o $@ $<
 
 .PHONY: clean
