@@ -5,7 +5,8 @@ all: \
 	AdderService \
 	Processes \
 	Process \
-	ProcessState
+	ProcessState \
+	ProcessGeneric
 
 AdderChannel: AdderChannel.idr
 	idris -o $@ $<
@@ -26,4 +27,7 @@ Process: Process.idr
 	idris -o $@ $<
 
 ProcessState: ProcessState.idr
+	idris -o $@ $<
+
+ProcessGeneric: ProcessGeneric.idr
 	idris -o $@ $<

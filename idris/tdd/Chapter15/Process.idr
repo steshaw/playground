@@ -1,6 +1,8 @@
 |||
 ||| ## 15.2 Defining a type for safe message passing
 |||
+||| Includes code called ProcessLoop.idr from the book.
+|||
 module Main
 
 import System.Concurrency.Channels
