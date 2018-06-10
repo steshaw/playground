@@ -4,7 +4,8 @@ all: \
 	AdderBlocking \
 	AdderService \
 	Processes \
-	Process
+	Process \
+	ProcessState
 
 AdderChannel: AdderChannel.idr
 	idris -o $@ $<
@@ -22,4 +23,7 @@ Processes: Processes.idr
 	idris -o $@ $<
 
 Process: Process.idr
+	idris -o $@ $<
+
+ProcessState: ProcessState.idr
 	idris -o $@ $<
