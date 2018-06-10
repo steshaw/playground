@@ -7,7 +7,8 @@ EXES := \
 	Process \
 	ProcessState \
 	ProcessGeneric \
-	ListProcess
+	ListProcess \
+	WordCount
 
 all: ${EXES}
 
@@ -35,7 +36,10 @@ ProcessState: ProcessState.idr
 ProcessGeneric: ProcessGeneric.idr
 	time idris -o $@ $<
 
-ListProcess: ListProcess.idr
+ListProcess: ListProcess.idr ProcessLib.idr
+	time idris -o $@ $<
+
+WordCount: WordCount.idr ProcessLib.idr
 	time idris -o $@ $<
 
 .PHONY: clean
