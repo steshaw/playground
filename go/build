@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+for file in *.go; do
+  if [[ $file != continuation-line.go ]]; then
+    go build $file
+  fi
+done
