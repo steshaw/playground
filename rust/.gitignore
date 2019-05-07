@@ -7,5 +7,6 @@
 /option_unwrap
 /panic
 /panic2
+/pretty_print
 /result_of_main
 /to_string

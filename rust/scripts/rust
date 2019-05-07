@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+rustFile=${1%.rs}.rs # Ensure we begin with a .rs extension.
+
+rustc "$rustFile" && "./${rustFile%.rs}"
