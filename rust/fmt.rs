@@ -35,4 +35,22 @@ fn main() {
     println!("              pretty print pi = {:#?}", pi);
     println!("   LowerExp[onent] e print pi = {:e}", pi);
     println!("   UpperExp[onent] E print pi = {:E}", pi);
+
+    println!("");
+    /// Some examples from _Rust By Example_.
+
+    // You can right-align text with a specified width. This will output
+    // "     1". 5 white spaces and a "1".
+    println!("{number:>width$}", number=1, width=6);
+
+    // You can pad numbers with extra zeroes. This will output "000001".
+    println!("{number:>0width$}", number=1, width=6);
+
+    // Create a structure which contains an `i32`. Name it `Structure`.
+    #[derive(Debug)]
+    struct Structure(i32);
+
+    // However, custom types such as this structure require more complicated
+    // handling.
+    println!("This struct now prints: {:?}!", Structure(3));
 }
