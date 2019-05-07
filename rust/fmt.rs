@@ -3,7 +3,7 @@ use std::fmt;
 #[derive(Debug)]
 struct Person {
     name: String,
-    age: i8,
+    age: u8,
 }
 
 impl fmt::Display for Person {
