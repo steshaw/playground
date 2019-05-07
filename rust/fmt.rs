@@ -41,10 +41,11 @@ fn main() {
 
     // You can right-align text with a specified width. This will output
     // "     1". 5 white spaces and a "1".
-    println!("{number:>width$}", number=1, width=6);
+    println!("{number:>width$}", number = 42, width = 6);
 
     // You can pad numbers with extra zeroes. This will output "000001".
-    println!("{number:>0width$}", number=1, width=6);
+    println!("{number:>0width$}", number = 42, width = 6);
+    println!("{number:>05}", number = 42);
 
     // Create a structure which contains an `i32`. Name it `Structure`.
     #[derive(Debug)]
