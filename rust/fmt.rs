@@ -54,4 +54,13 @@ fn main() {
     // However, custom types such as this structure require more complicated
     // handling.
     println!("This struct now prints: {:?}!", Structure(3));
+
+    /*
+     * Add a println! macro that prints: Pi is roughly 3.142 by controlling the number of decimal
+     * places shown. For the purposes of this exercise, use let pi = 3.141592 as an estimate for
+     * Pi.  (Hint: you may need to check the std::fmt documentation for setting the number of
+     * decimals to display)
+     */
+    let pi = 3.141592;
+    println!("Pi is roughly {:.3}", pi) // Outputs: Pi is roughly 3.142
 }
