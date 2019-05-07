@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+for file in *.rs; do
+  echo Compiling $file ...
+  rustc $file
+done

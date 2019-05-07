@@ -1,2 +1,6 @@
 /fact
+/format
 /hello
+/option_unwrap
+/panic
+/to_string

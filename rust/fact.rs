@@ -5,7 +5,7 @@
 fn factorial_recursive(i: u64) -> u64 {
     match i {
         0 => 1,
-        n => n * factorial_recursive(n-1)
+        n => n * factorial_recursive(n - 1),
     }
 }
 
@@ -22,7 +22,7 @@ fn factorial_iterators(i: u64) -> u64 {
 }
 
 fn main() {
-  println!("factorial_recursive(5) => {}", factorial_recursive(5));
-  println!("factorial_iterative(5) => {}", factorial_iterative(5));
-  println!("factorial_iterators(5) => {}", factorial_iterators(5))
+    println!("factorial_recursive(5) => {}", factorial_recursive(5));
+    println!("factorial_iterative(5) => {}", factorial_iterative(5));
+    println!("factorial_iterators(5) => {}", factorial_iterators(5))
 }
