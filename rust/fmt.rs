@@ -23,10 +23,12 @@ fn main() {
     println!("pretty print p = {:#?}", p);
     println!("");
     let i42 = 42;
-    println!("                print i42 = {:#?}", i42);
-    println!("lowercase hex x print i42 = {:x}", i42);
-    println!("uppercase hex X print i42 = {:X}", i42);
-    println!("        octal o print i42 = {:o}", i42);
+    println!("                print  i42 = {:#?}", i42);
+    println!("lowercase hex x print  i42 = {:x}", i42);
+    println!("uppercase hex X print  i42 = {:X}", i42);
+    println!("        octal o print  i42 = {:o}", i42);
+    println!("       binary o print  i42 = {:b}", i42);
+    println!("      pointer p print &i42 = {:p}", &i42);
     let pi = 3.145;
     println!("                     print pi = {}", pi);
     println!("               colon print pi = {:}", pi);
