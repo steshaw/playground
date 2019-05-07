@@ -4,6 +4,7 @@
 /format
 /hello
 /i8
+/mut_string
 /option_unwrap
 /panic
 /panic2
