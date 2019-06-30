@@ -1,6 +1,4 @@
 all: hello.js
 
-PSC := psc
-
-%.js: %.purs
-	$(PSC) -o $@ $<
+hello.js: src/Main.purs
+	pulp build --to $@
