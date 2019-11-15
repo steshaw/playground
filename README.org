@@ -1,3 +1,4 @@
 * Learning Programming Languages
 
 - Haskell moved to [[https://github.com/steshaw/learning-haskell]]
+- Idris moved to [[https://github.com/steshaw/learning-idris]]
