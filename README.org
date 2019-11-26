@@ -2,4 +2,5 @@
 
 - Haskell moved to [[https://github.com/steshaw/learning-haskell]]
 - Idris moved to [[https://github.com/steshaw/learning-idris]]
+- Scala moved to [[https://github.com/steshaw/learning-scala]]
 - Typesetting languages moved to [[https://github.com/steshaw/learning-typesetting]]
