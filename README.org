@@ -1,5 +1,6 @@
 * Learning Programming Languages
 
+- Erlang moved to [[https://github.com/steshaw/learning-erlang]]
 - Go[lang] moved to [[https://github.com/steshaw/learning-go]]
 - Haskell moved to [[https://github.com/steshaw/learning-haskell]]
 - Idris moved to [[https://github.com/steshaw/learning-idris]]
