@@ -5,6 +5,7 @@
 - Haskell moved to [[https://github.com/steshaw/learning-haskell]]
 - Idris moved to [[https://github.com/steshaw/learning-idris]]
 - Nix moved to [[https://github.com/steshaw/learning-nix]]
+- OCaml moved to https://github.com/steshaw/learning-ocaml
 - Rust moved to [[https://github.com/steshaw/learning-rust]]
 - Scala moved to [[https://github.com/steshaw/learning-scala]]
 - Typesetting languages moved to [[https://github.com/steshaw/learning-typesetting]]

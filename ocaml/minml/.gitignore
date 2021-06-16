@@ -1,9 +1,0 @@
-minml
-minml.annot
-fib
-fib2
-*.bc
-*.s
-*.cmi
-*.cmo
-_build
