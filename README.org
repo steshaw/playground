@@ -4,6 +4,7 @@
 - Go[lang] moved to [[https://github.com/steshaw/learning-go]]
 - Haskell moved to [[https://github.com/steshaw/learning-haskell]]
 - Idris moved to [[https://github.com/steshaw/learning-idris]]
+- Java moved to [[https://github.com/steshaw/learning-java]]
 - Nix moved to [[https://github.com/steshaw/learning-nix]]
 - OCaml moved to https://github.com/steshaw/learning-ocaml
 - Rust moved to [[https://github.com/steshaw/learning-rust]]
