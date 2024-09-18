@@ -2,6 +2,7 @@
 
 - Agda moved to [[https://github.com/steshaw/agda-playground]]
 - Erlang moved to [[https://github.com/steshaw/erlang-playground]]
+- Flix playground at [[https://github.com/steshaw/flix-playground]]
 - Go[lang] moved to [[https://github.com/steshaw/go-playground]]
 - Haskell moved to [[https://github.com/steshaw/haskell-playground]]
 - Idris moved to [[https://github.com/steshaw/idris-playground]]
